@@ -1,0 +1,4 @@
+useDynLib(RITCH, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+import(data.table)
