@@ -38,7 +38,7 @@ library(RITCH)
 file <- "20170130.BX_ITCH_50"
 
 msg_count <- count_messages(file, add_meta_data = T)
-#> [Counting]   54473386 found
+#> [Counting]   54473386 messages found
 #> [Converting] to data.table
 
 msg_count
@@ -97,7 +97,7 @@ orders
 #> 21162665:        A        8220               0 6.839625e+13  78524903  TRUE    100   XIV  60.6200      2017-01-30 2017-01-30 18:59:56
 ```
 
-If you want to load only a specified number of messages (this applies to all `get_` functions), you can always specify a start and end message number.
+If you want to load only a specified number of messages (this applies to all `get_*` functions), you can always specify a start and end message number.
 
 For example, if you want to get only the first 10 orders, you can use the following code.
 
@@ -168,13 +168,21 @@ changes
 #> 26013918:        D        4082               0 6.840003e+13  78443320     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
 ```
 
+To speed up the `get_*` functions, we can use the message-count information from earlier. For example the following code yields the same results as above, but saves time.
+
+```r
+orders <- get_orders(file, 1, count_orders(msg_count))
+trades <- get_trades(file, 1, count_trades(msg_count))
+```
+
+
 ### Create a Plot with Trades and Orders of the largest ETFs
 ```r
 library(ggplot2)
 
 # load the data
-orders <- get_orders(file)
-trades <- get_trades(file)
+orders <- get_orders(file, 1, count_orders(msg_count))
+trades <- get_trades(file, 1, count_trades(msg_count))
 
 # data munging
 tickers <- c("SPY", "IWO", "IWM", "VXX")
