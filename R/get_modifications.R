@@ -53,7 +53,7 @@ get_modifications <- function(file, start_msg_count = 0, end_msg_count = 0,
                                 max(0, end_msg_count - 1), buffer_size, quiet)
 
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
-  cat("[Formatting]\n")
+  if (!quiet) cat("[Formatting]\n")
 
   setDT(df)
   
