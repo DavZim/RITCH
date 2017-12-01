@@ -34,9 +34,7 @@ get_orders <- function(file, start_msg_count = 0, end_msg_count = 0,
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
   if (buffer_size > 1e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
   
-  date_ <- sub(".*(\\d{8}).*", "\\1", file)
-  date_ <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", date_)
-  date_ <- fasttime::fastPOSIXct(date_)
+  date_ <- get_date_from_filename(file)
   
   if (grepl("\\.gz$", file)) {
     if (!quiet) cat(sprintf("[Extracting] from %s\n", file))

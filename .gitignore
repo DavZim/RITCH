@@ -77,3 +77,4 @@ vignettes/*.pdf
 
 # End of https://www.gitignore.io/api/c++
 
+.Rproj.user
