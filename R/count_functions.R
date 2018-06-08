@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#' # Only used internally
 count_internal <- function(x, types) {
   if (!is.data.frame(x)) stop("x has to be a data.table")
   if (!all(c("msg_type", "count") %in% names(x))) stop("x has to have the variables 'msg_type' and 'count'")
@@ -25,11 +26,13 @@ count_internal <- function(x, types) {
 #' @seealso \code{\link{count_messages}}
 #'
 #' @examples
-#' raw_file <- "20170130.PSX_ITCH_50"
+#' \dontrun{
+#'   raw_file <- "20170130.PSX_ITCH_50"
 #' 
-#' msg_count <- count_messages(raw_file)
+#'   msg_count <- count_messages(raw_file)
 #' 
-#' count_orders(msg_count)
+#'   count_orders(msg_count)
+#' }
 count_orders <- function(x) {
   types <- c("A", "F")
   count_internal(x, types)
@@ -46,11 +49,13 @@ count_orders <- function(x) {
 #' @seealso \code{\link{count_messages}}
 #'
 #' @examples
-#' raw_file <- "20170130.PSX_ITCH_50"
+#' \dontrun{
+#'   raw_file <- "20170130.PSX_ITCH_50"
 #' 
-#' msg_count <- count_messages(raw_file)
+#'   msg_count <- count_messages(raw_file)
 #' 
-#' count_trades(msg_count)
+#'   count_trades(msg_count)
+#' }
 count_trades <- function(x) {
   types <- c("P", "Q", "B")
   count_internal(x, types)
@@ -66,11 +71,13 @@ count_trades <- function(x) {
 #' @seealso \code{\link{count_messages}}
 #'
 #' @examples
-#' raw_file <- "20170130.PSX_ITCH_50"
+#' \dontrun{
+#'   raw_file <- "20170130.PSX_ITCH_50"
 #' 
-#' msg_count <- count_messages(raw_file)
+#'   msg_count <- count_messages(raw_file)
 #' 
-#' count_modifications(msg_count)
+#'   count_modifications(msg_count)
+#' }
 count_modifications <- function(x) {
   types <- c("E", "C", "X", "D", "U")
   count_internal(x, types)

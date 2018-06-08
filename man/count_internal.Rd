@@ -17,4 +17,7 @@ a numeric value of number of orders in x
 \description{
 Internal function to count the messages
 }
+\examples{
+# Only used internally
+}
 \keyword{internal}

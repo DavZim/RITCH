@@ -16,11 +16,13 @@ a numeric value of number of trades in x
 Counts the number of trades from a data.table of message counts
 }
 \examples{
-raw_file <- "20170130.PSX_ITCH_50"
+\dontrun{
+  raw_file <- "20170130.PSX_ITCH_50"
 
-msg_count <- count_messages(raw_file)
+  msg_count <- count_messages(raw_file)
 
-count_trades(msg_count)
+  count_trades(msg_count)
+}
 }
 \seealso{
 \code{\link{count_messages}}

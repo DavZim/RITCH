@@ -1,14 +1,14 @@
 #include "RITCH.h"
 #include "countMessages.h"
 
-/**
- * @brief      Counts the number of each message type per file
- *
- * @param[in]  filename    The filename, either of a plain-text file or of a .gz-file
- * @param[in]  bufferSize  The buffer size in bytes, defaults to 100MB
- *
- * @return     An Rcpp::DataFrame containing the message type and the count
- */
+
+// @brief      Counts the number of each message type per file
+//
+// @param[in]  filename    The filename, either of a plain-text file or of a .gz-file
+// @param[in]  bufferSize  The buffer size in bytes, defaults to 100MB
+//
+// @return     An Rcpp::DataFrame containing the message type and the count
+//
 // [[Rcpp::export]]
 Rcpp::DataFrame getMessageCountDF(std::string filename,
                                   unsigned long long bufferSize,

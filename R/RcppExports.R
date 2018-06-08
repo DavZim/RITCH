@@ -2,18 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 getMessageCountDF <- function(filename, bufferSize, quiet = FALSE) {
-    .Call(`_RITCH_getMessageCountDF`, filename, bufferSize, quiet)
+    .Call('_RITCH_getMessageCountDF', PACKAGE = 'RITCH', filename, bufferSize, quiet)
 }
 
 getOrders <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call(`_RITCH_getOrders`, filename, startMsgCount, endMsgCount, bufferSize, quiet)
+    .Call('_RITCH_getOrders', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
 getTrades <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call(`_RITCH_getTrades`, filename, startMsgCount, endMsgCount, bufferSize, quiet)
+    .Call('_RITCH_getTrades', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
 getModifications <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call(`_RITCH_getModifications`, filename, startMsgCount, endMsgCount, bufferSize, quiet)
+    .Call('_RITCH_getModifications', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 

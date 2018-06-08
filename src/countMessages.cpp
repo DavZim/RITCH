@@ -148,7 +148,7 @@ void countMessageByType(std::vector<unsigned long long>& count, unsigned char ms
     count[ITCH::POS::N]++;
     break;
   default:
-    std::cout << "Unkown Case!\n";
+    Rcpp::Rcout << "Unkown Case!\n";
   break;
   }
 }

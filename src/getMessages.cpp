@@ -59,22 +59,22 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   return retDF;
 }
 
-/**
- * @brief      Returns the Orders from a file as a dataframe
- * 
- * Order Types considered are 'A' (add order) and 'F' (add order with MPID)
- *
- * @param[in]  filename       The filename to a plain-text-file
- * @param[in]  startMsgCount  The start message count, the message (order) count at which we 
- *                              start to save the messages, the defaults to 0 (first message)
- * @param[in]  endMsgCount    The end message count, the message count at which we stop to 
- *                              stop to save the messages, defaults to 0, which will be 
- *                              substituted to all messages
- * @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
- * @param[in]  quiet          If true, no status message is printed, defaults to false
- *
- * @return     The orders in a data.frame
- */
+
+// @brief      Returns the Orders from a file as a dataframe
+// 
+// Order Types considered are 'A' (add order) and 'F' (add order with MPID)
+//
+// @param[in]  filename       The filename to a plain-text-file
+// @param[in]  startMsgCount  The start message count, the message (order) count at which we 
+//                              start to save the messages, the defaults to 0 (first message)
+// @param[in]  endMsgCount    The end message count, the message count at which we stop to 
+//                              stop to save the messages, defaults to 0, which will be 
+//                              substituted to all messages
+// @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
+// @param[in]  quiet          If true, no status message is printed, defaults to false
+//
+// @return     The orders in a data.frame
+//
 // [[Rcpp::export]]
 Rcpp::DataFrame getOrders(std::string filename, 
                           unsigned long long startMsgCount,
@@ -86,22 +86,22 @@ Rcpp::DataFrame getOrders(std::string filename,
   return df;  
 }
 
-/**
- * @brief      Returns the Trades from a file as a dataframe
- * 
- * Trade Types considered are 'P', 'Q', and 'B' (Non Cross, Cross, and Broken)
- *
- * @param[in]  filename       The filename to a plain-text-file
- * @param[in]  startMsgCount  The start message count, the message (order) count at which we 
- *                              start to save the messages, the defaults to 0 (first message)
- * @param[in]  endMsgCount    The end message count, the message count at which we stop to 
- *                              stop to save the messages, defaults to 0, which will be 
- *                              substituted to all messages
- * @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
- * @param[in]  quiet          If true, no status message is printed, defaults to false
- *
- * @return     The trades in a data.frame
- */
+
+// @brief      Returns the Trades from a file as a dataframe
+// 
+// Trade Types considered are 'P', 'Q', and 'B' (Non Cross, Cross, and Broken)
+//
+// @param[in]  filename       The filename to a plain-text-file
+// @param[in]  startMsgCount  The start message count, the message (order) count at which we 
+//                              start to save the messages, the defaults to 0 (first message)
+// @param[in]  endMsgCount    The end message count, the message count at which we stop to 
+//                              stop to save the messages, defaults to 0, which will be 
+//                              substituted to all messages
+// @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
+// @param[in]  quiet          If true, no status message is printed, defaults to false
+//
+// @return     The trades in a data.frame
+//
 // [[Rcpp::export]]
 Rcpp::DataFrame getTrades(std::string filename, 
                           unsigned long long startMsgCount,
@@ -114,22 +114,20 @@ Rcpp::DataFrame getTrades(std::string filename,
   return df;  
 }
 
-/**
- * @brief      Returns the Modifications from a file as a dataframe
- * 
- * Modification Types considered are 'E' (order executed), 'C' (order executed with price), 'X' (order cancelled), 'D' (order deleted), and 'U' (order replaced)
- *
- * @param[in]  filename       The filename to a plain-text-file
- * @param[in]  startMsgCount  The start message count, the message (order) count at which we 
- *                              start to save the messages, the defaults to 0 (first message)
- * @param[in]  endMsgCount    The end message count, the message count at which we stop to 
- *                              stop to save the messages, defaults to 0, which will be 
- *                              substituted to all messages
- * @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
- * @param[in]  quiet          If true, no status message is printed, defaults to false
- *
- * @return     The modifications in a data.frame
- */
+// @brief      Returns the Modifications from a file as a dataframe
+// 
+// Modification Types considered are 'E' (order executed), 'C' (order executed with price), 'X' (order cancelled), 'D' (order deleted), and 'U' (order replaced)
+//
+// @param[in]  filename       The filename to a plain-text-file
+// @param[in]  startMsgCount  The start message count, the message (order) count at which we 
+//                              start to save the messages, the defaults to 0 (first message)
+// @param[in]  endMsgCount    The end message count, the message count at which we stop to 
+//                              stop to save the messages, defaults to 0, which will be 
+//                              substituted to all messages
+// @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
+// @param[in]  quiet          If true, no status message is printed, defaults to false
+//
+// @return     The modifications in a data.frame
 // [[Rcpp::export]]
 Rcpp::DataFrame getModifications(std::string filename, 
                           unsigned long long startMsgCount,

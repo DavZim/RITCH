@@ -1,3 +1,4 @@
-.onUnload <- function (libpath) {
-  library.dynam.unload("RITCH", libpath)
-}
+#' @useDynLib RITCH
+#' @importFrom Rcpp sourceCpp
+#' @import data.table
+NULL
