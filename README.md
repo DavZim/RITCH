@@ -1,5 +1,7 @@
 # RITCH - an R interface to the ITCH Protocol
 
+[![Travis build status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
+
 ## What?
 
 This R package allows you to read files that use the ITCH protocol (version 5.0) of NASDAQ and parse it into a data.table. 
