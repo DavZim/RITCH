@@ -12,4 +12,4 @@ Imports: fasttime,
   Rcpp (>= 0.12.12),
   R.utils
 LinkingTo: Rcpp
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

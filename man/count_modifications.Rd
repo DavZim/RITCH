@@ -7,7 +7,7 @@
 count_modifications(x)
 }
 \arguments{
-\item{x}{a data.frame containing the message types and the counts}
+\item{x}{a file or a data.frame containing the message types and the counts}
 }
 \value{
 a numeric value of number of order modifications in x

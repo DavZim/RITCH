@@ -47,8 +47,8 @@ get_orders <- function(file, start_msg_count = 0, end_msg_count = 0,
   
   # -1 because we want it 1 indexed (cpp is 0-indexed) 
   # and max(0, xxx) b.c. the variable is unsigned!
-  df <- RITCH::getOrders(file, max(0, start_msg_count - 1), 
-                         max(0, end_msg_count - 1), buffer_size, quiet)
+  df <- RITCH:::getOrders(file, max(0, start_msg_count - 1), 
+                          max(0, end_msg_count - 1), buffer_size, quiet)
   
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
   if (!quiet) cat("[Formatting]\n")
