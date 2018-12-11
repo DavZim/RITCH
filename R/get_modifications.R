@@ -87,8 +87,7 @@ get_modifications <- function(file, start_msg_count = 0, end_msg_count = 0,
 
   df[msg_type == 'U', ':=' (
     match_number  = NA_integer_,
-    printable     = NA,
-    new_order_ref = NA_integer_
+    printable     = NA
     )]
 
   a <- gc()
