@@ -1,8 +1,8 @@
 Package: RITCH
 Type: Package
 Title: R Parser for the ITCH-Protocol
-Version: 0.1
-Date: 2017-11-10
+Version: 0.1.1
+Date: 2020-04-20
 Author: David Zimmermann
 Maintainer: David Zimmermann <david_j_zimmermann@hotmail.com>
 Description: This package allows to parse files that use the ITCH-Protocol (version 5.0) to an R data.table. Currently the package allows to parse trades, orders, and order modifications.
@@ -14,4 +14,4 @@ Imports: fasttime,
   nanotime,
   bit64
 LinkingTo: Rcpp
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0
