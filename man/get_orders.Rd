@@ -4,8 +4,13 @@
 \alias{get_orders}
 \title{Retrieves the messages of an ITCH-file}
 \usage{
-get_orders(file, start_msg_count = 0, end_msg_count = 0,
-  buffer_size = 1e+08, quiet = FALSE)
+get_orders(
+  file,
+  start_msg_count = 0,
+  end_msg_count = 0,
+  buffer_size = 1e+08,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
