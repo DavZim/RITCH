@@ -5,15 +5,15 @@ getMessageCountDF <- function(filename, bufferSize, quiet = FALSE) {
     .Call('_RITCH_getMessageCountDF', PACKAGE = 'RITCH', filename, bufferSize, quiet)
 }
 
-getOrders <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getOrders', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getOrders_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getOrders_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
-getTrades <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getTrades', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getTrades_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getTrades_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
-getModifications <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getModifications', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getModifications_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getModifications_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
