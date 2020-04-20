@@ -10,6 +10,8 @@ License: GPL-3
 Imports: fasttime,
   data.table,
   Rcpp (>= 0.12.12),
-  R.utils
+  R.utils,
+  nanotime,
+  bit64
 LinkingTo: Rcpp
 RoxygenNote: 6.1.0

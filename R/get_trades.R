@@ -57,7 +57,8 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = 0,
   
   # add the date
   df[, date := date_]
-  df[, datetime := date_ + timestamp / 1e9]
+  df[, datetime := nanotime(as.Date(date_)) + timestamp]
+  df[, timestamp := as.integer64(timestamp)]
 
   # replace missing values
   df[msg_type == 'P', ':=' (
