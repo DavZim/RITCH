@@ -18,9 +18,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// getOrders
-Rcpp::DataFrame getOrders(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
-RcppExport SEXP _RITCH_getOrders(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
+// getOrders_impl
+Rcpp::DataFrame getOrders_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+RcppExport SEXP _RITCH_getOrders_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,13 +29,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
     Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
-    rcpp_result_gen = Rcpp::wrap(getOrders(filename, startMsgCount, endMsgCount, bufferSize, quiet));
+    rcpp_result_gen = Rcpp::wrap(getOrders_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
-// getTrades
-Rcpp::DataFrame getTrades(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
-RcppExport SEXP _RITCH_getTrades(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
+// getTrades_impl
+Rcpp::DataFrame getTrades_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+RcppExport SEXP _RITCH_getTrades_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -44,13 +44,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
     Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
-    rcpp_result_gen = Rcpp::wrap(getTrades(filename, startMsgCount, endMsgCount, bufferSize, quiet));
+    rcpp_result_gen = Rcpp::wrap(getTrades_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
-// getModifications
-Rcpp::DataFrame getModifications(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
-RcppExport SEXP _RITCH_getModifications(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
+// getModifications_impl
+Rcpp::DataFrame getModifications_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+RcppExport SEXP _RITCH_getModifications_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,16 +59,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
     Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
-    rcpp_result_gen = Rcpp::wrap(getModifications(filename, startMsgCount, endMsgCount, bufferSize, quiet));
+    rcpp_result_gen = Rcpp::wrap(getModifications_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_getMessageCountDF", (DL_FUNC) &_RITCH_getMessageCountDF, 3},
-    {"_RITCH_getOrders", (DL_FUNC) &_RITCH_getOrders, 5},
-    {"_RITCH_getTrades", (DL_FUNC) &_RITCH_getTrades, 5},
-    {"_RITCH_getModifications", (DL_FUNC) &_RITCH_getModifications, 5},
+    {"_RITCH_getOrders_impl", (DL_FUNC) &_RITCH_getOrders_impl, 5},
+    {"_RITCH_getTrades_impl", (DL_FUNC) &_RITCH_getTrades_impl, 5},
+    {"_RITCH_getModifications_impl", (DL_FUNC) &_RITCH_getModifications_impl, 5},
     {NULL, NULL, 0}
 };
 

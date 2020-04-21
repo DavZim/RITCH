@@ -4,8 +4,7 @@
 \alias{count_messages}
 \title{Counts the messages of an ITCH-file}
 \usage{
-count_messages(file, add_meta_data = FALSE, buffer_size = 1e+08,
-  quiet = FALSE)
+count_messages(file, add_meta_data = FALSE, buffer_size = 1e+08, quiet = FALSE)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}

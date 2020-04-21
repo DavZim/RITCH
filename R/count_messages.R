@@ -39,7 +39,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = 1e8, quiet
     file <- tmp_file
   }
 
-  df <- RITCH:::getMessageCountDF(file, buffer_size, quiet)
+  df <- getMessageCountDF(file, buffer_size, quiet)
   setDT(df)
 
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")

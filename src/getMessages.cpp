@@ -76,11 +76,11 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
 // @return     The orders in a data.frame
 //
 // [[Rcpp::export]]
-Rcpp::DataFrame getOrders(std::string filename, 
-                          unsigned long long startMsgCount,
-                          unsigned long long endMsgCount,
-                          unsigned long long bufferSize, 
-                          bool quiet) {
+Rcpp::DataFrame getOrders_impl(std::string filename,
+                               unsigned long long startMsgCount,
+                               unsigned long long endMsgCount,
+                               unsigned long long bufferSize,
+                               bool quiet) {
   Orders orders;
   Rcpp::DataFrame df = getMessagesTemplate(orders, filename, startMsgCount, endMsgCount, bufferSize, quiet);
   return df;  
@@ -103,11 +103,11 @@ Rcpp::DataFrame getOrders(std::string filename,
 // @return     The trades in a data.frame
 //
 // [[Rcpp::export]]
-Rcpp::DataFrame getTrades(std::string filename, 
-                          unsigned long long startMsgCount,
-                          unsigned long long endMsgCount,
-                          unsigned long long bufferSize, 
-                          bool quiet) {
+Rcpp::DataFrame getTrades_impl(std::string filename,
+                               unsigned long long startMsgCount,
+                               unsigned long long endMsgCount,
+                               unsigned long long bufferSize,
+                               bool quiet) {
   
   Trades trades;
   Rcpp::DataFrame df = getMessagesTemplate(trades, filename, startMsgCount, endMsgCount, bufferSize, quiet);
@@ -129,11 +129,11 @@ Rcpp::DataFrame getTrades(std::string filename,
 //
 // @return     The modifications in a data.frame
 // [[Rcpp::export]]
-Rcpp::DataFrame getModifications(std::string filename, 
-                          unsigned long long startMsgCount,
-                          unsigned long long endMsgCount,
-                          unsigned long long bufferSize, 
-                          bool quiet) {
+Rcpp::DataFrame getModifications_impl(std::string filename,
+                                      unsigned long long startMsgCount,
+                                      unsigned long long endMsgCount,
+                                      unsigned long long bufferSize,
+                                      bool quiet) {
   
   Modifications mods;
   Rcpp::DataFrame df = getMessagesTemplate(mods, filename, startMsgCount, endMsgCount, bufferSize, quiet);
