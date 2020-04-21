@@ -22,7 +22,8 @@
 #'   count_messages(gz_file, TRUE)
 #' }
 count_messages <- function(file, add_meta_data = FALSE, buffer_size = 1e8, quiet = FALSE) {
-
+  
+  t0 <- Sys.time()
   # ADD GZ-possibility!
   # ADD VERBOSITY!
   # 
@@ -46,5 +47,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = 1e8, quiet
   
   if (add_meta_data) df <- df[RITCH::get_meta_data(), on = "msg_type"]
   
+  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
   return(df)
 }

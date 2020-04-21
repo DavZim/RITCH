@@ -30,6 +30,7 @@
 #' }
 get_trades <- function(file, start_msg_count = 0, end_msg_count = 0, 
                        buffer_size = 1e8, quiet = FALSE) {
+  t0 <- Sys.time()
   if (!file.exists(file)) stop("File not found!")
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
   if (buffer_size > 1e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
@@ -80,6 +81,9 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = 0,
     )]
 
   a <- gc()
-
+  
+  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
+  
   return(df[])
 }
