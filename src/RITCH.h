@@ -32,4 +32,8 @@ void loadToMessages(std::string filename,
                     unsigned long long bufferSize = 1e8,
                     bool quiet = false);
 
+// formats a number with thousands seperators
+std::string formatThousands(unsigned long long num, 
+                            const std::string sep = ",", 
+                            std::string s = "");
 #endif //RITCH_H

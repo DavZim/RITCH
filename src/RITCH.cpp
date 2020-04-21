@@ -203,3 +203,27 @@ void loadToMessages(std::string filename,
   free(bufferPtr);
   fclose(infile);
 }
+
+/*
+ * @brief      Formats an integer number to a std::string with thousands separator
+ *
+ * @param      num    The number to format
+ * @param      sep    The thousands separator, default value is a comma  
+ * @param      s      The return string, this is only used internally, as the function
+ *                    is called recursively
+ *                    
+ * @return       The number as a string
+ */
+std::string formatThousands(unsigned long long num, const std::string sep, std::string s) {
+  if (num < 1000) {
+    return std::to_string(num) + s;
+  } else {
+    std::string last_three = std::to_string(num % 1000);
+    const int num_zeros = 3 - last_three.length();
+    last_three = std::string(num_zeros, '0').append(last_three);
+    
+    const unsigned long long remainder = (unsigned long long) num / 1000;
+    std::string res = sep + last_three + s;
+    return formatThousands(remainder, sep, res);
+  }
+}

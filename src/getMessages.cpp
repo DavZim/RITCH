@@ -44,7 +44,7 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
     nMessages = endMsgCount - startMsgCount + 1;
   }
   
-  if (!quiet) Rcpp::Rcout << nMessages << " messages found\n";
+  if (!quiet) Rcpp::Rcout << formatThousands(nMessages) << " messages found\n";
 
   // Reserve the space for messages of type A and F 
   msg.reserve(nMessages);
