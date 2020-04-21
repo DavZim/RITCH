@@ -78,3 +78,11 @@ vignettes/*.pdf
 # End of https://www.gitignore.io/api/c++
 
 .Rproj.user
+
+# ITCH FILES
+*.*_ITCH_50
+*.*_ITCH_50.gz
+
+# ITCH Documentation
+NQTVITCHspecification.pdf
+
