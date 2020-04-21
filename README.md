@@ -1,190 +1,342 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # RITCH - an R interface to the ITCH Protocol
 
-[![Travis build status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
+<!-- badges: start -->
 
-## What?
+[![Travis build
+status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
+<!-- badges: end -->
 
-This R package allows you to read files that use the ITCH protocol (version 5.0) of NASDAQ and parse it into a data.table. 
+## The What?\!
 
-The ITCH protocol allows NASDAQ to distribute financial information to market participants. The financial information includes orders, trades, order modifications, trading status, traded stocks, and more.
+This R package allows you to read files that use the ITCH protocol
+(version 5.0) of NASDAQ and parse it into a data.table.
 
-## Why?
+The ITCH protocol allows NASDAQ to distribute financial information to
+market participants. The financial information includes orders, trades,
+order modifications, trading status, traded stocks, and more.
 
-During my research I had to parse some ITCH files and couldn't find any R libraries. While parsing the files in pure R is certainly possible, this library uses `C++` and `Rcpp` to speed up the parsing process. 
+## The Why?\!
 
-A typical file containing a single trading day consists of something like 30-50 million messages (BX-exchange) up to 230 million messages (NASDAQ), thus speed makes a crucial difference. As the data is streamed from the file, the execution time mainly depends on the reading/writing speed of the hard-drive. 
+During my research I had to parse some ITCH files and couldn’t find any
+R libraries. While parsing the files in pure R is certainly possible,
+this library uses `C++` and `Rcpp` to speed up the parsing process.
 
-As a general benchmark, it takes my machine about 20 seconds to count the messages of a plain-file (unzipped, 55 million order) and about 10 seconds longer for a `.gz`-file.
+A typical file containing a single trading day consists of something
+like 30-50 million messages (BX-exchange) up to 230 million messages
+(NASDAQ), thus speed makes a crucial difference. As the data is streamed
+from the file, the execution time mainly depends on the reading/writing
+speed of the hard-drive.
+
+As a general benchmark, it takes my machine about 20 seconds to count
+the messages of a plain-file (unzipped, 55 million order) and about 10
+seconds longer for a `.gz`-file.
 
 Enough of the talk, how can I use the package?
 
-## How?
+## The How?\!
+
+Currently the code only lives on GitHub but eventually it may find its
+way to CRAN. Until then, you have to use `remotes` or `devtools` to
+install `RITCH`:
 
 ### Installation
 
-Currently the code only lives on GitHub but eventually it should find its way into CRAN. Until then, you have to use `devtools` to install `RITCH`:
+You can install the development version from
+[GitHub](https://github.com/DavZim/RITCH) with:
 
-```r
-# install.packages("devtools")
-devtools::install_github("DavZim/RITCH")
+``` r
+# install.packages("remotes")
+remotes::install_github("DavZim/RITCH")
 ```
 
-As a first step, we want to count how often each message is found in a given file.
+### Example Usage
+
+As a first step, we want to count how often each message is found in a
+given file.
 
 ### Counting Messages
-```r
+
+RITCH is able to read gzipped (`*.XXX_ITCH_50.gz`) and unzipped files
+(`*.XXX_ITCH_50`), for speed reasons, we gunzipped the file by hand as
+we will use it multiple times throughout this example.
+
+As I don’t own any rights to the data, the data is not included in this
+package, but can be downloaded from NASDAQs FTP server here:
+<ftp://emi.nasdaq.com/ITCH/>
+
+``` r
 library(RITCH)
 
-# RITCH is able to read *.XXX_ITCH_50.gz files, for speed reasons this file was gunzipped by hand
-# the file can be found here: ftp://emi.nasdaq.com/ITCH/
-file <- "20170130.BX_ITCH_50"
+file <- "20191230.BX_ITCH_50"
 
-msg_count <- count_messages(file, add_meta_data = T)
-#> [Counting]   54473386 messages found
+msg_count <- count_messages(file, add_meta_data = TRUE)
+#> [Counting]   29,156,757 messages found
 #> [Converting] to data.table
-
+#> [Done]       in 0.36 secs
 msg_count
 #>     msg_type    count                                  msg_name                                    msg_group  doc_nr
 #>  1:        S        6                      System Event Message                         System Event Message     4.1
-#>  2:        R     8371                           Stock Directory                       Stock Related Messages   4.2.1
-#>  3:        H     8401                      Stock Trading Action                       Stock Related Messages   4.2.2
-#>  4:        Y     8502                       Reg SHO Restriction                       Stock Related Messages   4.2.3
-#>  5:        L     6011               Market Participant Position                       Stock Related Messages   4.2.4
-#>  6:        V        2                MWCB Decline Level Message                       Stock Related Messages 4.2.5.1
+#>  2:        R     8906                           Stock Directory                       Stock Related Messages   4.2.1
+#>  3:        H     8961                      Stock Trading Action                       Stock Related Messages   4.2.2
+#>  4:        Y     9013                       Reg SHO Restriction                       Stock Related Messages   4.2.3
+#>  5:        L     6171               Market Participant Position                       Stock Related Messages   4.2.4
+#>  6:        V        1                MWCB Decline Level Message                       Stock Related Messages 4.2.5.1
 #>  7:        W        0                       MWCB Status Message                       Stock Related Messages 4.2.5.2
 #>  8:        K        0                 IPO Quoting Period Update                       Stock Related Messages   4.2.6
 #>  9:        J        0                       LULD Auction Collar                       Stock Related Messages   4.2.7
-#> 10:        A 21142017                         Add Order Message                            Add Order Message   4.3.1
-#> 11:        F    20648      Add Order - MPID Attribution Message                            Add Order Message   4.3.2
-#> 12:        E  1203625                    Order Executed Message                        Modify Order Messages   4.4.1
-#> 13:        C     8467 Order Executed Message With Price Message                        Modify Order Messages   4.4.2
-#> 14:        X  1498904                      Order Cancel Message                        Modify Order Messages   4.4.3
-#> 15:        D 20282644                      Order Delete Message                        Modify Order Messages   4.4.4
-#> 16:        U  3020278                     Order Replace Message                        Modify Order Messages   4.4.5
-#> 17:        P   330023                 Trade Message (Non-Cross)                               Trade Messages   4.5.1
+#> 10:        A 12210139                         Add Order Message                            Add Order Message   4.3.1
+#> 11:        F    45058      Add Order - MPID Attribution Message                            Add Order Message   4.3.2
+#> 12:        E   578839                    Order Executed Message                        Modify Order Messages   4.4.1
+#> 13:        C     2686 Order Executed Message With Price Message                        Modify Order Messages   4.4.2
+#> 14:        X   348198                      Order Cancel Message                        Modify Order Messages   4.4.3
+#> 15:        D 11821540                      Order Delete Message                        Modify Order Messages   4.4.4
+#> 16:        U  1741672                     Order Replace Message                        Modify Order Messages   4.4.5
+#> 17:        P   134385                 Trade Message (Non-Cross)                               Trade Messages   4.5.1
 #> 18:        Q        0                       Cross Trade Message                               Trade Messages   4.5.2
 #> 19:        B        0                      Broken Trade Message                               Trade Messages   4.5.3
 #> 20:        I        0                              NOII Message Net Order Imbalance Indicator (NOII) Message     4.6
-#> 21:        N  6935487                   Retail Interest Message    Retail Price Improvement Indicator (RPII)     4.7
+#> 21:        N  2241182                   Retail Interest Message    Retail Price Improvement Indicator (RPII)     4.7
 #>     msg_type    count                                  msg_name                                    msg_group  doc_nr
-
 ```
 
-As you can see, there are a lot of different message types. Currently this package parses only messages from the group "Add Order Messages" (type 'A' and 'F'), "Modify Order Messages" (type 'E', 'C', 'X', 'D', and 'U'), and "Trade Messages" (type 'P', 'Q', and 'B'). You can extract the different message-types by using the functions `get_orders`, `get_modifications`, and `get_trades`, respectively. The doc-number refers to the section in the official documentation (see link below).
+As you can see, there are a lot of different message types. Currently
+this package parses only messages from the following groups - “Add Order
+Messages” (type ‘A’ and ‘F’), - “Modify Order Messages” (type ‘E’, ‘C’,
+‘X’, ‘D’, and ‘U’), - and “Trade Messages” (type ‘P’, ‘Q’, and ‘B’).
 
-If you are annoyed by the feedback the function gives you (`[Counting] ... [Converting]...`), you can always turn the feedback off with the `quiet = TRUE` option (this applies to all functions).
+To get an overview of this information, you can also use the
+`get_meta_data()` function.
 
-If you need more message type compatibility, you are more than welcome to post an issue or open a pull request.
+``` r
+get_meta_data()
+#>     msg_type                                  msg_name                                    msg_group  doc_nr
+#>  1:        S                      System Event Message                         System Event Message     4.1
+#>  2:        R                           Stock Directory                       Stock Related Messages   4.2.1
+#>  3:        H                      Stock Trading Action                       Stock Related Messages   4.2.2
+#>  4:        Y                       Reg SHO Restriction                       Stock Related Messages   4.2.3
+#>  5:        L               Market Participant Position                       Stock Related Messages   4.2.4
+#>  6:        V                MWCB Decline Level Message                       Stock Related Messages 4.2.5.1
+#>  7:        W                       MWCB Status Message                       Stock Related Messages 4.2.5.2
+#>  8:        K                 IPO Quoting Period Update                       Stock Related Messages   4.2.6
+#>  9:        J                       LULD Auction Collar                       Stock Related Messages   4.2.7
+#> 10:        A                         Add Order Message                            Add Order Message   4.3.1
+#> 11:        F      Add Order - MPID Attribution Message                            Add Order Message   4.3.2
+#> 12:        E                    Order Executed Message                        Modify Order Messages   4.4.1
+#> 13:        C Order Executed Message With Price Message                        Modify Order Messages   4.4.2
+#> 14:        X                      Order Cancel Message                        Modify Order Messages   4.4.3
+#> 15:        D                      Order Delete Message                        Modify Order Messages   4.4.4
+#> 16:        U                     Order Replace Message                        Modify Order Messages   4.4.5
+#> 17:        P                 Trade Message (Non-Cross)                               Trade Messages   4.5.1
+#> 18:        Q                       Cross Trade Message                               Trade Messages   4.5.2
+#> 19:        B                      Broken Trade Message                               Trade Messages   4.5.3
+#> 20:        I                              NOII Message Net Order Imbalance Indicator (NOII) Message     4.6
+#> 21:        N                   Retail Interest Message    Retail Price Improvement Indicator (RPII)     4.7
+#>     msg_type                                  msg_name                                    msg_group  doc_nr
+```
+
+You can extract the different message-types by using the functions
+`get_orders()`, `get_modifications()`, and `get_trades()`, respectively.
+The doc-number refers to the section in the official documentation (see
+link below).
+
+If you are annoyed by the feedback the function gives you (`[Counting]
+... [Converting]...`), you can always turn the feedback off with the
+`quiet = TRUE` option (this applies to all functions of this package).
+
+If you need more message type compatibility, you are more than welcome
+to post an issue or open a pull request.
 
 ### Retrieve Orders
-```r
-orders  <- get_orders(file)
-#> [Counting]   21162665 messages found
-#> [Loading]    ................
-#> [Converting] to data.table
-#> [Formatting]
 
+``` r
+orders  <- get_orders(file)
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 4.40 secs
 orders
-#>           msg_type locate_code tracking_number    timestamp order_ref   buy shares stock    price mpid       date            datetime
-#>        1:        A        7584               0 2.520001e+13     36132  TRUE 500000  UAMY   0.0001      2017-01-30 2017-01-30 07:00:00
-#>        2:        A        3223               0 2.520001e+13     36133  TRUE 500000  GLOW   0.0001      2017-01-30 2017-01-30 07:00:00
-#>        3:        A        2937               0 2.520001e+13     36136 FALSE    200   FRP  18.6500      2017-01-30 2017-01-30 07:00:00
-#>        4:        A        5907               0 2.520001e+13     36137  TRUE   1500   PIP   3.1500      2017-01-30 2017-01-30 07:00:00
-#>        5:        A        5907               0 2.520001e+13     36138 FALSE   2000   PIP   3.2500      2017-01-30 2017-01-30 07:00:00
-#>       ---                                                                                                                            
-#> 21162661:        A        7021               0 6.838192e+13  78524860 FALSE   2500   SPY 227.6700      2017-01-30 2017-01-30 18:59:41
-#> 21162662:        A        7021               0 6.838204e+13  78524862  TRUE   2500   SPY 227.6200      2017-01-30 2017-01-30 18:59:42
-#> 21162663:        A        7021               0 6.838213e+13  78524863 FALSE   2500   SPY 227.7200      2017-01-30 2017-01-30 18:59:42
-#> 21162664:        A        7021               0 6.838849e+13  78524878 FALSE   2500   SPY 227.6900      2017-01-30 2017-01-30 18:59:48
-#> 21162665:        A        8220               0 6.839625e+13  78524903  TRUE    100   XIV  60.6200      2017-01-30 2017-01-30 18:59:56
+#>           msg_type locate_code tracking_number    timestamp order_ref   buy shares stock  price mpid       date
+#>        1:        A        8236               0 2.520000e+13         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
+#>        2:        A        2220               0 2.520000e+13     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
+#>        3:        A        8101               0 2.520000e+13         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
+#>        4:        A        8236               0 2.520000e+13        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
+#>        5:        A        2220               0 2.520000e+13     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
+#>       ---                                                                                                      
+#> 12255193:        A        4315               0 6.837479e+13  85855062 FALSE   1800   IWM 165.55 <NA> 2019-12-30
+#> 12255194:        A        6556               0 6.837479e+13  82661763 FALSE   1000   QQQ 212.28 <NA> 2019-12-30
+#> 12255195:        A        7279               0 6.837479e+13  89116736  TRUE    500  SMLL  52.67 <NA> 2019-12-30
+#> 12255196:        A        8494               0 6.837479e+13  89116740  TRUE    400  VTWO 132.75 <NA> 2019-12-30
+#> 12255197:        A        7451               0 6.837489e+13  89116748  TRUE    500   SPY 321.25 <NA> 2019-12-30
+#>                      datetime
+#>        1: 2019-12-30 07:00:00
+#>        2: 2019-12-30 07:00:00
+#>        3: 2019-12-30 07:00:00
+#>        4: 2019-12-30 07:00:00
+#>        5: 2019-12-30 07:00:00
+#>       ---                    
+#> 12255193: 2019-12-30 18:59:34
+#> 12255194: 2019-12-30 18:59:34
+#> 12255195: 2019-12-30 18:59:34
+#> 12255196: 2019-12-30 18:59:34
+#> 12255197: 2019-12-30 18:59:34
 ```
 
-If you want to load only a specified number of messages (this applies to all `get_*` functions), you can always specify a start and end message number.
+If you want to load only a specified number of messages (this applies to
+all `get_*` functions), you can always specify a start and end message
+number.
 
-For example, if you want to get only the first 10 orders, you can use the following code.
+For example, if you want to get only the first 10 orders, you can use
+the following code.
 
-```r
+``` r
 orders_small  <- get_orders(file, 1, 10)
-#> 10 messages found
+#> [Counting]   10 messages found
 #> [Loading]    .
 #> [Converting] to data.table
-#> [Formatting]
-
+#> [Done]       in 0.06 secs
 orders_small
-#>     msg_type locate_code tracking_number    timestamp order_ref   buy shares stock   price mpid       date            datetime
-#>  1:        A        7584               0 2.520001e+13     36132  TRUE 500000  UAMY  0.0001   NA 2017-01-30 2017-01-30 07:00:00
-#>  2:        A        3223               0 2.520001e+13     36133  TRUE 500000  GLOW  0.0001   NA 2017-01-30 2017-01-30 07:00:00
-#>  3:        A        2937               0 2.520001e+13     36136 FALSE    200   FRP 18.6500   NA 2017-01-30 2017-01-30 07:00:00
-#>  4:        A        5907               0 2.520001e+13     36137  TRUE   1500   PIP  3.1500   NA 2017-01-30 2017-01-30 07:00:00
-#>  5:        A        5907               0 2.520001e+13     36138 FALSE   2000   PIP  3.2500   NA 2017-01-30 2017-01-30 07:00:00
-#>  6:        A        5907               0 2.520001e+13     36139  TRUE   3000   PIP  3.1000   NA 2017-01-30 2017-01-30 07:00:00
-#>  7:        A        5398               0 2.520001e+13     36140  TRUE    200   NSR 33.0000   NA 2017-01-30 2017-01-30 07:00:00
-#>  8:        A        5907               0 2.520001e+13     36141 FALSE    500   PIP  3.2500   NA 2017-01-30 2017-01-30 07:00:00
-#>  9:        A        2061               0 2.520001e+13     36142 FALSE   1300  DSCI  7.0000   NA 2017-01-30 2017-01-30 07:00:00
-#> 10:        A        1582               0 2.520001e+13     36143  TRUE    500  CPPL 17.1500   NA 2017-01-30 2017-01-30 07:00:00
+#>     msg_type locate_code tracking_number timestamp order_ref   buy shares stock  price mpid       date
+#>  1:        A        8236               0  2.52e+13         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
+#>  2:        A        2220               0  2.52e+13     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
+#>  3:        A        8101               0  2.52e+13         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
+#>  4:        A        8236               0  2.52e+13        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
+#>  5:        A        2220               0  2.52e+13     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
+#>  6:        A        8101               0  2.52e+13        16 FALSE   1500   UCO  21.10 <NA> 2019-12-30
+#>  7:        A        8167               0  2.52e+13        20  TRUE   1300   UNG  17.07 <NA> 2019-12-30
+#>  8:        A        1987               0  2.52e+13     31997 FALSE    100  DGAZ 176.00 <NA> 2019-12-30
+#>  9:        A        8167               0  2.52e+13        24 FALSE   1300   UNG  17.13 <NA> 2019-12-30
+#> 10:        A        8236               0  2.52e+13        28  TRUE  11900   USO  12.95 <NA> 2019-12-30
+#>                datetime
+#>  1: 2019-12-30 07:00:00
+#>  2: 2019-12-30 07:00:00
+#>  3: 2019-12-30 07:00:00
+#>  4: 2019-12-30 07:00:00
+#>  5: 2019-12-30 07:00:00
+#>  6: 2019-12-30 07:00:00
+#>  7: 2019-12-30 07:00:00
+#>  8: 2019-12-30 07:00:00
+#>  9: 2019-12-30 07:00:00
+#> 10: 2019-12-30 07:00:00
 ```
 
 ### Retrieve Trades
-```r
-trades  <- get_trades(file)
-#> [Counting]   330023 messages found
-#> [Loading]    ................
-#> [Converting] to data.table
-#> [Formatting]
 
+``` r
+trades <- get_trades(file)
+#> [Counting]   134,385 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 0.86 secs
 trades
-#>         msg_type locate_code tracking_number    timestamp order_ref  buy shares stock price match_number cross_type       date            datetime
-#>      1:        P        6126               2 2.689416e+13         0 TRUE    100  PULM  3.59        16760         NA 2017-01-30 2017-01-30 07:28:14
-#>      2:        P        1622               2 2.821047e+13         0 TRUE    100  CRNT  3.63        16774         NA 2017-01-30 2017-01-30 07:50:10
-#>      3:        P        1622               2 2.829043e+13         0 TRUE    100  CRNT  3.63        16775         NA 2017-01-30 2017-01-30 07:51:30
-#>      4:        P        1622               2 2.829107e+13         0 TRUE    100  CRNT  3.63        16776         NA 2017-01-30 2017-01-30 07:51:31
-#>      5:        P        7443               2 2.881681e+13         0 TRUE    125   TPX 45.81        16814         NA 2017-01-30 2017-01-30 08:00:16
-#>     ---                                                                                                                                           
-#> 330019:        P        2056               2 6.732688e+13         0 TRUE    100  DRYS  3.21      1559011         NA 2017-01-30 2017-01-30 18:42:06
-#> 330020:        P        5296               2 6.733375e+13         0 TRUE    100  NICE 69.69      1559012         NA 2017-01-30 2017-01-30 18:42:13
-#> 330021:        P        5296               2 6.735846e+13         0 TRUE    100  NICE 69.63      1559013         NA 2017-01-30 2017-01-30 18:42:38
-#> 330022:        P        5632               2 6.752254e+13         0 TRUE    100   OPK  8.51      1559014         NA 2017-01-30 2017-01-30 18:45:22
-#> 330023:        P        2056               2 6.753387e+13         0 TRUE    100  DRYS  3.23      1559015         NA 2017-01-30 2017-01-30 18:45:33
+#>         msg_type locate_code tracking_number    timestamp order_ref  buy shares stock   price match_number cross_type
+#>      1:        P        8124               2 2.636645e+13         0 TRUE    100  UGAZ  76.050        17803       <NA>
+#>      2:        P        1987               2 2.899516e+13         0 TRUE    100  DGAZ 175.640        17814       <NA>
+#>      3:        P        1987               2 2.899516e+13         0 TRUE    100  DGAZ 175.610        17815       <NA>
+#>      4:        P        8268               2 2.900829e+13         0 TRUE   1000   UWT  14.821        17817       <NA>
+#>      5:        P        6098               2 2.919268e+13         0 TRUE     53  PEIX   0.702        17819       <NA>
+#>     ---                                                                                                              
+#> 134381:        P        6966               2 5.969714e+13         0 TRUE    100  SAVA   5.930       733868       <NA>
+#> 134382:        P        7080               2 6.103018e+13         0 TRUE     27  SDRL   2.840       733872       <NA>
+#> 134383:        P        7080               2 6.134018e+13         0 TRUE     47  SDRL   2.840       733873       <NA>
+#> 134384:        P        3328               4 6.278856e+13         0 TRUE    400  GHSI   0.250       733875       <NA>
+#> 134385:        P        3328               4 6.309003e+13         0 TRUE    300  GHSI   0.250       733878       <NA>
+#>               date            datetime
+#>      1: 2019-12-30 2019-12-30 07:19:26
+#>      2: 2019-12-30 2019-12-30 08:03:15
+#>      3: 2019-12-30 2019-12-30 08:03:15
+#>      4: 2019-12-30 2019-12-30 08:03:28
+#>      5: 2019-12-30 2019-12-30 08:06:32
+#>     ---                               
+#> 134381: 2019-12-30 2019-12-30 16:34:57
+#> 134382: 2019-12-30 2019-12-30 16:57:10
+#> 134383: 2019-12-30 2019-12-30 17:02:20
+#> 134384: 2019-12-30 2019-12-30 17:26:28
+#> 134385: 2019-12-30 2019-12-30 17:31:30
 ```
 
 ### Retrieve Order Modifications
-```r
-changes <- get_modifications(file)
-#> [Counting]   26013918 messages found
-#> [Loading]    ................
+
+``` r
+mods <- get_modifications(file)
+#> [Counting]   14,492,935 messages found
+#> [Loading]    .........
 #> [Converting] to data.table
-#> [Formatting]
-
-changes
-#>           msg_type locate_code tracking_number    timestamp order_ref shares match_number printable price new_order_ref       date            datetime
-#>        1:        D        7392               0 2.520556e+13     36168     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 07:00:05
-#>        2:        D        3030               0 2.520647e+13     36296     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 07:00:06
-#>        3:        D        7392               0 2.520653e+13     36157     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 07:00:06
-#>        4:        D        7612               0 2.520664e+13     36361     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 07:00:06
-#>        5:        D        7612               0 2.520664e+13     36362     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 07:00:06
-#>       ---                                                                                                                                             
-#> 26013914:        D        7021               0 6.840003e+13  78524877     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
-#> 26013915:        D        5907               0 6.840003e+13  78451076     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
-#> 26013916:        D        5907               0 6.840003e+13  78454702     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
-#> 26013917:        D        2955               0 6.840003e+13  69844908     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
-#> 26013918:        D        4082               0 6.840003e+13  78443320     NA           NA        NA    NA            NA 2017-01-30 2017-01-30 19:00:00
+#> [Done]       in 2.97 secs
+mods
+#>           msg_type locate_code tracking_number    timestamp order_ref shares match_number printable price new_order_ref
+#>        1:        D         393               0 2.520001e+13     32009     NA           NA        NA    NA            NA
+#>        2:        D        8124               0 2.520001e+13        96     NA           NA        NA    NA            NA
+#>        3:        E        8124               2 2.520001e+13        56    100        17795        NA    NA            NA
+#>        4:        D         393               0 2.520001e+13     32033     NA           NA        NA    NA            NA
+#>        5:        D         687               0 2.520002e+13     32025     NA           NA        NA    NA            NA
+#>       ---                                                                                                              
+#> 14492931:        D        2952               0 6.840003e+13  66995214     NA           NA        NA    NA            NA
+#> 14492932:        D        5125               0 6.840003e+13   4393583     NA           NA        NA    NA            NA
+#> 14492933:        D        5125               0 6.840003e+13  72136531     NA           NA        NA    NA            NA
+#> 14492934:        D        4155               0 6.840003e+13  47273658     NA           NA        NA    NA            NA
+#> 14492935:        D        2952               0 6.840003e+13  63304398     NA           NA        NA    NA            NA
+#>                 date            datetime
+#>        1: 2019-12-30 2019-12-30 07:00:00
+#>        2: 2019-12-30 2019-12-30 07:00:00
+#>        3: 2019-12-30 2019-12-30 07:00:00
+#>        4: 2019-12-30 2019-12-30 07:00:00
+#>        5: 2019-12-30 2019-12-30 07:00:00
+#>       ---                               
+#> 14492931: 2019-12-30 2019-12-30 19:00:00
+#> 14492932: 2019-12-30 2019-12-30 19:00:00
+#> 14492933: 2019-12-30 2019-12-30 19:00:00
+#> 14492934: 2019-12-30 2019-12-30 19:00:00
+#> 14492935: 2019-12-30 2019-12-30 19:00:00
 ```
 
-To speed up the `get_*` functions, we can use the message-count information from earlier. For example the following code yields the same results as above, but saves time.
+To speed up the `get_*` functions, we can use the message-count
+information from earlier. For example the following code yields the same
+results as above, but saves time.
 
-```r
-orders <- get_orders(file, 1, count_orders(msg_count))
-trades <- get_trades(file, 1, count_trades(msg_count))
+``` r
+
+orders <- get_orders(file, msg_count)
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 3.60 secs
+trades <- get_trades(file, msg_count)
+#> [Counting]   134,385 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 0.53 secs
+mods   <- get_modifications(file, msg_count)
+#> [Counting]   14,492,935 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 2.47 secs
+# # alternatively, provide the start and end number of messages:
+# orders <- get_orders(file, 1, count_orders(msg_count))
+# trades <- get_trades(file, 1, count_trades(msg_count))
+# mods   <- get_modifications(file, 1, count_modifications(msg_count))
 ```
-
 
 ### Create a Plot with Trades and Orders of the largest ETFs
-```r
+
+As a last step, I wanted to show a quick visualisation of the
+
+``` r
 library(ggplot2)
 
 # load the data
 orders <- get_orders(file, 1, count_orders(msg_count))
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 3.56 secs
 trades <- get_trades(file, 1, count_trades(msg_count))
+#> [Counting]   134,385 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 0.53 secs
 
 # data munging
 tickers <- c("SPY", "IWO", "IWM", "VXX")
@@ -197,6 +349,30 @@ ranges <- dt_trades[, .(min_price = min(price), max_price = max(price)), by = st
 dt_orders <- dt_orders[ranges, on = "stock"][price >= 0.99 * min_price & price <= 1.01 * max_price]
 # replace the buy-factor with something more useful
 dt_orders[, buy := ifelse(buy, "Bid", "Ask")][]
+#>         msg_type locate_code tracking_number    timestamp order_ref buy shares stock  price mpid       date
+#>      1:        A        7451               0 2.520444e+13       280 Bid    500   SPY 322.66 <NA> 2019-12-30
+#>      2:        A        7451               0 2.520444e+13       284 Ask    500   SPY 322.78 <NA> 2019-12-30
+#>      3:        A        7451               0 2.520464e+13       288 Bid    500   SPY 322.63 <NA> 2019-12-30
+#>      4:        A        7451               0 2.520464e+13       292 Ask    500   SPY 322.81 <NA> 2019-12-30
+#>      5:        A        7451               0 2.520485e+13       296 Bid    500   SPY 322.61 <NA> 2019-12-30
+#>     ---                                                                                                    
+#> 669530:        A        4315               0 6.828041e+13  85854970 Bid   1800   IWM 165.51 <NA> 2019-12-30
+#> 669531:        A        4315               0 6.830216e+13  85854982 Ask   1800   IWM 165.56 <NA> 2019-12-30
+#> 669532:        A        4315               0 6.833540e+13  85855010 Bid   1800   IWM 165.51 <NA> 2019-12-30
+#> 669533:        A        4315               0 6.835454e+13  85855050 Ask   1800   IWM 165.56 <NA> 2019-12-30
+#> 669534:        A        4315               0 6.837479e+13  85855062 Ask   1800   IWM 165.55 <NA> 2019-12-30
+#>                    datetime min_price max_price
+#>      1: 2019-12-30 07:00:04    320.65    323.14
+#>      2: 2019-12-30 07:00:04    320.65    323.14
+#>      3: 2019-12-30 07:00:04    320.65    323.14
+#>      4: 2019-12-30 07:00:04    320.65    323.14
+#>      5: 2019-12-30 07:00:04    320.65    323.14
+#>     ---                                        
+#> 669530: 2019-12-30 18:58:00    164.71    166.09
+#> 669531: 2019-12-30 18:58:22    164.71    166.09
+#> 669532: 2019-12-30 18:58:55    164.71    166.09
+#> 669533: 2019-12-30 18:59:14    164.71    166.09
+#> 669534: 2019-12-30 18:59:34    164.71    166.09
 dt_orders[, stock := factor(stock, levels = tickers)]
 
 # data visualization
@@ -212,30 +388,91 @@ ggplot() +
   # some Aesthetics
   theme_light() +
   labs(title = "Orders and Trades of the largest ETFs",
-       subtitle = "Date: 2017-01-30 | Exchange: BX", 
-       caption = "Source: NASDAQ",
+       subtitle = "Date: 2019-12-30 | Exchange: BX", 
+       caption = "Source: NASDAQ ITCH",
        x = "Time", y = "Price", 
        color = "Side") +
   scale_y_continuous(labels = scales::dollar) +
   scale_color_brewer(palette = "Set1")
 ```
 
-![](ETF_plot.png)
+<img src="man/figures/README-ETF_plot-1.png" width="100%" />
 
 ## Some considerations
 
-All functions that take a file-name work for both `.gz`-files (i.e., `YYYYMMDD.XXX_ITCH_50.gz`) or or plain-files (`YYYYMMDD.XXX_ITCH_50`). The compressed files will be uncompressed into a temp-file and deleted after the function finishes, if you want to use multiple commands on one file, it might be faster to use `R.utils::gunzip(..., remove = FALSE)` in R or `gunzip -k YYYYMMDD.XXX_ITCH_50.gz` in the terminal and call the functions on the "plain"-file.
+All functions that take a file-name work for both `.gz`-files (i.e.,
+`YYYYMMDD.XXX_ITCH_50.gz`) or or plain-files (`YYYYMMDD.XXX_ITCH_50`).
+The compressed files will be uncompressed into a temp-file and deleted
+after the function finishes, if you want to use multiple commands on one
+file, it might be faster to use `R.utils::gunzip(..., remove = FALSE)`
+in R or `gunzip -k YYYYMMDD.XXX_ITCH_50.gz` in the terminal and call the
+functions on the plain, uncompressed file.
 
-Parsing the file specified above (`20170130.BX_ITCH_50.gz`, 714MB gzipped and 1.6GB unzipped) has a peak RAM-consumption of around 7GB on my machine.
+Parsing another example file (`20170130.BX_ITCH_50.gz`, 714MB gzipped
+and 1.6GB unzipped) has a peak RAM-consumption of around 7GB on my
+machine.
 
-If the file is too large for your RAM, you can also process everything in batches by providing a start and end message count. I.e., to only parse the first 1,000 orders, you can use `get_orders(file, 1, 1000)`.
+If the file is too large for your RAM, you can also process everything
+in batches by providing a start and end message count. I.e., to only
+parse the first 1,000 orders, you can use `get_orders(file, 1, 1000)`.
 
-To speed the parsing up, you can also specify the number of messages. I.e., count all messages once using `count_messages`, and then provide the number of trades/orders/order-modifications to `end_msg_count` in each subsequent function call. This saves the parser one trip over the file.
+To speed the parsing up, you can also specify the number of messages.
+I.e., count all messages once using `count_messages()`, and then provide
+the number of trades/orders/order-modifications to `end_msg_count` in
+each subsequent function call. This saves the parser one trip over the
+file.
+
+You can also just provide the message counts directly, e.g.:
+
+``` r
+msg_count <- count_messages(file)
+#> [Counting]   29,156,757 messages found
+#> [Converting] to data.table
+#> [Done]       in 0.35 secs
+orders <- get_orders(file, msg_count)
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 3.54 secs
+```
+
+versus providing the actual start and end position of messages:
+
+``` r
+msg_count <- count_messages(file)
+#> [Counting]   29,156,757 messages found
+#> [Converting] to data.table
+#> [Done]       in 0.35 secs
+orders <- get_orders(file, 1, count_orders(msg_count))
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .........
+#> [Converting] to data.table
+#> [Done]       in 3.53 secs
+```
 
 ## Additional Sources aka. Data
 
-While this package does not contain any real financial data using the ITCH format, NASDAQ provides some sample datasets on its FTP-server, which you can find here: [ftp://emi.nasdaq.com/](ftp://emi.nasdaq.com/)
+While this package does not contain any real financial data using the
+ITCH format, NASDAQ provides some sample datasets on its FTP-server,
+which you can find here: <ftp://emi.nasdaq.com/>
 
-If you want to find out more about the protocol, have a look at the official protocol specification, which you can find here: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf
+If you want to find out more about the protocol, have a look at the
+official protocol specification, which you can find here:
+<https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf>
 
-If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality for additional message types, please feel free to create an issue or a pull request. 
+If you find this package useful or have any other kind of feedback, I’d
+be happy if you let me know. Otherwise, if you need more functionality
+for additional message types, please feel free to create an issue or a
+pull request.
+
+## Open Issues
+
+To move the package towards CRAN, I want to include a smaller data file
+containing fake or simulated data, this needs to be converted to the
+ITCH format. This would allow the example code to run, but also to
+properly use unit tests in the package.
+
+Currently the `C++` code parses the data into data.frame, which is then
+converted into a data.table. If possible, the data.table should be
+directly populated. But I haven’t found the time to look into a Rcpp
+data.table API.
