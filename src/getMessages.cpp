@@ -33,8 +33,8 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   }
   
   // if no max num given, count valid messages!
+  if (!quiet) Rcpp::Rcout << "[Counting]   ";
   if (endMsgCount == 0ULL) {
-    if (!quiet) Rcpp::Rcout << "[Counting]   ";
     std::vector<unsigned long long> count = countMessages(filename, bufferSize);
     endMsgCount = msg.countValidMessages(count);
     nMessages = endMsgCount - startMsgCount;
@@ -54,9 +54,7 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   loadToMessages(filename, msg, startMsgCount, endMsgCount, bufferSize, quiet);
 
   // converting the messages to a data.frame
-  if (!quiet) Rcpp::Rcout << "\n[Converting] to data.table\n";
-  Rcpp::DataFrame retDF = msg.getDF();
-  return retDF;
+  return msg.getDF();
 }
 
 

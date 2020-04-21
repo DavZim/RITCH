@@ -51,7 +51,7 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = 0,
                        max(0, end_msg_count - 1), buffer_size, quiet)
 
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
-  if (!quiet) cat("[Formatting]\n")
+  if (!quiet) cat("\n[Converting] to data.table\n")
 
   setDT(df)
   
