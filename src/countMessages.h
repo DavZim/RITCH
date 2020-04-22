@@ -11,9 +11,9 @@
  * countMessageByType is an internal function that does the actual counting
  * #######################################################################################
  */ 
-std::vector<unsigned long long> countMessages(std::string filename, 
-                                              unsigned long long bufferSize = 1e8);
+std::vector<int64_t> countMessages(std::string filename, 
+                                              int64_t bufferSize = 1e8);
 
-void countMessageByType(std::vector<unsigned long long>& count, unsigned char msg);
+void countMessageByType(std::vector<int64_t>& count, unsigned char msg);
 
 #endif // COUNTMESSAGES_H

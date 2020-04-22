@@ -17,16 +17,16 @@
  */
 Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
                                     std::string filename, 
-                                    unsigned long long startMsgCount,
-                                    unsigned long long endMsgCount,
-                                    unsigned long long bufferSize, 
+                                    int64_t startMsgCount,
+                                    int64_t endMsgCount,
+                                    int64_t bufferSize, 
                                     bool quiet) {
 
-  unsigned long long nMessages;
+  int64_t nMessages;
 
   // check that the order is correct
   if (startMsgCount > endMsgCount) {
-    unsigned long long t;
+    int64_t t;
     t = startMsgCount;
     startMsgCount = endMsgCount;
     endMsgCount = t;
@@ -35,7 +35,7 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   // if no max num given, count valid messages!
   if (!quiet) Rcpp::Rcout << "[Counting]   ";
   if (endMsgCount == 0ULL) {
-    std::vector<unsigned long long> count = countMessages(filename, bufferSize);
+    std::vector<int64_t> count = countMessages(filename, bufferSize);
     endMsgCount = msg.countValidMessages(count);
     nMessages = endMsgCount - startMsgCount;
   } else {
@@ -75,9 +75,9 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
 //
 // [[Rcpp::export]]
 Rcpp::DataFrame getOrders_impl(std::string filename,
-                               unsigned long long startMsgCount,
-                               unsigned long long endMsgCount,
-                               unsigned long long bufferSize,
+                               int64_t startMsgCount,
+                               int64_t endMsgCount,
+                               int64_t bufferSize,
                                bool quiet) {
   Orders orders;
   Rcpp::DataFrame df = getMessagesTemplate(orders, filename, startMsgCount, endMsgCount, bufferSize, quiet);
@@ -102,9 +102,9 @@ Rcpp::DataFrame getOrders_impl(std::string filename,
 //
 // [[Rcpp::export]]
 Rcpp::DataFrame getTrades_impl(std::string filename,
-                               unsigned long long startMsgCount,
-                               unsigned long long endMsgCount,
-                               unsigned long long bufferSize,
+                               int64_t startMsgCount,
+                               int64_t endMsgCount,
+                               int64_t bufferSize,
                                bool quiet) {
   
   Trades trades;
@@ -128,9 +128,9 @@ Rcpp::DataFrame getTrades_impl(std::string filename,
 // @return     The modifications in a data.frame
 // [[Rcpp::export]]
 Rcpp::DataFrame getModifications_impl(std::string filename,
-                                      unsigned long long startMsgCount,
-                                      unsigned long long endMsgCount,
-                                      unsigned long long bufferSize,
+                                      int64_t startMsgCount,
+                                      int64_t endMsgCount,
+                                      int64_t bufferSize,
                                       bool quiet) {
   
   Modifications mods;

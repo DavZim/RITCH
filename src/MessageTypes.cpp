@@ -23,24 +23,24 @@ unsigned int get4bytes(unsigned char* buf) {
 }
 
 /**
- * @brief      Converts 6 bytes from a buffer in big endian to an unsigned long long
+ * @brief      Converts 6 bytes from a buffer in big endian to an int64_t
  * 
  * @param      buf   The buffer as a pointer to an array of unsigned chars
  *
- * @return     The converted unsigned long long
+ * @return     The converted int64_t
  */
-unsigned long long int get6bytes(unsigned char* buf) {
+int64_t get6bytes(unsigned char* buf) {
   return (__builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0])) & 0xFFFFFFFFFFFF0000) >> 16;
 }
 
 /**
- * @brief      Converts 8 bytes from a buffer in big endian to an unsigned long long
+ * @brief      Converts 8 bytes from a buffer in big endian to an int64_t
  * 
  * @param      buf   The buffer as a pointer to an array of unsigned chars
  *
- * @return     The converted unsigned long long
+ * @return     The converted int64_t
  */
-unsigned long long int get8bytes(unsigned char* buf) {
+int64_t get8bytes(unsigned char* buf) {
   return __builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0]));
 }
 
@@ -51,8 +51,8 @@ unsigned long long int get8bytes(unsigned char* buf) {
  *
  * @return     The Number of valid messages.
  */
-unsigned long long MessageType::countValidMessages(std::vector<unsigned long long> count) { 
-  unsigned long long total = 0;
+int64_t MessageType::countValidMessages(std::vector<int64_t> count) { 
+  int64_t total = 0;
   for (int typePos : typePositions) {
       total += count[typePos];
   }
@@ -62,7 +62,7 @@ unsigned long long MessageType::countValidMessages(std::vector<unsigned long lon
 // virtual functions of the class MessageType, will be overloaded by the other classes
 bool MessageType::loadMessages(unsigned char* buf) { return bool(); }
 Rcpp::DataFrame MessageType::getDF() { return Rcpp::DataFrame(); }
-void MessageType::reserve(unsigned long long size) {}
+void MessageType::reserve(int64_t size) {}
 
 
 /**
@@ -73,7 +73,7 @@ void MessageType::reserve(unsigned long long size) {}
  * @param[in]  endMsgCount    The end message count, i.e., what is the last message to be parsed,
  *                             defaults to +Inf (the last message)
  */
-void MessageType::setBoundaries(unsigned long long startMsgCount, unsigned long long endMsgCount) {
+void MessageType::setBoundaries(int64_t startMsgCount, int64_t endMsgCount) {
   this->startMsgCount = startMsgCount;
   this->endMsgCount   = endMsgCount;
 }
@@ -173,7 +173,7 @@ Rcpp::DataFrame Orders::getDF() {
  *
  * @param[in]  size  The size which should be reserved
  */
-void Orders::reserve(unsigned long long size) {
+void Orders::reserve(int64_t size) {
   type.reserve(size);
   locateCode.reserve(size);
   trackingNumber.reserve(size);
@@ -313,7 +313,7 @@ Rcpp::DataFrame Trades::getDF() {
  *
  * @param[in]  size  The size which should be reserved
  */
-void Trades::reserve(unsigned long long size) {
+void Trades::reserve(int64_t size) {
   type.reserve(size);
   locateCode.reserve(size);
   trackingNumber.reserve(size);
@@ -455,7 +455,7 @@ Rcpp::DataFrame Modifications::getDF() {
  *
  * @param[in]  size  The size which should be reserved
  */
-void Modifications::reserve(unsigned long long size) {
+void Modifications::reserve(int64_t size) {
   type.reserve(size);
   locateCode.reserve(size);
   trackingNumber.reserve(size);

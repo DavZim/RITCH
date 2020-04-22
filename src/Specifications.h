@@ -15,27 +15,27 @@ namespace ITCH {
                                             'B','I','N'};
    // the size in bytes of each message
   namespace SIZE {
-    const unsigned long long S = 12;
-    const unsigned long long R = 39;
-    const unsigned long long H = 25;
-    const unsigned long long Y = 20;
-    const unsigned long long L = 26;
-    const unsigned long long V = 35;
-    const unsigned long long W = 12;
-    const unsigned long long K = 28;
-    const unsigned long long J = 35;
-    const unsigned long long A = 36;
-    const unsigned long long F = 40;
-    const unsigned long long E = 31;
-    const unsigned long long C = 36;
-    const unsigned long long X = 23;
-    const unsigned long long D = 19;
-    const unsigned long long U = 35;
-    const unsigned long long P = 44;
-    const unsigned long long Q = 40;
-    const unsigned long long B = 19;
-    const unsigned long long I = 50;
-    const unsigned long long N = 20;
+    const int64_t S = 12;
+    const int64_t R = 39;
+    const int64_t H = 25;
+    const int64_t Y = 20;
+    const int64_t L = 26;
+    const int64_t V = 35;
+    const int64_t W = 12;
+    const int64_t K = 28;
+    const int64_t J = 35;
+    const int64_t A = 36;
+    const int64_t F = 40;
+    const int64_t E = 31;
+    const int64_t C = 36;
+    const int64_t X = 23;
+    const int64_t D = 19;
+    const int64_t U = 35;
+    const int64_t P = 44;
+    const int64_t Q = 40;
+    const int64_t B = 19;
+    const int64_t I = 50;
+    const int64_t N = 20;
   }
 
   // the position (for example in the count) of each message

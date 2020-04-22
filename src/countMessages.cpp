@@ -8,8 +8,8 @@
  *
  * @return     A vector containing the number of messages per type
  */
-std::vector<unsigned long long> countMessages(std::string filename, 
-                                              unsigned long long bufferSize) {
+std::vector<int64_t> countMessages(std::string filename, 
+                                              int64_t bufferSize) {
   
   // Open the file
   FILE* infile;
@@ -18,14 +18,14 @@ std::vector<unsigned long long> countMessages(std::string filename,
     Rcpp::stop("File Error!\n");
   }
   
-  std::vector<unsigned long long> count(ITCH::TYPES.size(), 0);
+  std::vector<int64_t> count(ITCH::TYPES.size(), 0);
   
   unsigned char* bufferPtr;
-  unsigned long long bufferCharSize = sizeof(char) * bufferSize;
+  int64_t bufferCharSize = sizeof(char) * bufferSize;
   bufferPtr = (unsigned char*) malloc(bufferCharSize);
   
-  unsigned long long thisBufferSize = 0;
-  unsigned long long curFilePtr;
+  int64_t thisBufferSize = 0;
+  int64_t curFilePtr;
   
   // fill the buffer
   while ((thisBufferSize = fread(bufferPtr, 1, bufferCharSize, infile)) > 0) {
@@ -35,8 +35,8 @@ std::vector<unsigned long long> countMessages(std::string filename,
     curFilePtr = ftell(infile);
     
     // use the current buffer to read in the messages
-    unsigned long long inBufferIdx = 2;
-    unsigned long long thisMsgLength;
+    int64_t inBufferIdx = 2;
+    int64_t thisMsgLength;
     
     // loop through the buffer by the index inBufferIdx
     while (1) {
@@ -82,73 +82,73 @@ std::vector<unsigned long long> countMessages(std::string filename,
  * @param      count  The vector which holds the counts for each message type
  * @param[in]  msg    The message-type given by a character
  */
-void countMessageByType(std::vector<unsigned long long>& count, unsigned char msg) {
+void countMessageByType(std::vector<int64_t>& count, unsigned char msg) {
   switch(msg) {
-  case 'S':
-    count[ITCH::POS::S]++;
+    case 'S':
+      count[ITCH::POS::S]++;
+      break;
+    case 'R':
+      count[ITCH::POS::R]++;
+      break;
+    case 'H':
+      count[ITCH::POS::H]++;
+      break;
+    case 'Y':
+      count[ITCH::POS::Y]++;
+      break;
+    case 'L':
+      count[ITCH::POS::L]++;
+      break;
+    case 'V':
+      count[ITCH::POS::V]++;
+      break;
+    case 'W':
+      count[ITCH::POS::W]++;
+      break;
+    case 'K':
+      count[ITCH::POS::K]++;
+      break;
+    case 'J':
+      count[ITCH::POS::J]++;
+      break;
+    case 'A':
+      count[ITCH::POS::A]++;
+      break;
+    case 'F':
+      count[ITCH::POS::F]++;
+      break;
+    case 'E':
+      count[ITCH::POS::E]++;
+      break;
+    case 'C':
+      count[ITCH::POS::C]++;
+      break;
+    case 'X':
+      count[ITCH::POS::X]++;
+      break;
+    case 'D':
+      count[ITCH::POS::D]++;
+      break;
+    case 'U':
+      count[ITCH::POS::U]++;
+      break;
+    case 'P':
+      count[ITCH::POS::P]++;
+      break;
+    case 'Q':
+      count[ITCH::POS::Q]++;
+      break;
+    case 'B':
+      count[ITCH::POS::B]++;
+      break;
+    case 'I':
+      count[ITCH::POS::I]++;
+      break;
+    case 'N':
+      count[ITCH::POS::N]++;
+      break;
+    default:
+      Rcpp::Rcout << "Unkown Case!\n";
     break;
-  case 'R':
-    count[ITCH::POS::R]++;
-    break;
-  case 'H':
-    count[ITCH::POS::H]++;
-    break;
-  case 'Y':
-    count[ITCH::POS::Y]++;
-    break;
-  case 'L':
-    count[ITCH::POS::L]++;
-    break;
-  case 'V':
-    count[ITCH::POS::V]++;
-    break;
-  case 'W':
-    count[ITCH::POS::W]++;
-    break;
-  case 'K':
-    count[ITCH::POS::K]++;
-    break;
-  case 'J':
-    count[ITCH::POS::J]++;
-    break;
-  case 'A':
-    count[ITCH::POS::A]++;
-    break;
-  case 'F':
-    count[ITCH::POS::F]++;
-    break;
-  case 'E':
-    count[ITCH::POS::E]++;
-    break;
-  case 'C':
-    count[ITCH::POS::C]++;
-    break;
-  case 'X':
-    count[ITCH::POS::X]++;
-    break;
-  case 'D':
-    count[ITCH::POS::D]++;
-    break;
-  case 'U':
-    count[ITCH::POS::U]++;
-    break;
-  case 'P':
-    count[ITCH::POS::P]++;
-    break;
-  case 'Q':
-    count[ITCH::POS::Q]++;
-    break;
-  case 'B':
-    count[ITCH::POS::B]++;
-    break;
-  case 'I':
-    count[ITCH::POS::I]++;
-    break;
-  case 'N':
-    count[ITCH::POS::N]++;
-    break;
-  default:
-    Rcpp::Rcout << "Unkown Case!\n";
-  break;
   }
 }

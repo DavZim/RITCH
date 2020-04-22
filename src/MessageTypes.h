@@ -23,8 +23,8 @@
 // __builtin_bswap requires gcc!
 unsigned int get2bytes(unsigned char* buf);
 unsigned int get4bytes(unsigned char* buf);
-unsigned long long get6bytes(unsigned char* buf);
-unsigned long long get8bytes(unsigned char* buf);
+int64_t get6bytes(unsigned char* buf);
+int64_t get8bytes(unsigned char* buf);
 
 // #################################################################
 
@@ -33,18 +33,18 @@ public:
   MessageType() = default; // To still allow default construction as before
 
   // Functions
-  unsigned long long countValidMessages(std::vector<unsigned long long> count);
-  void setBoundaries(unsigned long long startMsgCount, unsigned long long endMsgCount);
+  int64_t countValidMessages(std::vector<int64_t> count);
+  void setBoundaries(int64_t startMsgCount, int64_t endMsgCount);
   
   // Virtual Functions
   virtual bool loadMessages(unsigned char* buf);
   virtual Rcpp::DataFrame getDF();
-  virtual void reserve(unsigned long long size);
+  virtual void reserve(int64_t size);
 
   // Members
-  unsigned long long messageCount  = 0,
+  int64_t messageCount  = 0,
                      startMsgCount = 0, 
-                     endMsgCount   = std::numeric_limits<unsigned long long>::max();
+                     endMsgCount   = std::numeric_limits<int64_t>::max();
   const std::vector<unsigned char> validTypes;
   const std::vector<int> typePositions;
 
@@ -62,17 +62,17 @@ public:
   Orders() : MessageType({'A', 'F'}, {ITCH::POS::A, ITCH::POS::F}) {}
   // Functions
   bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
   std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
+  std::vector<int64_t> locateCode;
+  std::vector<int64_t> trackingNumber;
+  std::vector<int64_t> timestamp;
+  std::vector<int64_t> orderRef;
   std::vector<bool>               buy;
-  std::vector<unsigned long long> shares;
+  std::vector<int64_t> shares;
   std::vector<std::string>        stock;
   std::vector<double>             price;
   std::vector<std::string>        mpid;
@@ -86,20 +86,20 @@ public:
   Trades() : MessageType({'P', 'Q', 'B'}, {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B}) {}
   // Functions
   bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
   std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
+  std::vector<int64_t> locateCode;
+  std::vector<int64_t> trackingNumber;
+  std::vector<int64_t> timestamp;
+  std::vector<int64_t> orderRef;
   std::vector<bool>               buy;
-  std::vector<unsigned long long> shares;
+  std::vector<int64_t> shares;
   std::vector<std::string>        stock;
   std::vector<double>             price;
-  std::vector<unsigned long long> matchNumber;
+  std::vector<int64_t> matchNumber;
   std::vector<char>               crossType;
 };
 
@@ -113,20 +113,20 @@ public:
     {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U}) {}
   // Functions
   bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
   std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
-  std::vector<unsigned long long> shares;
-  std::vector<unsigned long long> matchNumber;
+  std::vector<int64_t> locateCode;
+  std::vector<int64_t> trackingNumber;
+  std::vector<int64_t> timestamp;
+  std::vector<int64_t> orderRef;
+  std::vector<int64_t> shares;
+  std::vector<int64_t> matchNumber;
   std::vector<bool>               printable;
   std::vector<double>             price;
-  std::vector<unsigned long long> newOrderRef;
+  std::vector<int64_t> newOrderRef;
 };
 
 #endif //MESSAGES_H

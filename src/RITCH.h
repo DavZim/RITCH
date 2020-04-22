@@ -21,19 +21,19 @@
  */
 
 /// Returns the message lengths for a given character
-unsigned long long getMessageLength(unsigned char msgType);
+int64_t getMessageLength(unsigned char msgType);
 int getMessagePosition(unsigned char msgType);
 
 // loads a plain-text file into the messagetype
 void loadToMessages(std::string filename, 
                     MessageType& msg,
-                    unsigned long long startMsgCount = 0,
-                    unsigned long long endMsgCount = std::numeric_limits<unsigned long long>::max(),
-                    unsigned long long bufferSize = 1e8,
+                    int64_t startMsgCount = 0,
+                    int64_t endMsgCount = std::numeric_limits<int64_t>::max(),
+                    int64_t bufferSize = 1e8,
                     bool quiet = false);
 
 // formats a number with thousands seperators
-std::string formatThousands(unsigned long long num, 
+std::string formatThousands(int64_t num, 
                             const std::string sep = ",", 
                             std::string s = "");
 #endif //RITCH_H
