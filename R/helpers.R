@@ -20,6 +20,6 @@ get_date_from_filename <- function(file) {
     date_ <- gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", date_)
   }
   
-  date_ <- fasttime::fastPOSIXct(date_, tz = "GMT")
+  date_ <- as.POSIXct(date_, tz = "GMT")
   return(date_)
 }
