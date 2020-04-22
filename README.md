@@ -379,10 +379,10 @@ dt_orders[, stock := factor(stock, levels = tickers)]
 ggplot() +
   # add the orders to the plot
   geom_point(data = dt_orders, 
-             aes(x = datetime, y = price, color = buy), size = 0.5, alpha = 0.2) +
+             aes(x = as.POSIXct(datetime), y = price, color = buy), size = 0.5, alpha = 0.2) +
   # add the trades as a black line to the plot
   geom_step(data = dt_trades, 
-            aes(x = datetime, y = price)) +
+            aes(x = as.POSIXct(datetime), y = price)) +
   # add a facet for each ETF
   facet_wrap(~stock, scales = "free_y") +
   # some Aesthetics
