@@ -31,7 +31,7 @@
 #'   msg_count <- count_messages(raw_file)
 #'   get_modifications(raw_file, msg_count)
 #' }
-get_modifications <- function(file, start_msg_count = 0, end_msg_count = 0, 
+get_modifications <- function(file, start_msg_count = 0, end_msg_count = -1, 
                               buffer_size = 1e8, quiet = FALSE) {
   t0 <- Sys.time()
   if (!file.exists(file)) stop("File not found!")
@@ -61,7 +61,7 @@ get_modifications <- function(file, start_msg_count = 0, end_msg_count = 0,
   # -1 because we want it 1 indexed (cpp is 0-indexed) 
   # and max(0, xxx) b.c. the variable is unsigned!
   df <- getModifications_impl(file, max(0, start_msg_count - 1),
-                              max(0, end_msg_count - 1), buffer_size, quiet)
+                              max(-1, end_msg_count - 1), buffer_size, quiet)
 
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
   if (!quiet) cat("\n[Converting] to data.table\n")

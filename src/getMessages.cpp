@@ -25,16 +25,15 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   int64_t nMessages;
 
   // check that the order is correct
-  if (startMsgCount > endMsgCount) {
-    int64_t t;
-    t = startMsgCount;
+  if (startMsgCount > endMsgCount && endMsgCount >= 0) {
+    int64_t t = startMsgCount;
     startMsgCount = endMsgCount;
     endMsgCount = t;
   }
   
   // if no max num given, count valid messages!
   if (!quiet) Rcpp::Rcout << "[Counting]   ";
-  if (endMsgCount == 0ULL) {
+  if (endMsgCount < 0) {
     std::vector<int64_t> count = countMessages(filename, bufferSize);
     endMsgCount = msg.countValidMessages(count);
     nMessages = endMsgCount - startMsgCount;
