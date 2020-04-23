@@ -193,7 +193,7 @@ orders <- get_orders(file, 1, count_orders(msg_count))
 
 ## Additional Sources aka. Data
 
-While this package does not contain any real financial data using the ITCH format, NASDAQ provides some sample datasets on its FTP-server, which you can find here: [ftp://emi.nasdaq.com/](ftp://emi.nasdaq.com/)
+While this package does not contain any real financial data using the ITCH format, NASDAQ provides some sample datasets on its FTP-server, which you can find here: [ftp://emi.nasdaq.com/ITCH](ftp://emi.nasdaq.com/ITCH)
 
 If you want to find out more about the protocol, have a look at the official protocol specification, which you can find here: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf
 
