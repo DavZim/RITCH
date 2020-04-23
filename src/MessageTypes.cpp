@@ -44,6 +44,18 @@ int64_t get8bytes(unsigned char* buf) {
   return __builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0]));
 }
 
+
+/**
+ * @brief copies a 64bit value (or multiple) into a numeric vector
+ * @param vec the target vector
+ * @param idx the starting position
+ * @param val the value to copy
+ */
+void copy64bit(Rcpp::NumericVector vec, int64_t idx, int64_t val) {
+  const int64_t tmp = val;
+  std::memcpy(&(vec[idx]), &(tmp), sizeof(double));
+}
+
 /**
  * @brief      Counts the number of valid messages for this messagetype, given a count-vector
  *
@@ -112,14 +124,15 @@ bool Orders::loadMessages(unsigned char* buf) {
   // no need to iterate over all the other messages.
   if (messageCount > endMsgCount) return false;
   
+  // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
-  type.push_back(           buf[0] );
-  locateCode.push_back(     get2bytes(&buf[1]) );
-  trackingNumber.push_back( get2bytes(&buf[3]) );
-  timestamp.push_back(      get6bytes(&buf[5]) );
-  orderRef.push_back(       get8bytes(&buf[11]) );
-  buy.push_back(            buf[19] == 'B' );
-  shares.push_back(         get4bytes(&buf[20]) );
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
+  copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
+  buy[current_idx]             = buf[19] == 'B';
+  shares[current_idx]          = get4bytes(&buf[20]);
 
   // 8 characters make up the stockname
   std::string stock_string;
@@ -127,9 +140,8 @@ bool Orders::loadMessages(unsigned char* buf) {
   for (unsigned int i = 0; i < 8U; ++i) {
     if (buf[24 + i] != white) stock_string += buf[24 + i];
   }
-  stock.push_back( stock_string );
-  
-  price.push_back( (double) get4bytes(&buf[32]) / 10000.0 );
+  stock[current_idx] = stock_string;
+  price[current_idx] = (double) get4bytes(&buf[32]) / 10000.0;
   
   // 4 characters make up the MPID-string (if message type 'F')
   std::string mpid_string = "";
@@ -138,10 +150,11 @@ bool Orders::loadMessages(unsigned char* buf) {
       if (buf[36 + i] != white) mpid_string += buf[36 + i];
     }
   }
-  mpid.push_back( mpid_string );
+  mpid[current_idx] = mpid_string;
   
   // increase the number of this message type
   ++messageCount;
+  ++current_idx;
   return true;
 }
 
@@ -151,21 +164,12 @@ bool Orders::loadMessages(unsigned char* buf) {
  * @return     The Rcpp::DataFrame
  */
 Rcpp::DataFrame Orders::getDF() {
-
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(
-    Rcpp::Named("msg_type")        = type,
-    Rcpp::Named("locate_code")     = locateCode,
-    Rcpp::Named("tracking_number") = trackingNumber,
-    Rcpp::Named("timestamp")       = timestamp,
-    Rcpp::Named("order_ref")       = orderRef,
-    Rcpp::Named("buy")             = buy,
-    Rcpp::Named("shares")          = shares,
-    Rcpp::Named("stock")           = stock,
-    Rcpp::Named("price")           = price,
-    Rcpp::Named("mpid")            = mpid
-  );
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  Rcpp::NumericVector oref = data["order_ref"];
+  oref.attr("class") = "integer64";
   
-  return df;
+  return data;
 }
 
 /**
@@ -174,16 +178,16 @@ Rcpp::DataFrame Orders::getDF() {
  * @param[in]  size  The size which should be reserved
  */
 void Orders::reserve(int64_t size) {
-  type.reserve(size);
-  locateCode.reserve(size);
-  trackingNumber.reserve(size);
-  timestamp.reserve(size);
-  orderRef.reserve(size);
-  buy.reserve(size);
-  shares.reserve(size);
-  stock.reserve(size);
-  price.reserve(size);
-  mpid.reserve(size);
+  msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
+  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
+  timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
+  order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
+  buy             = data["buy"]             = Rcpp::LogicalVector(size);
+  shares          = data["shares"]          = Rcpp::IntegerVector(size);
+  stock           = data["stock"]           = Rcpp::CharacterVector(size);
+  price           = data["price"]           = Rcpp::NumericVector(size);
+  mpid            = data["mpid"]            = Rcpp::CharacterVector(size);
 }
 
 

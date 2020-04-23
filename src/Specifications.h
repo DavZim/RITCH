@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+// Define NA_INT64
+const int64_t NA_INT64 = 1ULL << 63;
+
 /**
  * A Namespace containint the important (constant) specifications
  * of the different messagetypes

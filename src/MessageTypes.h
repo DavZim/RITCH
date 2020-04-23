@@ -26,6 +26,7 @@ unsigned int get4bytes(unsigned char* buf);
 int64_t get6bytes(unsigned char* buf);
 int64_t get8bytes(unsigned char* buf);
 
+void copy64bit(Rcpp::NumericVector vec, int64_t idx, int64_t val);
 // #################################################################
 
 class MessageType {
@@ -42,12 +43,16 @@ public:
   virtual void reserve(int64_t size);
 
   // Members
-  int64_t messageCount  = 0,
-                     startMsgCount = 0, 
-                     endMsgCount   = std::numeric_limits<int64_t>::max();
+  int64_t current_idx = 0,
+    messageCount  = 0,
+    startMsgCount = 0, 
+    endMsgCount   = std::numeric_limits<int64_t>::max();
   const std::vector<unsigned char> validTypes;
   const std::vector<int> typePositions;
-
+  
+  Rcpp::List data;
+  Rcpp::CharacterVector colnames;
+  
 protected:
   explicit MessageType(std::vector<unsigned char> const& validTypes,
                        std::vector<int> const& typePositions) : 
@@ -59,23 +64,31 @@ protected:
  */
 class Orders : public MessageType {
 public:
-  Orders() : MessageType({'A', 'F'}, {ITCH::POS::A, ITCH::POS::F}) {}
+  Orders() : MessageType({'A', 'F'}, {ITCH::POS::A, ITCH::POS::F}) {
+    
+    colnames = {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"};
+    data = Rcpp::List(colnames.size());
+    data.names() = colnames;
+    data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+    
+  }
   // Functions
   bool loadMessages(unsigned char* buf);
   void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<int64_t> locateCode;
-  std::vector<int64_t> trackingNumber;
-  std::vector<int64_t> timestamp;
-  std::vector<int64_t> orderRef;
-  std::vector<bool>               buy;
-  std::vector<int64_t> shares;
-  std::vector<std::string>        stock;
-  std::vector<double>             price;
-  std::vector<std::string>        mpid;
+  // The references to the data vectors
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::LogicalVector   buy;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   price;
+  Rcpp::CharacterVector mpid;
 };
 
 /**
