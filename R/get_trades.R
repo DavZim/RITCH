@@ -65,8 +65,8 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = -1,
 
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
   if (!quiet) cat("\n[Converting] to data.table\n")
-
-  setDT(df)
+  
+  df <- data.table::setalloccol(df)
   
   # add the date
   df[, date := date_]

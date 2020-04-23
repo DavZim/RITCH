@@ -206,13 +206,13 @@ void Orders::reserve(int64_t size) {
 bool Trades::loadMessages(unsigned char* buf) {
 
   // first check if this is the wrong message
-  bool wrongMessage = false;
+  bool rightMessage = false;
   for (unsigned char type : validTypes) {
-    wrongMessage = wrongMessage || buf[0] == type;
+    rightMessage = rightMessage || buf[0] == type;
   }
   
   // if the message is of the wrong type, terminate here, but continue with the next message
-  if (!wrongMessage) return true;
+  if (!rightMessage) return true;
   
   // if the message is out of bounds (i.e., we dont want to collect it yet!)
   if (messageCount < startMsgCount) {
@@ -224,67 +224,75 @@ bool Trades::loadMessages(unsigned char* buf) {
   // thus aborting the information gathering (return false!))
   // no need to iterate over all the other messages.
   if (messageCount > endMsgCount) return false;
-  
+
+  // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
-  type.push_back(           buf[0] );
-  locateCode.push_back(     get2bytes(&buf[1]) );
-  trackingNumber.push_back( get2bytes(&buf[3]) );
-  timestamp.push_back(      get6bytes(&buf[5]) );
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
   
   std::string stock_string;
   const unsigned char white = ' ';
+  // only used in Message Q
+  int64_t cross_shares;
 
   switch (buf[0]) {
     case 'P':
-      orderRef.push_back(get8bytes(&buf[11]) );
-      buy.push_back(     buf[19] == 'B' );
-      shares.push_back(  get4bytes(&buf[20]) );
+      copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
+      buy[current_idx]    = buf[19] == 'B';
+      shares[current_idx] = get4bytes(&buf[20]);
 
       // 8 characters make up the stockname
       for (unsigned int i = 0; i < 8U; ++i) {
         if (buf[24 + i] != white) stock_string += buf[24 + i];
       }
-      stock.push_back(       stock_string );
-      price.push_back(       (double) get4bytes(&buf[32]) / 10000.0 );
-      matchNumber.push_back( get8bytes(&buf[36]) );
+      stock[current_idx]  = stock_string;
+      price[current_idx]  = (double) get4bytes(&buf[32]) / 10000.0;
+      
+      copy64bit(match_number, current_idx, get8bytes(&buf[36]));
       // empty assigns
-      crossType.push_back(' ');
+      cross_type[current_idx] = NA_STRING;
       break;
 
     case 'Q':
-      shares.push_back(get4bytes(&buf[11]));
+      cross_shares   = get8bytes(&buf[11]); // only Q has 8 byte shares... otherwise 4 bytes
+      if (cross_shares >= INT32_MAX) Rcpp::Rcout <<
+        "Warning, overflow for shares on message 'Q' at position " << 
+          current_idx << "\n",
+      shares[current_idx] = (int32_t) cross_shares;
 
       for (unsigned int i = 0; i < 8U; ++i) {
         if (buf[19 + i] != white) stock_string += buf[19 + i];
       }
-      stock.push_back(       stock_string );
-      price.push_back(       (double) get4bytes(&buf[27]) / 10000.0 ); // price = cross-price!
-      matchNumber.push_back( get8bytes(&buf[31]) );
-      crossType.push_back(   buf[39] );
-
-      orderRef.push_back( 0ULL );
-      buy.push_back(      false );
+      stock[current_idx]      = stock_string;
+      price[current_idx]      = (double) get4bytes(&buf[27]) / 10000.0;
+      copy64bit(match_number, current_idx, get8bytes(&buf[31]));
+      cross_type[current_idx] = buf[39];
+      //empty assigns
+      copy64bit(order_ref, current_idx, NA_INT64);
+      buy[current_idx] = NA_LOGICAL;
       break;
 
     case 'B': 
-      matchNumber.push_back( get8bytes(&buf[11]) );
+      copy64bit(match_number, current_idx, get8bytes(&buf[11]));
       // empty assigns
-      orderRef.push_back(  0ULL );
-      buy.push_back(       false );
-      shares.push_back(    0ULL );
-      stock.push_back(     "" );
-      price.push_back(     0.0 );
-      crossType.push_back( ' ' );
+      copy64bit(order_ref, current_idx, NA_INT64);
+      buy[current_idx]        = NA_LOGICAL;
+      shares[current_idx]     = NA_INTEGER;
+      stock[current_idx]      = NA_STRING;
+      price[current_idx]      = NA_REAL;
+      cross_type[current_idx] = NA_STRING;
       break;
 
     default:
       Rcpp::Rcout << "Unkown Type: " << buf[0] << "\n";
       break;
-
   }
 
   // increase the number of this message type
   ++messageCount;
+  ++current_idx;
   return true;
 }
 
@@ -294,22 +302,14 @@ bool Trades::loadMessages(unsigned char* buf) {
  * @return     The Rcpp::DataFrame
  */
 Rcpp::DataFrame Trades::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  Rcpp::NumericVector oref = data["order_ref"];
+  oref.attr("class") = "integer64";
+  Rcpp::NumericVector mtch = data["match_number"];
+  mtch.attr("class") = "integer64";
 
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(
-    Rcpp::Named("msg_type")        = type,
-    Rcpp::Named("locate_code")     = locateCode,
-    Rcpp::Named("tracking_number") = trackingNumber,
-    Rcpp::Named("timestamp")       = timestamp,
-    Rcpp::Named("order_ref")       = orderRef,
-    Rcpp::Named("buy")             = buy,
-    Rcpp::Named("shares")          = shares,
-    Rcpp::Named("stock")           = stock,
-    Rcpp::Named("price")           = price,
-    Rcpp::Named("match_number")    = matchNumber,
-    Rcpp::Named("cross_type")      = crossType
-  );
-  
-  return df;
+  return data;
 }
 
 /**
@@ -318,17 +318,17 @@ Rcpp::DataFrame Trades::getDF() {
  * @param[in]  size  The size which should be reserved
  */
 void Trades::reserve(int64_t size) {
-  type.reserve(size);
-  locateCode.reserve(size);
-  trackingNumber.reserve(size);
-  timestamp.reserve(size);
-  orderRef.reserve(size);
-  buy.reserve(size);
-  shares.reserve(size);
-  stock.reserve(size);
-  price.reserve(size);
-  matchNumber.reserve(size);
-  crossType.reserve(size);
+  msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
+  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
+  timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
+  order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
+  buy             = data["buy"]             = Rcpp::LogicalVector(size);
+  shares          = data["shares"]          = Rcpp::IntegerVector(size);
+  stock           = data["stock"]           = Rcpp::CharacterVector(size);
+  price           = data["price"]           = Rcpp::NumericVector(size);
+  match_number    = data["match_number"]    = Rcpp::NumericVector(size);
+  cross_type      = data["cross_type"]      = Rcpp::CharacterVector(size);
 }
 
 
