@@ -126,7 +126,7 @@ mods   <- get_modifications(file, msg_count)
 
 ### Create a Plot with Trades and Orders of the largest ETFs
 
-As a last step, I wanted to show a quick visualisation of the
+As a last step, a quick visualisation of the data
 
 ```{r ETF_plot, cache=TRUE}
 library(ggplot2)
@@ -136,7 +136,7 @@ orders <- get_orders(file, 1, count_orders(msg_count))
 trades <- get_trades(file, 1, count_trades(msg_count))
 
 # data munging
-tickers <- c("SPY", "IWO", "IWM", "VXX")
+tickers <- c("SPY", "IWO")
 dt_orders <- orders[stock %in% tickers]
 dt_trades <- trades[stock %in% tickers]
 
@@ -145,7 +145,7 @@ ranges <- dt_trades[, .(min_price = min(price), max_price = max(price)), by = st
 # filter the orders
 dt_orders <- dt_orders[ranges, on = "stock"][price >= 0.99 * min_price & price <= 1.01 * max_price]
 # replace the buy-factor with something more useful
-dt_orders[, buy := ifelse(buy, "Bid", "Ask")][]
+dt_orders[, buy := ifelse(buy, "Bid", "Ask")]
 dt_orders[, stock := factor(stock, levels = tickers)]
 
 # data visualization
@@ -157,7 +157,7 @@ ggplot() +
   geom_step(data = dt_trades, 
             aes(x = as.POSIXct(datetime), y = price)) +
   # add a facet for each ETF
-  facet_wrap(~stock, scales = "free_y") +
+  facet_grid(stock~., scales = "free_y") +
   # some Aesthetics
   theme_light() +
   labs(title = "Orders and Trades of the largest ETFs",

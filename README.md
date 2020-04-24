@@ -156,32 +156,32 @@ orders  <- get_orders(file)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 4.40 secs
+#> [Done]       in 2.65 secs
 orders
-#>           msg_type locate_code tracking_number    timestamp order_ref   buy shares stock  price mpid       date
-#>        1:        A        8236               0 2.520000e+13         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
-#>        2:        A        2220               0 2.520000e+13     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
-#>        3:        A        8101               0 2.520000e+13         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
-#>        4:        A        8236               0 2.520000e+13        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
-#>        5:        A        2220               0 2.520000e+13     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
-#>       ---                                                                                                      
-#> 12255193:        A        4315               0 6.837479e+13  85855062 FALSE   1800   IWM 165.55 <NA> 2019-12-30
-#> 12255194:        A        6556               0 6.837479e+13  82661763 FALSE   1000   QQQ 212.28 <NA> 2019-12-30
-#> 12255195:        A        7279               0 6.837479e+13  89116736  TRUE    500  SMLL  52.67 <NA> 2019-12-30
-#> 12255196:        A        8494               0 6.837479e+13  89116740  TRUE    400  VTWO 132.75 <NA> 2019-12-30
-#> 12255197:        A        7451               0 6.837489e+13  89116748  TRUE    500   SPY 321.25 <NA> 2019-12-30
-#>                      datetime
-#>        1: 2019-12-30 07:00:00
-#>        2: 2019-12-30 07:00:00
-#>        3: 2019-12-30 07:00:00
-#>        4: 2019-12-30 07:00:00
-#>        5: 2019-12-30 07:00:00
-#>       ---                    
-#> 12255193: 2019-12-30 18:59:34
-#> 12255194: 2019-12-30 18:59:34
-#> 12255195: 2019-12-30 18:59:34
-#> 12255196: 2019-12-30 18:59:34
-#> 12255197: 2019-12-30 18:59:34
+#>           msg_type locate_code tracking_number      timestamp order_ref   buy shares stock  price mpid       date
+#>        1:        A        8236               0 25200002107428         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
+#>        2:        A        2220               0 25200002110565     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
+#>        3:        A        8101               0 25200002132115         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
+#>        4:        A        8236               0 25200002150516        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
+#>        5:        A        2220               0 25200002160093     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
+#>       ---                                                                                                        
+#> 12255193:        A        4315               0 68374788588500  85855062 FALSE   1800   IWM 165.55 <NA> 2019-12-30
+#> 12255194:        A        6556               0 68374789602669  82661763 FALSE   1000   QQQ 212.28 <NA> 2019-12-30
+#> 12255195:        A        7279               0 68374789872250  89116736  TRUE    500  SMLL  52.67 <NA> 2019-12-30
+#> 12255196:        A        8494               0 68374790724019  89116740  TRUE    400  VTWO 132.75 <NA> 2019-12-30
+#> 12255197:        A        7451               0 68374891256781  89116748  TRUE    500   SPY 321.25 <NA> 2019-12-30
+#>                                      datetime
+#>        1: 2019-12-30T07:00:00.002107428+00:00
+#>        2: 2019-12-30T07:00:00.002110565+00:00
+#>        3: 2019-12-30T07:00:00.002132115+00:00
+#>        4: 2019-12-30T07:00:00.002150516+00:00
+#>        5: 2019-12-30T07:00:00.002160093+00:00
+#>       ---                                    
+#> 12255193: 2019-12-30T18:59:34.788588500+00:00
+#> 12255194: 2019-12-30T18:59:34.789602669+00:00
+#> 12255195: 2019-12-30T18:59:34.789872250+00:00
+#> 12255196: 2019-12-30T18:59:34.790724019+00:00
+#> 12255197: 2019-12-30T18:59:34.891256781+00:00
 ```
 
 If you want to load only a specified number of messages (this applies to
@@ -196,30 +196,30 @@ orders_small  <- get_orders(file, 1, 10)
 #> [Counting]   10 messages found
 #> [Loading]    .
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs
+#> [Done]       in 0.10 secs
 orders_small
-#>     msg_type locate_code tracking_number timestamp order_ref   buy shares stock  price mpid       date
-#>  1:        A        8236               0  2.52e+13         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
-#>  2:        A        2220               0  2.52e+13     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
-#>  3:        A        8101               0  2.52e+13         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
-#>  4:        A        8236               0  2.52e+13        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
-#>  5:        A        2220               0  2.52e+13     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
-#>  6:        A        8101               0  2.52e+13        16 FALSE   1500   UCO  21.10 <NA> 2019-12-30
-#>  7:        A        8167               0  2.52e+13        20  TRUE   1300   UNG  17.07 <NA> 2019-12-30
-#>  8:        A        1987               0  2.52e+13     31997 FALSE    100  DGAZ 176.00 <NA> 2019-12-30
-#>  9:        A        8167               0  2.52e+13        24 FALSE   1300   UNG  17.13 <NA> 2019-12-30
-#> 10:        A        8236               0  2.52e+13        28  TRUE  11900   USO  12.95 <NA> 2019-12-30
-#>                datetime
-#>  1: 2019-12-30 07:00:00
-#>  2: 2019-12-30 07:00:00
-#>  3: 2019-12-30 07:00:00
-#>  4: 2019-12-30 07:00:00
-#>  5: 2019-12-30 07:00:00
-#>  6: 2019-12-30 07:00:00
-#>  7: 2019-12-30 07:00:00
-#>  8: 2019-12-30 07:00:00
-#>  9: 2019-12-30 07:00:00
-#> 10: 2019-12-30 07:00:00
+#>     msg_type locate_code tracking_number      timestamp order_ref   buy shares stock  price mpid       date
+#>  1:        A        8236               0 25200002107428         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
+#>  2:        A        2220               0 25200002110565     31989  TRUE  15000   DWT   3.38 <NA> 2019-12-30
+#>  3:        A        8101               0 25200002132115         8  TRUE   1500   UCO  21.03 <NA> 2019-12-30
+#>  4:        A        8236               0 25200002150516        12 FALSE  11900   USO  12.99 <NA> 2019-12-30
+#>  5:        A        2220               0 25200002160093     31993 FALSE  15000   DWT   3.40 <NA> 2019-12-30
+#>  6:        A        8101               0 25200002170000        16 FALSE   1500   UCO  21.10 <NA> 2019-12-30
+#>  7:        A        8167               0 25200002183311        20  TRUE   1300   UNG  17.07 <NA> 2019-12-30
+#>  8:        A        1987               0 25200002198910     31997 FALSE    100  DGAZ 176.00 <NA> 2019-12-30
+#>  9:        A        8167               0 25200002209200        24 FALSE   1300   UNG  17.13 <NA> 2019-12-30
+#> 10:        A        8236               0 25200002243946        28  TRUE  11900   USO  12.95 <NA> 2019-12-30
+#>                                datetime
+#>  1: 2019-12-30T07:00:00.002107428+00:00
+#>  2: 2019-12-30T07:00:00.002110565+00:00
+#>  3: 2019-12-30T07:00:00.002132115+00:00
+#>  4: 2019-12-30T07:00:00.002150516+00:00
+#>  5: 2019-12-30T07:00:00.002160093+00:00
+#>  6: 2019-12-30T07:00:00.002170000+00:00
+#>  7: 2019-12-30T07:00:00.002183311+00:00
+#>  8: 2019-12-30T07:00:00.002198910+00:00
+#>  9: 2019-12-30T07:00:00.002209200+00:00
+#> 10: 2019-12-30T07:00:00.002243946+00:00
 ```
 
 ### Retrieve Trades
@@ -229,32 +229,32 @@ trades <- get_trades(file)
 #> [Counting]   134,385 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 0.86 secs
+#> [Done]       in 0.87 secs
 trades
-#>         msg_type locate_code tracking_number    timestamp order_ref  buy shares stock   price match_number cross_type
-#>      1:        P        8124               2 2.636645e+13         0 TRUE    100  UGAZ  76.050        17803       <NA>
-#>      2:        P        1987               2 2.899516e+13         0 TRUE    100  DGAZ 175.640        17814       <NA>
-#>      3:        P        1987               2 2.899516e+13         0 TRUE    100  DGAZ 175.610        17815       <NA>
-#>      4:        P        8268               2 2.900829e+13         0 TRUE   1000   UWT  14.821        17817       <NA>
-#>      5:        P        6098               2 2.919268e+13         0 TRUE     53  PEIX   0.702        17819       <NA>
-#>     ---                                                                                                              
-#> 134381:        P        6966               2 5.969714e+13         0 TRUE    100  SAVA   5.930       733868       <NA>
-#> 134382:        P        7080               2 6.103018e+13         0 TRUE     27  SDRL   2.840       733872       <NA>
-#> 134383:        P        7080               2 6.134018e+13         0 TRUE     47  SDRL   2.840       733873       <NA>
-#> 134384:        P        3328               4 6.278856e+13         0 TRUE    400  GHSI   0.250       733875       <NA>
-#> 134385:        P        3328               4 6.309003e+13         0 TRUE    300  GHSI   0.250       733878       <NA>
-#>               date            datetime
-#>      1: 2019-12-30 2019-12-30 07:19:26
-#>      2: 2019-12-30 2019-12-30 08:03:15
-#>      3: 2019-12-30 2019-12-30 08:03:15
-#>      4: 2019-12-30 2019-12-30 08:03:28
-#>      5: 2019-12-30 2019-12-30 08:06:32
-#>     ---                               
-#> 134381: 2019-12-30 2019-12-30 16:34:57
-#> 134382: 2019-12-30 2019-12-30 16:57:10
-#> 134383: 2019-12-30 2019-12-30 17:02:20
-#> 134384: 2019-12-30 2019-12-30 17:26:28
-#> 134385: 2019-12-30 2019-12-30 17:31:30
+#>         msg_type locate_code tracking_number      timestamp order_ref  buy shares stock   price match_number cross_type
+#>      1:        P        8124               2 26366446396437         0 TRUE    100  UGAZ  76.050        17803       <NA>
+#>      2:        P        1987               2 28995161549677         0 TRUE    100  DGAZ 175.640        17814       <NA>
+#>      3:        P        1987               2 28995162132166         0 TRUE    100  DGAZ 175.610        17815       <NA>
+#>      4:        P        8268               2 29008286649292         0 TRUE   1000   UWT  14.821        17817       <NA>
+#>      5:        P        6098               2 29192675981664         0 TRUE     53  PEIX   0.702        17819       <NA>
+#>     ---                                                                                                                
+#> 134381:        P        6966               2 59697140243203         0 TRUE    100  SAVA   5.930       733868       <NA>
+#> 134382:        P        7080               2 61030182372978         0 TRUE     27  SDRL   2.840       733872       <NA>
+#> 134383:        P        7080               2 61340181587362         0 TRUE     47  SDRL   2.840       733873       <NA>
+#> 134384:        P        3328               4 62788556629955         0 TRUE    400  GHSI   0.250       733875       <NA>
+#> 134385:        P        3328               4 63090027940171         0 TRUE    300  GHSI   0.250       733878       <NA>
+#>               date                            datetime
+#>      1: 2019-12-30 2019-12-30T07:19:26.446396437+00:00
+#>      2: 2019-12-30 2019-12-30T08:03:15.161549677+00:00
+#>      3: 2019-12-30 2019-12-30T08:03:15.162132166+00:00
+#>      4: 2019-12-30 2019-12-30T08:03:28.286649292+00:00
+#>      5: 2019-12-30 2019-12-30T08:06:32.675981664+00:00
+#>     ---                                               
+#> 134381: 2019-12-30 2019-12-30T16:34:57.140243203+00:00
+#> 134382: 2019-12-30 2019-12-30T16:57:10.182372978+00:00
+#> 134383: 2019-12-30 2019-12-30T17:02:20.181587362+00:00
+#> 134384: 2019-12-30 2019-12-30T17:26:28.556629955+00:00
+#> 134385: 2019-12-30 2019-12-30T17:31:30.027940171+00:00
 ```
 
 ### Retrieve Order Modifications
@@ -264,32 +264,32 @@ mods <- get_modifications(file)
 #> [Counting]   14,492,935 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 2.97 secs
+#> [Done]       in 1.98 secs
 mods
-#>           msg_type locate_code tracking_number    timestamp order_ref shares match_number printable price new_order_ref
-#>        1:        D         393               0 2.520001e+13     32009     NA           NA        NA    NA            NA
-#>        2:        D        8124               0 2.520001e+13        96     NA           NA        NA    NA            NA
-#>        3:        E        8124               2 2.520001e+13        56    100        17795        NA    NA            NA
-#>        4:        D         393               0 2.520001e+13     32033     NA           NA        NA    NA            NA
-#>        5:        D         687               0 2.520002e+13     32025     NA           NA        NA    NA            NA
-#>       ---                                                                                                              
-#> 14492931:        D        2952               0 6.840003e+13  66995214     NA           NA        NA    NA            NA
-#> 14492932:        D        5125               0 6.840003e+13   4393583     NA           NA        NA    NA            NA
-#> 14492933:        D        5125               0 6.840003e+13  72136531     NA           NA        NA    NA            NA
-#> 14492934:        D        4155               0 6.840003e+13  47273658     NA           NA        NA    NA            NA
-#> 14492935:        D        2952               0 6.840003e+13  63304398     NA           NA        NA    NA            NA
-#>                 date            datetime
-#>        1: 2019-12-30 2019-12-30 07:00:00
-#>        2: 2019-12-30 2019-12-30 07:00:00
-#>        3: 2019-12-30 2019-12-30 07:00:00
-#>        4: 2019-12-30 2019-12-30 07:00:00
-#>        5: 2019-12-30 2019-12-30 07:00:00
-#>       ---                               
-#> 14492931: 2019-12-30 2019-12-30 19:00:00
-#> 14492932: 2019-12-30 2019-12-30 19:00:00
-#> 14492933: 2019-12-30 2019-12-30 19:00:00
-#> 14492934: 2019-12-30 2019-12-30 19:00:00
-#> 14492935: 2019-12-30 2019-12-30 19:00:00
+#>           msg_type locate_code tracking_number      timestamp order_ref shares match_number printable price
+#>        1:        D         393               0 25200008944172     32009     NA         <NA>        NA    NA
+#>        2:        D        8124               0 25200013213153        96     NA         <NA>        NA    NA
+#>        3:        E        8124               2 25200013663284        56    100        17795        NA    NA
+#>        4:        D         393               0 25200013964664     32033     NA         <NA>        NA    NA
+#>        5:        D         687               0 25200015715177     32025     NA         <NA>        NA    NA
+#>       ---                                                                                                  
+#> 14492931:        D        2952               0 68400026060023  66995214     NA         <NA>        NA    NA
+#> 14492932:        D        5125               0 68400026060337   4393583     NA         <NA>        NA    NA
+#> 14492933:        D        5125               0 68400026069079  72136531     NA         <NA>        NA    NA
+#> 14492934:        D        4155               0 68400026070313  47273658     NA         <NA>        NA    NA
+#> 14492935:        D        2952               0 68400026070658  63304398     NA         <NA>        NA    NA
+#>           new_order_ref stock       date                            datetime
+#>        1:          <NA>       2019-12-30 2019-12-30T07:00:00.008944172+00:00
+#>        2:          <NA>       2019-12-30 2019-12-30T07:00:00.013213153+00:00
+#>        3:          <NA>       2019-12-30 2019-12-30T07:00:00.013663284+00:00
+#>        4:          <NA>       2019-12-30 2019-12-30T07:00:00.013964664+00:00
+#>        5:          <NA>       2019-12-30 2019-12-30T07:00:00.015715177+00:00
+#>       ---                                                                   
+#> 14492931:          <NA>       2019-12-30 2019-12-30T19:00:00.026060023+00:00
+#> 14492932:          <NA>       2019-12-30 2019-12-30T19:00:00.026060337+00:00
+#> 14492933:          <NA>       2019-12-30 2019-12-30T19:00:00.026069079+00:00
+#> 14492934:          <NA>       2019-12-30 2019-12-30T19:00:00.026070313+00:00
+#> 14492935:          <NA>       2019-12-30 2019-12-30T19:00:00.026070658+00:00
 ```
 
 To speed up the `get_*` functions, we can use the message-count
@@ -302,17 +302,17 @@ orders <- get_orders(file, msg_count)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 3.60 secs
+#> [Done]       in 1.96 secs
 trades <- get_trades(file, msg_count)
 #> [Counting]   134,385 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 0.53 secs
+#> [Done]       in 0.58 secs
 mods   <- get_modifications(file, msg_count)
 #> [Counting]   14,492,935 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 2.47 secs
+#> [Done]       in 1.42 secs
 # # alternatively, provide the start and end number of messages:
 # orders <- get_orders(file, 1, count_orders(msg_count))
 # trades <- get_trades(file, 1, count_trades(msg_count))
@@ -321,7 +321,7 @@ mods   <- get_modifications(file, msg_count)
 
 ### Create a Plot with Trades and Orders of the largest ETFs
 
-As a last step, I wanted to show a quick visualisation of the
+As a last step, a quick visualisation of the data
 
 ``` r
 library(ggplot2)
@@ -331,15 +331,15 @@ orders <- get_orders(file, 1, count_orders(msg_count))
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 3.56 secs
+#> [Done]       in 1.86 secs
 trades <- get_trades(file, 1, count_trades(msg_count))
 #> [Counting]   134,385 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 0.53 secs
+#> [Done]       in 0.63 secs
 
 # data munging
-tickers <- c("SPY", "IWO", "IWM", "VXX")
+tickers <- c("SPY", "IWO")
 dt_orders <- orders[stock %in% tickers]
 dt_trades <- trades[stock %in% tickers]
 
@@ -348,31 +348,7 @@ ranges <- dt_trades[, .(min_price = min(price), max_price = max(price)), by = st
 # filter the orders
 dt_orders <- dt_orders[ranges, on = "stock"][price >= 0.99 * min_price & price <= 1.01 * max_price]
 # replace the buy-factor with something more useful
-dt_orders[, buy := ifelse(buy, "Bid", "Ask")][]
-#>         msg_type locate_code tracking_number    timestamp order_ref buy shares stock  price mpid       date
-#>      1:        A        7451               0 2.520444e+13       280 Bid    500   SPY 322.66 <NA> 2019-12-30
-#>      2:        A        7451               0 2.520444e+13       284 Ask    500   SPY 322.78 <NA> 2019-12-30
-#>      3:        A        7451               0 2.520464e+13       288 Bid    500   SPY 322.63 <NA> 2019-12-30
-#>      4:        A        7451               0 2.520464e+13       292 Ask    500   SPY 322.81 <NA> 2019-12-30
-#>      5:        A        7451               0 2.520485e+13       296 Bid    500   SPY 322.61 <NA> 2019-12-30
-#>     ---                                                                                                    
-#> 669530:        A        4315               0 6.828041e+13  85854970 Bid   1800   IWM 165.51 <NA> 2019-12-30
-#> 669531:        A        4315               0 6.830216e+13  85854982 Ask   1800   IWM 165.56 <NA> 2019-12-30
-#> 669532:        A        4315               0 6.833540e+13  85855010 Bid   1800   IWM 165.51 <NA> 2019-12-30
-#> 669533:        A        4315               0 6.835454e+13  85855050 Ask   1800   IWM 165.56 <NA> 2019-12-30
-#> 669534:        A        4315               0 6.837479e+13  85855062 Ask   1800   IWM 165.55 <NA> 2019-12-30
-#>                    datetime min_price max_price
-#>      1: 2019-12-30 07:00:04    320.65    323.14
-#>      2: 2019-12-30 07:00:04    320.65    323.14
-#>      3: 2019-12-30 07:00:04    320.65    323.14
-#>      4: 2019-12-30 07:00:04    320.65    323.14
-#>      5: 2019-12-30 07:00:04    320.65    323.14
-#>     ---                                        
-#> 669530: 2019-12-30 18:58:00    164.71    166.09
-#> 669531: 2019-12-30 18:58:22    164.71    166.09
-#> 669532: 2019-12-30 18:58:55    164.71    166.09
-#> 669533: 2019-12-30 18:59:14    164.71    166.09
-#> 669534: 2019-12-30 18:59:34    164.71    166.09
+dt_orders[, buy := ifelse(buy, "Bid", "Ask")]
 dt_orders[, stock := factor(stock, levels = tickers)]
 
 # data visualization
@@ -384,7 +360,7 @@ ggplot() +
   geom_step(data = dt_trades, 
             aes(x = as.POSIXct(datetime), y = price)) +
   # add a facet for each ETF
-  facet_wrap(~stock, scales = "free_y") +
+  facet_grid(stock~., scales = "free_y") +
   # some Aesthetics
   theme_light() +
   labs(title = "Orders and Trades of the largest ETFs",
@@ -433,7 +409,7 @@ orders <- get_orders(file, msg_count)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 3.54 secs
+#> [Done]       in 1.80 secs
 ```
 
 versus providing the actual start and end position of messages:
@@ -442,19 +418,19 @@ versus providing the actual start and end position of messages:
 msg_count <- count_messages(file)
 #> [Counting]   29,156,757 messages found
 #> [Converting] to data.table
-#> [Done]       in 0.35 secs
+#> [Done]       in 0.36 secs
 orders <- get_orders(file, 1, count_orders(msg_count))
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 3.53 secs
+#> [Done]       in 1.77 secs
 ```
 
 ## Additional Sources aka. Data
 
 While this package does not contain any real financial data using the
 ITCH format, NASDAQ provides some sample datasets on its FTP-server,
-which you can find here: <ftp://emi.nasdaq.com/>
+which you can find here: <ftp://emi.nasdaq.com/ITCH>
 
 If you want to find out more about the protocol, have a look at the
 official protocol specification, which you can find here:
