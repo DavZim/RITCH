@@ -29,8 +29,17 @@ Rcpp::DataFrame getMessageCountDF(std::string filename,
   Rcpp::StringVector types(ITCH::TYPES.size());
   types = ITCH::TYPESSTRING;
   
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("msg_type") = types,
-                                               Rcpp::Named("count") = count);
+  Rcpp::List df(2);
+  df.names() = Rcpp::CharacterVector::create("msg_type", "count");
+  df["msg_type"] = types;
+  const int len = types.size();
+  Rcpp::NumericVector ct(len);
+  std::memcpy(&(ct[0]), &(count[0]), len * sizeof(double));
+  ct.attr("class") = "integer64";
+  
+  df["count"] = ct;
+  
+  df.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
   
   return df;
 }
