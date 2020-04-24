@@ -16,13 +16,13 @@
  *  - Trades: For Trades 'P', 'Q', and 'B' (Trades, Cross-Trades, and Broken Trades)
  *  
  * Also some getXBytes functions, that get X bytes (big endian)
- *  and convert them to unsigned int (or long long int if needed)
+ *  and convert them to int32_t (or int64_t if needed)
  * #################################################################
  */
 
 // __builtin_bswap requires gcc!
-unsigned int get2bytes(unsigned char* buf);
-unsigned int get4bytes(unsigned char* buf);
+int32_t get2bytes(unsigned char* buf);
+int32_t get4bytes(unsigned char* buf);
 int64_t get6bytes(unsigned char* buf);
 int64_t get8bytes(unsigned char* buf);
 
@@ -55,8 +55,9 @@ public:
   
 protected:
   explicit MessageType(std::vector<unsigned char> const& validTypes,
-                       std::vector<int> const& typePositions) : 
-    validTypes(validTypes), typePositions(typePositions) {}
+                       std::vector<int> const& typePositions,
+                       Rcpp::CharacterVector colnames) : 
+    validTypes(validTypes), typePositions(typePositions), colnames(colnames) {}
 };
 
 /**
@@ -64,16 +65,13 @@ protected:
  */
 class Orders : public MessageType {
 public:
-  Orders() : MessageType({'A', 'F'}, {ITCH::POS::A, ITCH::POS::F}) {
-    
-    colnames = {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"};
-    data = Rcpp::List(colnames.size());
-    data.names() = colnames;
-    data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
-    
-  }
+  Orders() : MessageType(
+    {'A', 'F'}, 
+    {ITCH::POS::A, ITCH::POS::F},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"}
+  ) {}
   // Functions
-  bool loadMessages(unsigned char* buf);
+  bool loadMessage(unsigned char* buf);
   void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
@@ -96,9 +94,13 @@ public:
  */
 class Trades : public MessageType {
 public:
-  Trades() : MessageType({'P', 'Q', 'B'}, {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B}) {}
+  Trades() : MessageType(
+    {'P', 'Q', 'B'}, 
+    {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "match_number", "cross_type"}
+) {}
   // Functions
-  bool loadMessages(unsigned char* buf);
+  bool loadMessage(unsigned char* buf);
   void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
@@ -123,10 +125,14 @@ public:
  */
 class Modifications : public MessageType {
 public:
-  Modifications() : MessageType({'E', 'C', 'X', 'D', 'U'}, 
-    {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U}) {}
+  Modifications() : MessageType(
+    {'E', 'C', 'X', 'D', 'U'}, 
+    {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "shares", "match_number", "printable", "price", "new_order_ref"}
+  ) {}
+
   // Functions
-  bool loadMessages(unsigned char* buf);
+  bool loadMessage(unsigned char* buf);
   void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   

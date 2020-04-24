@@ -1,24 +1,24 @@
 #include "MessageTypes.h"
 
 /**
- * @brief      Converts 2 bytes from a buffer in big endian to an unsigned integer
+ * @brief      Converts 2 bytes from a buffer in big endian to an int32_t
  * 
  * @param      buf   The buffer as a pointer to an array of unsigned chars
  *
- * @return     The converted unsigned integer
+ * @return     The converted integer
  */
-unsigned int get2bytes(unsigned char* buf) {
+int32_t get2bytes(unsigned char* buf) {
   return __builtin_bswap16(*reinterpret_cast<uint16_t*>(&buf[0]));
 }
 
 /**
- * @brief      Converts 4 bytes from a buffer in big endian to an unsigned integer
+ * @brief      Converts 4 bytes from a buffer in big endian to an int32_t
  * 
  * @param      buf   The buffer as a pointer to an array of unsigned chars
  *
- * @return     The converted unsigned integer
+ * @return     The converted integer
  */
-unsigned int get4bytes(unsigned char* buf) {
+int32_t get4bytes(unsigned char* buf) {
   return __builtin_bswap32(*reinterpret_cast<uint32_t*>(&buf[0]));
 }
 
@@ -178,6 +178,8 @@ Rcpp::DataFrame Orders::getDF() {
  * @param[in]  size  The size which should be reserved
  */
 void Orders::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
   locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
@@ -188,6 +190,7 @@ void Orders::reserve(int64_t size) {
   stock           = data["stock"]           = Rcpp::CharacterVector(size);
   price           = data["price"]           = Rcpp::NumericVector(size);
   mpid            = data["mpid"]            = Rcpp::CharacterVector(size);
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -249,7 +252,6 @@ bool Trades::loadMessages(unsigned char* buf) {
       }
       stock[current_idx]  = stock_string;
       price[current_idx]  = (double) get4bytes(&buf[32]) / 10000.0;
-      
       copy64bit(match_number, current_idx, get8bytes(&buf[36]));
       // empty assigns
       cross_type[current_idx] = NA_STRING;
@@ -318,6 +320,8 @@ Rcpp::DataFrame Trades::getDF() {
  * @param[in]  size  The size which should be reserved
  */
 void Trades::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
   locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
@@ -329,6 +333,7 @@ void Trades::reserve(int64_t size) {
   price           = data["price"]           = Rcpp::NumericVector(size);
   match_number    = data["match_number"]    = Rcpp::NumericVector(size);
   cross_type      = data["cross_type"]      = Rcpp::CharacterVector(size);
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
