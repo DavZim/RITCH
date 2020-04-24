@@ -103,17 +103,18 @@ public:
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<int64_t> locateCode;
-  std::vector<int64_t> trackingNumber;
-  std::vector<int64_t> timestamp;
-  std::vector<int64_t> orderRef;
-  std::vector<bool>               buy;
-  std::vector<int64_t> shares;
-  std::vector<std::string>        stock;
-  std::vector<double>             price;
-  std::vector<int64_t> matchNumber;
-  std::vector<char>               crossType;
+  // The references to the data vectors
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::LogicalVector   buy;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   price;
+  Rcpp::NumericVector   match_number;
+  Rcpp::CharacterVector cross_type;
 };
 
 
@@ -130,16 +131,17 @@ public:
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<int64_t> locateCode;
-  std::vector<int64_t> trackingNumber;
-  std::vector<int64_t> timestamp;
-  std::vector<int64_t> orderRef;
-  std::vector<int64_t> shares;
-  std::vector<int64_t> matchNumber;
-  std::vector<bool>               printable;
-  std::vector<double>             price;
-  std::vector<int64_t> newOrderRef;
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   match_number;
+  Rcpp::LogicalVector   printable;
+  Rcpp::NumericVector   price;
+  Rcpp::NumericVector   new_order_ref;
 };
 
 #endif //MESSAGES_H

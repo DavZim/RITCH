@@ -347,13 +347,13 @@ void Trades::reserve(int64_t size) {
 bool Modifications::loadMessages(unsigned char* buf) {
 
   // first check if this is the wrong message
-  bool wrongMessage = false;
+  bool rightMessage = false;
   for (unsigned char type : validTypes) {
-    wrongMessage = wrongMessage || buf[0] == type;
+    rightMessage = rightMessage || buf[0] == type;
   }
   
   // if the message is of the wrong type, terminate here, but continue with the next message
-  if (!wrongMessage) return true;
+  if (!rightMessage) return true;
 
   // if the message is out of bounds (i.e., we dont want to collect it yet!)
   if (messageCount < startMsgCount) {
@@ -366,59 +366,60 @@ bool Modifications::loadMessages(unsigned char* buf) {
   // no need to iterate over all the other messages.
   if (messageCount > endMsgCount) return false;
   
+  // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
-  type.push_back(           buf[0] );
-  locateCode.push_back(     get2bytes(&buf[1]) );
-  trackingNumber.push_back( get2bytes(&buf[3]) );
-  timestamp.push_back(      get6bytes(&buf[5]) );
-  orderRef.push_back(       get8bytes(&buf[11]) );
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
+  copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
   
   switch (buf[0]) {
     case 'E':
-      shares.push_back(      get4bytes(&buf[19]) ); // executed shares
-      matchNumber.push_back( get8bytes(&buf[23]) );
+      shares[current_idx]       = get4bytes(&buf[19]);// executed shares
+      copy64bit(match_number, current_idx, get8bytes(&buf[23]));
       // empty assigns
-      printable.push_back(   'N' );
-      price.push_back(       0.0 );
-      newOrderRef.push_back( 0ULL );
+      printable[current_idx]    = NA_LOGICAL;
+      price[current_idx]        = NA_REAL;
+      copy64bit(new_order_ref, current_idx, NA_INT64);
       break;
 
     case 'C':
-      shares.push_back(      get4bytes(&buf[19]) ); // executed shares
-      matchNumber.push_back( get8bytes(&buf[23]) );
-      printable.push_back(   buf[31] );
-      price.push_back(       (double) get4bytes(&buf[32]) / 10000.0 );
+      shares[current_idx]       = get4bytes(&buf[19]);// executed shares
+      copy64bit(match_number, current_idx, get8bytes(&buf[23]));
+      printable[current_idx]    = buf[31] == 'P';
+      price[current_idx]        = (double) get4bytes(&buf[32]) / 10000.0;
       // empty assigns
-      newOrderRef.push_back( 0ULL );
+      copy64bit(new_order_ref, current_idx, NA_INT64);
       break;
 
     case 'X':
-      shares.push_back(      get4bytes(&buf[19]) ); // cancelled shares
+      shares[current_idx] = get4bytes(&buf[19]); // cancelled shares
       // empty assigns
-      matchNumber.push_back( 0ULL);
-      printable.push_back(   false );
-      price.push_back(       0.0 );
-      newOrderRef.push_back( 0ULL );
+      copy64bit(match_number, current_idx, NA_INT64);
+      printable[current_idx] = NA_LOGICAL;
+      price[current_idx]     = NA_REAL;
+      copy64bit(new_order_ref, current_idx, NA_INT64);
       break;
 
     case 'D':
       // empty assigns
-      shares.push_back(      0ULL); 
-      matchNumber.push_back( 0ULL);
-      printable.push_back(   false );
-      price.push_back(       0.0 );
-      newOrderRef.push_back( 0ULL );
+      shares[current_idx]    = NA_INTEGER;
+      copy64bit(match_number, current_idx, NA_INT64);
+      printable[current_idx] = NA_LOGICAL;
+      price[current_idx]     = NA_REAL;
+      copy64bit(new_order_ref, current_idx, NA_INT64);
       break;
 
     case 'U':
       // the order ref is the original order reference, 
       // the new order reference is the new order reference
-      newOrderRef.push_back( get8bytes(&buf[19]) );
-      shares.push_back(      get4bytes(&buf[27]) );
-      price.push_back(       (double) get4bytes(&buf[31]) / 10000.0 );
+      copy64bit(new_order_ref, current_idx, get8bytes(&buf[19]));
+      shares[current_idx] = get4bytes(&buf[27]);
+      price[current_idx]  = (double) get4bytes(&buf[31]) / 10000.0;
       // empty assigns
-      matchNumber.push_back( 0ULL);
-      printable.push_back(   false );
+      copy64bit(match_number, current_idx, NA_INT64);
+      printable[current_idx] = NA_LOGICAL;
       break;
 
     default:
@@ -428,6 +429,7 @@ bool Modifications::loadMessages(unsigned char* buf) {
 
   // increase the number of this message type
   ++messageCount;
+  ++current_idx;
   return true;
 }
 
@@ -437,21 +439,16 @@ bool Modifications::loadMessages(unsigned char* buf) {
  * @return     The Rcpp::DataFrame
  */
 Rcpp::DataFrame Modifications::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  Rcpp::NumericVector oref = data["order_ref"];
+  oref.attr("class") = "integer64";
+  Rcpp::NumericVector mtch = data["match_number"];
+  mtch.attr("class") = "integer64";
+  Rcpp::NumericVector nor = data["new_order_ref"];
+  nor.attr("class") = "integer64";
 
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(
-    Rcpp::Named("msg_type")        = type,
-    Rcpp::Named("locate_code")     = locateCode,
-    Rcpp::Named("tracking_number") = trackingNumber,
-    Rcpp::Named("timestamp")       = timestamp,
-    Rcpp::Named("order_ref")       = orderRef,
-    Rcpp::Named("shares")          = shares,
-    Rcpp::Named("match_number")    = matchNumber,
-    Rcpp::Named("printable")       = printable,
-    Rcpp::Named("price")           = price,
-    Rcpp::Named("new_order_ref")   = newOrderRef
-  );
-  
-  return df;
+  return data;
 }
 
 /**
@@ -460,14 +457,18 @@ Rcpp::DataFrame Modifications::getDF() {
  * @param[in]  size  The size which should be reserved
  */
 void Modifications::reserve(int64_t size) {
-  type.reserve(size);
-  locateCode.reserve(size);
-  trackingNumber.reserve(size);
-  timestamp.reserve(size);
-  orderRef.reserve(size);
-  shares.reserve(size);
-  matchNumber.reserve(size);
-  printable.reserve(size);
-  price.reserve(size);
-  newOrderRef.reserve(size);
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
+  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
+  timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
+  order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
+  shares          = data["shares"]          = Rcpp::IntegerVector(size);
+  stock           = data["stock"]           = Rcpp::CharacterVector(size);
+  match_number    = data["match_number"]    = Rcpp::NumericVector(size);
+  printable       = data["printable"]       = Rcpp::LogicalVector(size);
+  price           = data["price"]           = Rcpp::NumericVector(size);
+  new_order_ref   = data["new_order_ref"]   = Rcpp::NumericVector(size);
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
