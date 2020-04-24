@@ -7,6 +7,7 @@ Author: David Zimmermann
 Maintainer: David Zimmermann <david_j_zimmermann@hotmail.com>
 Description: This package allows to parse files that use the ITCH-Protocol (version 5.0) to an R data.table. Currently the package allows to parse trades, orders, and order modifications.
 License: GPL-3
+Depends: R (>= 3.5.0)
 Imports: data.table,
   Rcpp (>= 0.12.12),
   R.utils,

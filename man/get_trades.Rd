@@ -7,7 +7,7 @@
 get_trades(
   file,
   start_msg_count = 0,
-  end_msg_count = 0,
+  end_msg_count = -1,
   buffer_size = 1e+08,
   quiet = FALSE
 )
@@ -15,7 +15,7 @@ get_trades(
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
 
-\item{start_msg_count}{the start count of the messages, defaults to 0}
+\item{start_msg_count}{the start count of the messages, defaults to 0, or a data.frame of msg_types and counts, as outputted by count_messages()}
 
 \item{end_msg_count}{the end count of the messages, defaults to all messages}
 
@@ -45,5 +45,8 @@ you can specify different start_msg_count/end_msg_counts to load only some messa
   gz_file <- "20170130.PSX_ITCH_50.gz"
   get_trades(gz_file)
   get_trades(gz_file, quiet = TRUE)
+  
+  msg_count <- count_messages(raw_file)
+  get_trades(raw_file, msg_count)
 }
 }
