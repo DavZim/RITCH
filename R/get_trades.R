@@ -71,26 +71,6 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = -1,
   # add the date
   df[, date := date_]
   df[, datetime := nanotime(as.Date(date_)) + timestamp]
-  df[, timestamp := as.integer64(timestamp)]
-
-  # replace missing values
-  df[msg_type == 'P', ':=' (
-    cross_type = NA_character_
-    )]
-
-  df[msg_type == 'Q', ':=' (
-    order_ref = NA_integer_,
-    buy       = NA
-    )]
-
-  df[msg_type == 'B', ':=' (
-    order_ref  = NA_integer_,
-    buy        = NA,
-    shares     = NA_integer_,
-    stock      = NA_character_,
-    price      = NA_real_,
-    cross_type = NA_character_
-    )]
 
   a <- gc()
   

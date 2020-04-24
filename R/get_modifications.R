@@ -66,43 +66,11 @@ get_modifications <- function(file, start_msg_count = 0, end_msg_count = -1,
   if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
   if (!quiet) cat("\n[Converting] to data.table\n")
   
-  setDT(df)
+  df <- data.table::setalloccol(df)
   
   # add the date
   df[, date := date_]
   df[, datetime := nanotime(as.Date(date_)) + timestamp]
-  df[, timestamp := as.integer64(timestamp)]
-
-  # replace missing values
-  df[msg_type == 'E', ':=' (
-    printable     = NA,
-    price         = NA_real_,
-    new_order_ref = NA_integer_
-    )]
-
-  df[msg_type == 'C', ':=' (
-    new_order_ref = NA_integer_
-    )]
-
-  df[msg_type == 'X', ':=' (
-    match_number  = NA_integer_,
-    printable     = NA,
-    price         = NA_real_,
-    new_order_ref = NA_integer_
-    )]
-
-  df[msg_type == 'D', ':=' (
-    shares        = NA_integer_,
-    match_number  = NA_integer_,
-    printable     = NA,
-    price         = NA_real_,
-    new_order_ref = NA_integer_
-    )]
-
-  df[msg_type == 'U', ':=' (
-    match_number  = NA_integer_,
-    printable     = NA
-    )]
 
   a <- gc()
   

@@ -149,8 +149,10 @@ bool Orders::loadMessages(unsigned char* buf) {
     for (unsigned int i = 0; i < 4U; ++i) {
       if (buf[36 + i] != white) mpid_string += buf[36 + i];
     }
+    mpid[current_idx] = mpid_string;
+  } else {
+    mpid[current_idx] = NA_STRING;
   }
-  mpid[current_idx] = mpid_string;
   
   // increase the number of this message type
   ++messageCount;
