@@ -16,15 +16,15 @@
  *  - Trades: For Trades 'P', 'Q', and 'B' (Trades, Cross-Trades, and Broken Trades)
  *  
  * Also some getXBytes functions, that get X bytes (big endian)
- *  and convert them to unsigned int (or long long int if needed)
+ *  and convert them to int32_t (or int64_t if needed)
  * #################################################################
  */
 
 // __builtin_bswap requires gcc!
-unsigned int get2bytes(unsigned char* buf);
-unsigned int get4bytes(unsigned char* buf);
-unsigned long long get6bytes(unsigned char* buf);
-unsigned long long get8bytes(unsigned char* buf);
+int32_t get2bytes(unsigned char* buf);
+int32_t get4bytes(unsigned char* buf);
+int64_t get6bytes(unsigned char* buf);
+int64_t get8bytes(unsigned char* buf);
 
 // #################################################################
 
@@ -33,25 +33,30 @@ public:
   MessageType() = default; // To still allow default construction as before
 
   // Functions
-  unsigned long long countValidMessages(std::vector<unsigned long long> count);
-  void setBoundaries(unsigned long long startMsgCount, unsigned long long endMsgCount);
+  int64_t countValidMessages(std::vector<int64_t> count);
+  void setBoundaries(int64_t startMsgCount, int64_t endMsgCount);
   
   // Virtual Functions
-  virtual bool loadMessages(unsigned char* buf);
+  virtual bool loadMessage(unsigned char* buf);
   virtual Rcpp::DataFrame getDF();
-  virtual void reserve(unsigned long long size);
+  virtual void reserve(int64_t size);
 
   // Members
-  unsigned long long messageCount  = 0,
-                     startMsgCount = 0, 
-                     endMsgCount   = std::numeric_limits<unsigned long long>::max();
+  int64_t current_idx = 0,
+    messageCount  = 0,
+    startMsgCount = 0, 
+    endMsgCount   = std::numeric_limits<int64_t>::max();
   const std::vector<unsigned char> validTypes;
   const std::vector<int> typePositions;
-
+  
+  Rcpp::List data;
+  Rcpp::CharacterVector colnames;
+  
 protected:
   explicit MessageType(std::vector<unsigned char> const& validTypes,
-                       std::vector<int> const& typePositions) : 
-    validTypes(validTypes), typePositions(typePositions) {}
+                       std::vector<int> const& typePositions,
+                       Rcpp::CharacterVector colnames) : 
+    validTypes(validTypes), typePositions(typePositions), colnames(colnames) {}
 };
 
 /**
@@ -59,23 +64,28 @@ protected:
  */
 class Orders : public MessageType {
 public:
-  Orders() : MessageType({'A', 'F'}, {ITCH::POS::A, ITCH::POS::F}) {}
+  Orders() : MessageType(
+    {'A', 'F'}, 
+    {ITCH::POS::A, ITCH::POS::F},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"}
+  ) {}
   // Functions
-  bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
-  std::vector<bool>               buy;
-  std::vector<unsigned long long> shares;
-  std::vector<std::string>        stock;
-  std::vector<double>             price;
-  std::vector<std::string>        mpid;
+  // The references to the data vectors
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::LogicalVector   buy;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   price;
+  Rcpp::CharacterVector mpid;
 };
 
 /**
@@ -83,24 +93,29 @@ public:
  */
 class Trades : public MessageType {
 public:
-  Trades() : MessageType({'P', 'Q', 'B'}, {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B}) {}
+  Trades() : MessageType(
+    {'P', 'Q', 'B'}, 
+    {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "match_number", "cross_type"}
+) {}
   // Functions
-  bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
-  std::vector<bool>               buy;
-  std::vector<unsigned long long> shares;
-  std::vector<std::string>        stock;
-  std::vector<double>             price;
-  std::vector<unsigned long long> matchNumber;
-  std::vector<char>               crossType;
+  // The references to the data vectors
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::LogicalVector   buy;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   price;
+  Rcpp::NumericVector   match_number;
+  Rcpp::CharacterVector cross_type;
 };
 
 
@@ -109,24 +124,29 @@ public:
  */
 class Modifications : public MessageType {
 public:
-  Modifications() : MessageType({'E', 'C', 'X', 'D', 'U'}, 
-    {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U}) {}
+  Modifications() : MessageType(
+    {'E', 'C', 'X', 'D', 'U'}, 
+    {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "shares", "match_number", "printable", "price", "new_order_ref"}
+  ) {}
+
   // Functions
-  bool loadMessages(unsigned char* buf);
-  void reserve(unsigned long long size);
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
   Rcpp::DataFrame getDF();
   
   // Members
-  std::vector<char> type;
-  std::vector<unsigned long long> locateCode;
-  std::vector<unsigned long long> trackingNumber;
-  std::vector<unsigned long long> timestamp;
-  std::vector<unsigned long long> orderRef;
-  std::vector<unsigned long long> shares;
-  std::vector<unsigned long long> matchNumber;
-  std::vector<bool>               printable;
-  std::vector<double>             price;
-  std::vector<unsigned long long> newOrderRef;
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   order_ref;
+  Rcpp::IntegerVector   shares;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   match_number;
+  Rcpp::LogicalVector   printable;
+  Rcpp::NumericVector   price;
+  Rcpp::NumericVector   new_order_ref;
 };
 
 #endif //MESSAGES_H

@@ -7,7 +7,7 @@
  *
  * @return     The message length.
  */
-unsigned long long getMessageLength(unsigned char msgType) {
+int64_t getMessageLength(unsigned char msgType) {
   switch (msgType) {
   case 'S':
     return ITCH::SIZE::S;
@@ -129,9 +129,9 @@ int getMessagePosition(unsigned char msgType) {
  */
 void loadToMessages(std::string filename, 
                     MessageType& msg,
-                    unsigned long long startMsgCount,
-                    unsigned long long endMsgCount,
-                    unsigned long long bufferSize,
+                    int64_t startMsgCount,
+                    int64_t endMsgCount,
+                    int64_t bufferSize,
                     bool quiet) {
 
   msg.setBoundaries(startMsgCount, endMsgCount);
@@ -144,11 +144,11 @@ void loadToMessages(std::string filename,
   }
   
   unsigned char* bufferPtr;
-  unsigned long long bufferCharSize = sizeof(char) * bufferSize;
+  int64_t bufferCharSize = sizeof(char) * bufferSize;
   bufferPtr = (unsigned char*) malloc(bufferCharSize);
   
-  unsigned long long thisBufferSize = 0;
-  unsigned long long curFilePtr;
+  int64_t thisBufferSize = 0;
+  int64_t curFilePtr;
   
   // fill the buffer
   while ((thisBufferSize = fread(bufferPtr, 1, bufferCharSize, infile)) > 0) {
@@ -159,8 +159,8 @@ void loadToMessages(std::string filename,
     curFilePtr = ftell(infile);
     
     // use the current buffer to read in the messages
-    unsigned long long inBufferIdx = 2;
-    unsigned long long thisMsgLength;
+    int64_t inBufferIdx = 2;
+    int64_t thisMsgLength;
     
     // loop through the buffer by the index inBufferIdx
     while (1) {
@@ -172,8 +172,8 @@ void loadToMessages(std::string filename,
       if (inBufferIdx > thisBufferSize - thisMsgLength) break;
       
       // try to load the message
-      if (!msg.loadMessages(&bufferPtr[inBufferIdx])) {
-        // loadMessages returns false if the endMsgCount has been reached, no need to continue
+      if (!msg.loadMessage(&bufferPtr[inBufferIdx])) {
+        // loadMessage returns false if the endMsgCount has been reached, no need to continue
         free(bufferPtr);
         fclose(infile);
         return;
@@ -214,7 +214,7 @@ void loadToMessages(std::string filename,
  *                    
  * @return       The number as a string
  */
-std::string formatThousands(unsigned long long num, const std::string sep, std::string s) {
+std::string formatThousands(int64_t num, const std::string sep, std::string s) {
   if (num < 1000) {
     return std::to_string(num) + s;
   } else {
@@ -222,7 +222,7 @@ std::string formatThousands(unsigned long long num, const std::string sep, std::
     const int num_zeros = 3 - last_three.length();
     last_three = std::string(num_zeros, '0').append(last_three);
     
-    const unsigned long long remainder = (unsigned long long) num / 1000;
+    const int64_t remainder = (int64_t) num / 1000;
     std::string res = sep + last_three + s;
     return formatThousands(remainder, sep, res);
   }

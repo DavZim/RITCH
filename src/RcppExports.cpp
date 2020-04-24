@@ -6,58 +6,58 @@
 using namespace Rcpp;
 
 // getMessageCountDF
-Rcpp::DataFrame getMessageCountDF(std::string filename, unsigned long long bufferSize, bool quiet);
+Rcpp::DataFrame getMessageCountDF(std::string filename, int64_t bufferSize, bool quiet);
 RcppExport SEXP _RITCH_getMessageCountDF(SEXP filenameSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
     rcpp_result_gen = Rcpp::wrap(getMessageCountDF(filename, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
 // getOrders_impl
-Rcpp::DataFrame getOrders_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+Rcpp::DataFrame getOrders_impl(std::string filename, int64_t startMsgCount, int64_t endMsgCount, int64_t bufferSize, bool quiet);
 RcppExport SEXP _RITCH_getOrders_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type startMsgCount(startMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type startMsgCount(startMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type endMsgCount(endMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
     rcpp_result_gen = Rcpp::wrap(getOrders_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
 // getTrades_impl
-Rcpp::DataFrame getTrades_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+Rcpp::DataFrame getTrades_impl(std::string filename, int64_t startMsgCount, int64_t endMsgCount, int64_t bufferSize, bool quiet);
 RcppExport SEXP _RITCH_getTrades_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type startMsgCount(startMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type startMsgCount(startMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type endMsgCount(endMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
     rcpp_result_gen = Rcpp::wrap(getTrades_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
 // getModifications_impl
-Rcpp::DataFrame getModifications_impl(std::string filename, unsigned long long startMsgCount, unsigned long long endMsgCount, unsigned long long bufferSize, bool quiet);
+Rcpp::DataFrame getModifications_impl(std::string filename, int64_t startMsgCount, int64_t endMsgCount, int64_t bufferSize, bool quiet);
 RcppExport SEXP _RITCH_getModifications_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type startMsgCount(startMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type endMsgCount(endMsgCountSEXP);
-    Rcpp::traits::input_parameter< unsigned long long >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type startMsgCount(startMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type endMsgCount(endMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
     rcpp_result_gen = Rcpp::wrap(getModifications_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
     return rcpp_result_gen;

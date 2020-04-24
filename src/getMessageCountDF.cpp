@@ -11,16 +11,16 @@
 //
 // [[Rcpp::export]]
 Rcpp::DataFrame getMessageCountDF(std::string filename,
-                                  unsigned long long bufferSize,
+                                  int64_t bufferSize,
                                   bool quiet = false) {
   
-  std::vector<unsigned long long> count;
+  std::vector<int64_t> count;
   
 
   if (!quiet) Rcpp::Rcout << "[Counting]   ";
   count = countMessages(filename, bufferSize);
-  unsigned long long nMessages = 0ULL;
-  for (unsigned long long i : count) {
+  int64_t nMessages = 0;
+  for (int64_t i : count) {
   	nMessages += i;
   }
   if (!quiet) Rcpp::Rcout << formatThousands(nMessages) << " messages found\n";
