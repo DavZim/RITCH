@@ -26,7 +26,6 @@ int32_t get4bytes(unsigned char* buf);
 int64_t get6bytes(unsigned char* buf);
 int64_t get8bytes(unsigned char* buf);
 
-void copy64bit(Rcpp::NumericVector vec, int64_t idx, int64_t val);
 // #################################################################
 
 class MessageType {

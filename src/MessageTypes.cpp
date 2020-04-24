@@ -44,18 +44,6 @@ int64_t get8bytes(unsigned char* buf) {
   return __builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0]));
 }
 
-
-/**
- * @brief copies a 64bit value (or multiple) into a numeric vector
- * @param vec the target vector
- * @param idx the starting position
- * @param val the value to copy
- */
-void copy64bit(Rcpp::NumericVector vec, int64_t idx, int64_t val) {
-  const int64_t tmp = val;
-  std::memcpy(&(vec[idx]), &(tmp), sizeof(double));
-}
-
 /**
  * @brief      Counts the number of valid messages for this messagetype, given a count-vector
  *
@@ -129,8 +117,10 @@ bool Orders::loadMessage(unsigned char* buf) {
   msg_type[current_idx]        = std::string(1, buf[0]);
   locate_code[current_idx]     = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
-  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
-  copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
+  int64_t ts = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &ts, sizeof(double));
+  int64_t od = get8bytes(&buf[11]);
+  std::memcpy(&(order_ref[current_idx]), &od, sizeof(double));
   buy[current_idx]             = buf[19] == 'B';
   shares[current_idx]          = get4bytes(&buf[20]);
 
@@ -232,10 +222,13 @@ bool Trades::loadMessage(unsigned char* buf) {
 
   // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  
   msg_type[current_idx]        = std::string(1, buf[0]);
   locate_code[current_idx]     = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
-  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
   
   std::string stock_string;
   const unsigned char white = ' ';
@@ -244,7 +237,9 @@ bool Trades::loadMessage(unsigned char* buf) {
 
   switch (buf[0]) {
     case 'P':
-      copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
+      tmp = get8bytes(&buf[11]);
+      std::memcpy(&(order_ref[current_idx]), &tmp, sizeof(double));
+
       buy[current_idx]    = buf[19] == 'B';
       shares[current_idx] = get4bytes(&buf[20]);
 
@@ -254,7 +249,8 @@ bool Trades::loadMessage(unsigned char* buf) {
       }
       stock[current_idx]  = stock_string;
       price[current_idx]  = (double) get4bytes(&buf[32]) / 10000.0;
-      copy64bit(match_number, current_idx, get8bytes(&buf[36]));
+      tmp = get8bytes(&buf[36]);
+      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       // empty assigns
       cross_type[current_idx] = NA_STRING;
       break;
@@ -271,17 +267,19 @@ bool Trades::loadMessage(unsigned char* buf) {
       }
       stock[current_idx]      = stock_string;
       price[current_idx]      = (double) get4bytes(&buf[27]) / 10000.0;
-      copy64bit(match_number, current_idx, get8bytes(&buf[31]));
+      tmp = get8bytes(&buf[31]);
+      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       cross_type[current_idx] = buf[39];
       //empty assigns
-      copy64bit(order_ref, current_idx, NA_INT64);
+      std::memcpy(&(order_ref[current_idx]), &NA_INT64, sizeof(double));
       buy[current_idx] = NA_LOGICAL;
       break;
 
     case 'B': 
-      copy64bit(match_number, current_idx, get8bytes(&buf[11]));
+      tmp = get8bytes(&buf[11]);
+      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       // empty assigns
-      copy64bit(order_ref, current_idx, NA_INT64);
+      std::memcpy(&(order_ref[current_idx]), &NA_INT64, sizeof(double));
       buy[current_idx]        = NA_LOGICAL;
       shares[current_idx]     = NA_INTEGER;
       stock[current_idx]      = NA_STRING;
@@ -375,57 +373,65 @@ bool Modifications::loadMessage(unsigned char* buf) {
   
   // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+
   msg_type[current_idx]        = std::string(1, buf[0]);
   locate_code[current_idx]     = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
-  copy64bit(timestamp, current_idx, get6bytes(&buf[5]));
-  copy64bit(order_ref, current_idx, get8bytes(&buf[11]));
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  tmp = get8bytes(&buf[11]);
+  std::memcpy(&(order_ref[current_idx]), &tmp, sizeof(double));
   
   switch (buf[0]) {
     case 'E':
       shares[current_idx]       = get4bytes(&buf[19]);// executed shares
-      copy64bit(match_number, current_idx, get8bytes(&buf[23]));
+
+      tmp = get8bytes(&buf[23]);
+      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       // empty assigns
       printable[current_idx]    = NA_LOGICAL;
       price[current_idx]        = NA_REAL;
-      copy64bit(new_order_ref, current_idx, NA_INT64);
+      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
 
     case 'C':
       shares[current_idx]       = get4bytes(&buf[19]);// executed shares
-      copy64bit(match_number, current_idx, get8bytes(&buf[23]));
+      tmp = get8bytes(&buf[23]);
+      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       printable[current_idx]    = buf[31] == 'P';
       price[current_idx]        = (double) get4bytes(&buf[32]) / 10000.0;
       // empty assigns
-      copy64bit(new_order_ref, current_idx, NA_INT64);
+      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
 
     case 'X':
       shares[current_idx] = get4bytes(&buf[19]); // cancelled shares
       // empty assigns
-      copy64bit(match_number, current_idx, NA_INT64);
+      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
       printable[current_idx] = NA_LOGICAL;
       price[current_idx]     = NA_REAL;
-      copy64bit(new_order_ref, current_idx, NA_INT64);
+      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
 
     case 'D':
       // empty assigns
       shares[current_idx]    = NA_INTEGER;
-      copy64bit(match_number, current_idx, NA_INT64);
+      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
       printable[current_idx] = NA_LOGICAL;
       price[current_idx]     = NA_REAL;
-      copy64bit(new_order_ref, current_idx, NA_INT64);
+      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
 
     case 'U':
       // the order ref is the original order reference, 
       // the new order reference is the new order reference
-      copy64bit(new_order_ref, current_idx, get8bytes(&buf[19]));
+      tmp = get8bytes(&buf[19]);
+      std::memcpy(&(new_order_ref[current_idx]), &tmp, sizeof(double));
       shares[current_idx] = get4bytes(&buf[27]);
       price[current_idx]  = (double) get4bytes(&buf[31]) / 10000.0;
       // empty assigns
-      copy64bit(match_number, current_idx, NA_INT64);
+      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
       printable[current_idx] = NA_LOGICAL;
       break;
 
