@@ -38,7 +38,7 @@ public:
   void setBoundaries(int64_t startMsgCount, int64_t endMsgCount);
   
   // Virtual Functions
-  virtual bool loadMessages(unsigned char* buf);
+  virtual bool loadMessage(unsigned char* buf);
   virtual Rcpp::DataFrame getDF();
   virtual void reserve(int64_t size);
 

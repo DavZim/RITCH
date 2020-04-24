@@ -72,7 +72,7 @@ int64_t MessageType::countValidMessages(std::vector<int64_t> count) {
 }
 
 // virtual functions of the class MessageType, will be overloaded by the other classes
-bool MessageType::loadMessages(unsigned char* buf) { return bool(); }
+bool MessageType::loadMessage(unsigned char* buf) { return bool(); }
 Rcpp::DataFrame MessageType::getDF() { return Rcpp::DataFrame(); }
 void MessageType::reserve(int64_t size) {}
 
@@ -102,7 +102,7 @@ void MessageType::setBoundaries(int64_t startMsgCount, int64_t endMsgCount) {
  * @return     false if the boundaries are broken (all necessary messages are already loaded), 
  *              thus the loading process can be aborted, otherwise true
  */
-bool Orders::loadMessages(unsigned char* buf) {
+bool Orders::loadMessage(unsigned char* buf) {
 
   // first check if this is the wrong message
   bool rightMessage = false;
@@ -208,7 +208,7 @@ void Orders::reserve(int64_t size) {
  * @return     false if the boundaries are broken (all necessary messages are already loaded), 
  *              thus the loading process can be aborted, otherwise true
  */
-bool Trades::loadMessages(unsigned char* buf) {
+bool Trades::loadMessage(unsigned char* buf) {
 
   // first check if this is the wrong message
   bool rightMessage = false;
@@ -351,7 +351,7 @@ void Trades::reserve(int64_t size) {
  * @return     false if the boundaries are broken (all necessary messages are already loaded), 
  *              thus the loading process can be aborted, otherwise true
  */
-bool Modifications::loadMessages(unsigned char* buf) {
+bool Modifications::loadMessage(unsigned char* buf) {
 
   // first check if this is the wrong message
   bool rightMessage = false;

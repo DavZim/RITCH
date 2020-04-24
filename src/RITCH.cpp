@@ -172,8 +172,8 @@ void loadToMessages(std::string filename,
       if (inBufferIdx > thisBufferSize - thisMsgLength) break;
       
       // try to load the message
-      if (!msg.loadMessages(&bufferPtr[inBufferIdx])) {
-        // loadMessages returns false if the endMsgCount has been reached, no need to continue
+      if (!msg.loadMessage(&bufferPtr[inBufferIdx])) {
+        // loadMessage returns false if the endMsgCount has been reached, no need to continue
         free(bufferPtr);
         fclose(infile);
         return;
