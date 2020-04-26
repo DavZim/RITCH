@@ -63,12 +63,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gunzipFile_impl
+void gunzipFile_impl(std::string infile, std::string outfile, int bufferSize);
+RcppExport SEXP _RITCH_gunzipFile_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP bufferSizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type infile(infileSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outfile(outfileSEXP);
+    Rcpp::traits::input_parameter< int >::type bufferSize(bufferSizeSEXP);
+    gunzipFile_impl(infile, outfile, bufferSize);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_getMessageCountDF", (DL_FUNC) &_RITCH_getMessageCountDF, 3},
     {"_RITCH_getOrders_impl", (DL_FUNC) &_RITCH_getOrders_impl, 5},
     {"_RITCH_getTrades_impl", (DL_FUNC) &_RITCH_getTrades_impl, 5},
     {"_RITCH_getModifications_impl", (DL_FUNC) &_RITCH_getModifications_impl, 5},
+    {"_RITCH_gunzipFile_impl", (DL_FUNC) &_RITCH_gunzipFile_impl, 3},
     {NULL, NULL, 0}
 };
 

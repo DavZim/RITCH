@@ -8,8 +8,10 @@ get_trades(
   file,
   start_msg_count = 0,
   end_msg_count = -1,
-  buffer_size = 1e+08,
-  quiet = FALSE
+  buffer_size = -1,
+  quiet = FALSE,
+  force_gunzip = FALSE,
+  force_cleanup = FALSE
 )
 }
 \arguments{
@@ -19,10 +21,18 @@ get_trades(
 
 \item{end_msg_count}{the end count of the messages, defaults to all messages}
 
-\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), 
-if you have a large amount of RAM, 1e9 (1GB) might be faster}
+\item{buffer_size}{the size of the buffer in bytes, 
+Default value is set to 1e8 bytes (100 MB),
+if you have a large amount of RAM, 1e9 (1GB) might be faster.
+If your file is a compressed file (.gz-file), the default value is set 
+to 3 times the size of the filesize. This reduces unecessary decompressions}
 
 \item{quiet}{if TRUE, the status messages are supressed, defaults to FALSE}
+
+\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 }
 \value{
 a data.table containing the trades

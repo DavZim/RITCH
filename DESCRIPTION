@@ -10,7 +10,6 @@ License: GPL-3
 Depends: R (>= 3.5.0)
 Imports: data.table,
   Rcpp (>= 0.12.12),
-  R.utils,
   nanotime,
   bit64
 LinkingTo: Rcpp

@@ -8,8 +8,10 @@ get_orders(
   file,
   start_msg_count = 0,
   end_msg_count = -1,
-  buffer_size = 1e+08,
-  quiet = FALSE
+  buffer_size = -1,
+  quiet = FALSE,
+  force_gunzip = FALSE,
+  force_cleanup = FALSE
 )
 }
 \arguments{
@@ -23,6 +25,11 @@ get_orders(
 if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{quiet}{if TRUE, the status messages are supressed, defaults to FALSE}
+
+\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 }
 \value{
 a data.table containing the orders

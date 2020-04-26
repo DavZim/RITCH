@@ -6,9 +6,17 @@
 #' @param file the path to the input file, either a gz-file or a plain-text file
 #' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 #' if you have a large amount of RAM, 1e9 (1GB) might be faster 
+#' @param buffer_size the size of the buffer in bytes, 
+#'       Default value is set to 1e8 bytes (100 MB),
+#'       if you have a large amount of RAM, 1e9 (1GB) might be faster.
+#'       If your file is a compressed file (.gz-file), the default value is set 
+#'       to 3 times the size of the filesize. This reduces unecessary decompressions
 #' @param start_msg_count the start count of the messages, defaults to 0, or a data.frame of msg_types and counts, as outputted by count_messages()
 #' @param end_msg_count the end count of the messages, defaults to all messages
 #' @param quiet if TRUE, the status messages are supressed, defaults to FALSE
+#' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+#'        if set to TRUE, the existing file is overwritten. Default value is FALSE
+#' @param force_cleanup only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
 #'
 #' @return a data.table containing the trades
 #' @export
@@ -32,11 +40,17 @@
 #'   get_trades(raw_file, msg_count)
 #' }
 get_trades <- function(file, start_msg_count = 0, end_msg_count = -1, 
-                       buffer_size = 1e8, quiet = FALSE) {
+                       buffer_size = -1, quiet = FALSE,
+                       force_gunzip = FALSE, force_cleanup = FALSE) {
   t0 <- Sys.time()
   if (!file.exists(file)) stop("File not found!")
+  
+  # Set the default value of the buffer size
+  if (buffer_size < 0)
+    buffer_size <- ifelse(grepl("\\.gz$", file), max(3 * file.size(file), 1e9), 1e8)
+  
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
-  if (buffer_size > 1e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
+  if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
   
   date_ <- get_date_from_filename(file)
   
@@ -46,24 +60,20 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = -1,
     dd <- start_msg_count
     start_msg_count <- 1
     msg_types <- c("P", "Q", "B")
-    end_msg_count <- dd[msg_type %in% msg_types, .(v = sum(count))]$v
+    end_msg_count <- as.integer(dd[msg_type %in% msg_types, sum(count)])
   }
   
-  if (grepl("\\.gz$", file)) {
-    if (!quiet) cat(sprintf("[Extracting] from %s\n", file))
-    
-    tmp_file <- "__tmp_gzip_extract__"
-    if (file.exists(tmp_file)) unlink(tmp_file)
-    R.utils::gunzip(filename = file, destname = tmp_file, remove = F)
-    file <- tmp_file
-  }
+  orig_file <- file
+  file <- RITCH:::check_and_gunzip(file, buffer_size, force_gunzip, quiet)
 
   # -1 because we want it 1 indexed (cpp is 0-indexed) 
   # and max(0, xxx) b.c. the variable is unsigned!
-  df <- getTrades_impl(file, max(0, start_msg_count - 1),
-                       max(-1, end_msg_count - 1), buffer_size, quiet)
+  df <- getTrades_impl(file, max(start_msg_count - 1, 0),
+                       max(end_msg_count - 1, -1), buffer_size, quiet)
 
-  if (file.exists("__tmp_gzip_extract__")) unlink("__tmp_gzip_extract__")
+  # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file 
+  if (grepl("\\.gz$", orig_file) && force_cleanup) unlink(gsub("\\.gz", "", file))
+  
   if (!quiet) cat("\n[Converting] to data.table\n")
   
   df <- data.table::setalloccol(df)
