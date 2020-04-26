@@ -20,6 +20,8 @@ The filename of the unzipped file
 gunzips a binary file to a destination
 }
 \examples{
-file <- "20191230.BX_ITCH_50.gz"
-gunzip_file(file, "tmp")
+\dontrun{
+  file <- "20191230.BX_ITCH_50.gz"
+  gunzip_file(file, "tmp")
+}
 }

@@ -8,8 +8,10 @@
 #' @export
 #'
 #' @examples
-#' file <- "20191230.BX_ITCH_50.gz"
-#' gunzip_file(file, "tmp")
+#' \dontrun{
+#'   file <- "20191230.BX_ITCH_50.gz"
+#'   gunzip_file(file, "tmp")
+#' }
 gunzip_file <- function(infile, outfile, buffer_size = min(4 * file.size(infile), 2e9)) {
   stopifnot(file.exists(infile))
   if (file.exists(outfile)) unlink(outfile)
