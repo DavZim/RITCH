@@ -64,13 +64,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // gunzipFile_impl
-void gunzipFile_impl(std::string infile, std::string outfile, int bufferSize);
+void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize);
 RcppExport SEXP _RITCH_gunzipFile_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP bufferSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type infile(infileSEXP);
     Rcpp::traits::input_parameter< std::string >::type outfile(outfileSEXP);
-    Rcpp::traits::input_parameter< int >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
     gunzipFile_impl(infile, outfile, bufferSize);
     return R_NilValue;
 END_RCPP

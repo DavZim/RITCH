@@ -9,7 +9,7 @@
  * @param buffer_size the size of the buffer, default is 1e9 bytes.
  */
 // [[Rcpp::export]]
-void gunzipFile_impl(std::string infile, std::string outfile, int bufferSize = 1e9) {
+void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize = 1e9) {
   gzFile gzfile = gzopen(infile.c_str(), "rb");
   
   unsigned char* bufferPtr;

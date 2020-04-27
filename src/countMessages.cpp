@@ -9,7 +9,7 @@
  * @return     A vector containing the number of messages per type
  */
 std::vector<int64_t> countMessages(std::string filename, 
-                                              int64_t bufferSize) {
+                                   int64_t bufferSize) {
   
   // Open the file
   FILE* infile;
