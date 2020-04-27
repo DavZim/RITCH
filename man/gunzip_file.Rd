@@ -4,7 +4,11 @@
 \alias{gunzip_file}
 \title{gunzips a binary file to a destination}
 \usage{
-gunzip_file(infile, outfile, buffer_size = min(4 * file.size(infile), 2e+09))
+gunzip_file(
+  infile,
+  outfile = gsub("\\\\.gz$", "", infile),
+  buffer_size = min(4 * file.size(infile), 2e+09)
+)
 }
 \arguments{
 \item{infile}{the gzipped binary file}

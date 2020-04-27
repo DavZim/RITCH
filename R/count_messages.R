@@ -33,7 +33,9 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1, quiet 
   
   # Set the default value of the buffer size
   if (buffer_size < 0)
-    buffer_size <- ifelse(grepl("\\.gz$", file), max(3 * file.size(file), 1e9), 1e8)
+    buffer_size <- ifelse(grepl("\\.gz$", file), 
+                          min(3 * file.size(file), 1e9),
+                          1e8)
   
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")

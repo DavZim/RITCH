@@ -12,9 +12,13 @@
 #'   file <- "20191230.BX_ITCH_50.gz"
 #'   gunzip_file(file, "tmp")
 #' }
-gunzip_file <- function(infile, outfile, buffer_size = min(4 * file.size(infile), 2e9)) {
+gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
+                        buffer_size = min(4 * file.size(infile), 2e9)) {
   stopifnot(file.exists(infile))
   if (file.exists(outfile)) unlink(outfile)
+  
+  # Wonky behaviour with buffer_sizes > .Machine$integer.max
+  buffer_size <- min(buffer_size, .Machine$integer.max)
   
   gunzipFile_impl(infile, outfile, buffer_size)
   return(outfile)

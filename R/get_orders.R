@@ -42,7 +42,12 @@ get_orders <- function(file, start_msg_count = 0, end_msg_count = -1,
 
   # Set the default value of the buffer size
   if (buffer_size < 0)
-    buffer_size <- ifelse(grepl("\\.gz$", file), max(3 * file.size(file), 1e9), 1e8)
+    buffer_size <- ifelse(grepl("\\.gz$", file), 
+                          min(3 * file.size(file), 1e9), 
+                          1e8)
+  
+  # Wonky behaviour with buffer_sizes > .Machine$integer.max
+  buffer_size <- min(buffer_size, .Machine$integer.max)
   
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
