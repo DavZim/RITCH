@@ -142,7 +142,6 @@ public:
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   order_ref;
   Rcpp::IntegerVector   shares;
-  Rcpp::CharacterVector stock;
   Rcpp::NumericVector   match_number;
   Rcpp::LogicalVector   printable;
   Rcpp::NumericVector   price;

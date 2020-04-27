@@ -478,7 +478,6 @@ void Modifications::reserve(int64_t size) {
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
   shares          = data["shares"]          = Rcpp::IntegerVector(size);
-  stock           = data["stock"]           = Rcpp::CharacterVector(size);
   match_number    = data["match_number"]    = Rcpp::NumericVector(size);
   printable       = data["printable"]       = Rcpp::LogicalVector(size);
   price           = data["price"]           = Rcpp::NumericVector(size);

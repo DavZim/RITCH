@@ -12,7 +12,7 @@
  * #######################################################################################
  */ 
 std::vector<int64_t> countMessages(std::string filename, 
-                                              int64_t bufferSize = 1e8);
+                                   int64_t bufferSize = 1e8);
 
 void countMessageByType(std::vector<int64_t>& count, unsigned char msg);
 
