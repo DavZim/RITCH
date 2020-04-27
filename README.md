@@ -447,8 +447,3 @@ To move the package towards CRAN, I want to include a smaller data file
 containing fake or simulated data, this needs to be converted to the
 ITCH format. This would allow the example code to run, but also to
 properly use unit tests in the package.
-
-Currently the `C++` code parses the data into data.frame, which is then
-converted into a data.table. If possible, the data.table should be
-directly populated. But I haven’t found the time to look into a Rcpp
-data.table API.

@@ -128,7 +128,7 @@ mods   <- get_modifications(file, msg_count)
 
 As a last step, a quick visualisation of the data
 
-```{r ETF_plot, cache=TRUE}
+```{r ETF_plot}
 library(ggplot2)
 
 # load the data
@@ -202,5 +202,3 @@ If you find this package useful or have any other kind of feedback, I'd be happy
 ## Open Issues
 
 To move the package towards CRAN, I want to include a smaller data file containing fake or simulated data, this needs to be converted to the ITCH format. This would allow the example code to run, but also to properly use unit tests in the package.
-
-Currently the `C++` code parses the data into data.frame, which is then converted into a data.table. If possible, the data.table should be directly populated. But I haven't found the time to look into a Rcpp data.table API. 
