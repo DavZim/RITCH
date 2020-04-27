@@ -132,8 +132,8 @@ As a last step, a quick visualisation of the data
 library(ggplot2)
 
 # load the data
-orders <- get_orders(file, 1, count_orders(msg_count))
-trades <- get_trades(file, 1, count_trades(msg_count))
+orders <- get_orders(file, msg_count)
+trades <- get_trades(file, msg_count)
 
 # data munging
 tickers <- c("SPY", "IWO")

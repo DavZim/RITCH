@@ -59,7 +59,7 @@ get_modifications <- function(file, start_msg_count = 0, end_msg_count = -1,
   }
   
   orig_file <- file
-  file <- RITCH:::check_and_gunzip(file, buffer_size, force_gunzip, quiet)
+  file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
   
   # -1 because we want it 1 indexed (cpp is 0-indexed) 
   # and max(0, xxx) b.c. the variable is unsigned!

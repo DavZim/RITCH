@@ -39,7 +39,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1, quiet 
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
 
   orig_file <- file
-  file <- RITCH:::check_and_gunzip(file, buffer_size, force_gunzip, quiet)
+  file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
   
   df <- getMessageCountDF(file, buffer_size, quiet)
   df <- data.table::setalloccol(df)

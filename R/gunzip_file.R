@@ -16,7 +16,7 @@ gunzip_file <- function(infile, outfile, buffer_size = min(4 * file.size(infile)
   stopifnot(file.exists(infile))
   if (file.exists(outfile)) unlink(outfile)
   
-  RITCH:::gunzipFile_impl(infile, outfile, buffer_size)
+  gunzipFile_impl(infile, outfile, buffer_size)
   return(outfile)
 }
 

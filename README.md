@@ -75,7 +75,7 @@ file <- "20191230.BX_ITCH_50"
 msg_count <- count_messages(file, add_meta_data = TRUE)
 #> [Counting]   29,156,757 messages found
 #> [Converting] to data.table
-#> [Done]       in 0.36 secs
+#> [Done]       in 0.39 secs
 msg_count
 #>     msg_type    count                                  msg_name                                    msg_group  doc_nr
 #>  1:        S        6                      System Event Message                         System Event Message     4.1
@@ -156,7 +156,7 @@ orders  <- get_orders(file)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 2.65 secs
+#> [Done]       in 2.61 secs
 orders
 #>           msg_type locate_code tracking_number      timestamp order_ref   buy shares stock  price mpid       date
 #>        1:        A        8236               0 25200002107428         4  TRUE  11900   USO  12.96 <NA> 2019-12-30
@@ -264,7 +264,7 @@ mods <- get_modifications(file)
 #> [Counting]   14,492,935 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 1.98 secs
+#> [Done]       in 1.99 secs
 mods
 #>           msg_type locate_code tracking_number      timestamp order_ref shares match_number printable price
 #>        1:        D         393               0 25200008944172     32009     NA         <NA>        NA    NA
@@ -302,17 +302,17 @@ orders <- get_orders(file, msg_count)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 1.96 secs
+#> [Done]       in 1.91 secs
 trades <- get_trades(file, msg_count)
 #> [Counting]   134,385 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 0.58 secs
+#> [Done]       in 0.56 secs
 mods   <- get_modifications(file, msg_count)
 #> [Counting]   14,492,935 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 1.42 secs
+#> [Done]       in 1.41 secs
 # # alternatively, provide the start and end number of messages:
 # orders <- get_orders(file, 1, count_orders(msg_count))
 # trades <- get_trades(file, 1, count_trades(msg_count))
@@ -327,16 +327,16 @@ As a last step, a quick visualisation of the data
 library(ggplot2)
 
 # load the data
-orders <- get_orders(file, 1, count_orders(msg_count))
+orders <- get_orders(file, msg_count)
 #> [Counting]   12,255,197 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 1.86 secs
-trades <- get_trades(file, 1, count_trades(msg_count))
+#> [Done]       in 1.80 secs
+trades <- get_trades(file, msg_count)
 #> [Counting]   134,385 messages found
 #> [Loading]    .........
 #> [Converting] to data.table
-#> [Done]       in 0.63 secs
+#> [Done]       in 0.62 secs
 
 # data munging
 tickers <- c("SPY", "IWO")
