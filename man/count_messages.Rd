@@ -4,7 +4,14 @@
 \alias{count_messages}
 \title{Counts the messages of an ITCH-file}
 \usage{
-count_messages(file, add_meta_data = FALSE, buffer_size = 1e+08, quiet = FALSE)
+count_messages(
+  file,
+  add_meta_data = FALSE,
+  buffer_size = -1,
+  quiet = FALSE,
+  force_gunzip = FALSE,
+  force_cleanup = FALSE
+)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
@@ -14,6 +21,11 @@ count_messages(file, add_meta_data = FALSE, buffer_size = 1e+08, quiet = FALSE)
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{quiet}{if TRUE, the status messages are supressed, defaults to FALSE}
+
+\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 }
 \value{
 a data.table containing the message-type and their counts

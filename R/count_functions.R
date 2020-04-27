@@ -12,7 +12,7 @@ count_internal <- function(x, types) {
   if (!is.data.frame(x)) stop("x has to be a data.table")
   if (!all(c("msg_type", "count") %in% names(x))) stop("x has to have the variables 'msg_type' and 'count'")
   
-  x[msg_type %in% types][, sum(count)]
+  as.integer(x[msg_type %in% types][, sum(count)])
 }
 
 #' Counts the number of orders from a data.table of message counts
