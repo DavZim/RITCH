@@ -17,9 +17,6 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
   stopifnot(file.exists(infile))
   if (file.exists(outfile)) unlink(outfile)
   
-  # Wonky behaviour with buffer_sizes > .Machine$integer.max
-  buffer_size <- min(buffer_size, .Machine$integer.max)
-  
   gunzipFile_impl(infile, outfile, buffer_size)
   return(outfile)
 }

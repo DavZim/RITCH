@@ -13,7 +13,9 @@ void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize
   gzFile gzfile = gzopen(infile.c_str(), "rb");
   
   unsigned char* bufferPtr;
-  int64_t bufferCharSize = sizeof(char) * bufferSize;
+  int64_t bufferCharSize = sizeof(char) * bufferSize > UINT_MAX ? 
+    UINT_MAX : 
+    sizeof(char) * bufferSize;
   bufferPtr = (unsigned char*) malloc(bufferCharSize);
   
   int64_t thisBufferSize;
