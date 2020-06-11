@@ -1,4 +1,4 @@
-#' returns the date from an ITCH-filename
+#' Returns the date from an ITCH-filename
 #'
 #' @param file a filename
 #'
@@ -23,3 +23,18 @@ get_date_from_filename <- function(file) {
   date_ <- as.POSIXct(date_, tz = "GMT")
   return(date_)
 }
+
+#' Returns the exchange from an ITCH-filename
+#'
+#' @param file a filename
+#'
+#' @return The exchange
+#' @export
+#'
+#' @examples
+#' get_exchange_from_filename("03302017.NASDAQ_ITCH50")
+#' get_exchange_from_filename("20170130.BX_ITCH_50.gz")
+get_exchange_from_filename <- function(file) {
+  regmatches(file, regexpr("(?<=\\.)[A-Z]+(?=_)", file, perl = TRUE))
+}
+

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{get_date_from_filename}
 \alias{get_date_from_filename}
-\title{returns the date from an ITCH-filename}
+\title{Returns the date from an ITCH-filename}
 \usage{
 get_date_from_filename(file)
 }
@@ -13,7 +13,7 @@ get_date_from_filename(file)
 the date as fastPOSIXct
 }
 \description{
-returns the date from an ITCH-filename
+Returns the date from an ITCH-filename
 }
 \examples{
 get_date_from_filename("03302017.NASDAQ_ITCH50")

@@ -83,6 +83,8 @@ get_trades <- function(file, start_msg_count = 0, end_msg_count = -1,
   # add the date
   df[, date := date_]
   df[, datetime := nanotime(as.Date(date_)) + timestamp]
+  
+  df[, exchange := get_exchange_from_filename(file)]
 
   a <- gc()
   
