@@ -23,6 +23,7 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
 
 check_and_gunzip <- function(file, buffer_size, force_gunzip, quiet) {
   
+  file <- path.expand(file)
   if (!grepl("\\.gz$", file)) return(file)
   
   raw_file <- gsub("\\.gz$", "", file)
