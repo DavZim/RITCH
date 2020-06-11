@@ -38,3 +38,17 @@ get_exchange_from_filename <- function(file) {
   regmatches(file, regexpr("(?<=\\.)[A-Z]+(?=_)", file, perl = TRUE))
 }
 
+
+#' Opens the ITCH Specification URL
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' open_itch_specification()
+#' }
+open_itch_specification <- function() {
+  url <- "https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf"
+  browseURL(url)
+}

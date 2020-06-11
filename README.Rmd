@@ -195,7 +195,32 @@ orders <- get_orders(file, 1, count_orders(msg_count))
 
 While this package does not contain any real financial data using the ITCH format, NASDAQ provides some sample datasets on its FTP-server, which you can find here: [ftp://emi.nasdaq.com/ITCH](ftp://emi.nasdaq.com/ITCH)
 
-If you want to find out more about the protocol, have a look at the official protocol specification, which you can find here: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf
+Since version `0.1.6`, you can also download a sample file by calling `download_sample_file()`
+
+```r
+file <- download_sample_file()
+#> Downloading 'smallest' sample file(s)
+#> File './20191230.BX_ITCH_50.gz' exists already, not downloading it again!
+#> Checking md5 sum of file './20191230.BX_ITCH_50.gz' ... matches '343ce64e5c0eb20c270ed65ad91bdbe5' - success !
+
+file
+#> [1] "20191230.BX_ITCH_50.gz"
+
+orders <- get_orders(file)
+#> [INFO] Unzipped file 20191230.BX_ITCH_50 already found, using that (overwrite with force_gunzip=TRUE)
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .
+#> [Converting] to data.table
+#> [Done]       in 6.04 secs
+```
+
+If you want to get an overview of all sample files: `list_sample_files()` is your friend
+```{r}
+list_sample_files()
+```
+
+
+If you want to find out more about the protocol, have a look at the official protocol specification, which you can find here: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf or if you are lazy, call `open_itch_specification()` which opens the PDF in your default browser.
 
 If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality for additional message types, please feel free to create an issue or a pull request. 
 

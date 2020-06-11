@@ -432,9 +432,55 @@ While this package does not contain any real financial data using the
 ITCH format, NASDAQ provides some sample datasets on its FTP-server,
 which you can find here: <ftp://emi.nasdaq.com/ITCH>
 
+Since version `0.1.6`, you can also download a sample file by calling
+`download_sample_file()`
+
+``` r
+file <- download_sample_file()
+#> Downloading 'smallest' sample file(s)
+#> File './20191230.BX_ITCH_50.gz' exists already, not downloading it again!
+#> Checking md5 sum of file './20191230.BX_ITCH_50.gz' ... matches '343ce64e5c0eb20c270ed65ad91bdbe5' - success !
+
+file
+#> [1] "20191230.BX_ITCH_50.gz"
+
+orders <- get_orders(file)
+#> [INFO] Unzipped file 20191230.BX_ITCH_50 already found, using that (overwrite with force_gunzip=TRUE)
+#> [Counting]   12,255,197 messages found
+#> [Loading]    .
+#> [Converting] to data.table
+#> [Done]       in 6.04 secs
+```
+
+If you want to get an overview of all sample files:
+`list_sample_files()` is your friend
+
+``` r
+list_sample_files()
+#>                          file exchange       date  file_size       last_modified
+#>  1: 01302020.NASDAQ_ITCH50.gz   NASDAQ 2020-01-30 5597158940 2020-01-31 01:18:00
+#>  2: 07302019.NASDAQ_ITCH50.gz   NASDAQ 2019-07-30 3662140094 2019-07-31 12:15:00
+#>  3: 08302019.NASDAQ_ITCH50.gz   NASDAQ 2019-08-30 4075649457 2019-08-31 12:25:00
+#>  4: 10302019.NASDAQ_ITCH50.gz   NASDAQ 2019-10-30 3872931242 2019-10-31 12:14:00
+#>  5: 12302019.NASDAQ_ITCH50.gz   NASDAQ 2019-12-30 3524013057 2019-12-31 01:13:00
+#>  6:    20190530.BX_ITCH_50.gz       BX 2019-05-30  497884404 2019-05-31 12:16:00
+#>  7:   20190530.PSX_ITCH_50.gz      PSX 2019-05-30  576045196 2019-05-31 12:18:00
+#>  8:    20190730.BX_ITCH_50.gz       BX 2019-07-30  391242214 2019-07-31 12:16:00
+#>  9:   20190730.PSX_ITCH_50.gz      PSX 2019-07-30  411831929 2019-07-31 12:18:00
+#> 10:    20190830.BX_ITCH_50.gz       BX 2019-08-30  449303567 2019-08-31 12:28:00
+#> 11:   20190830.PSX_ITCH_50.gz      PSX 2019-08-30  534501464 2019-08-31 12:32:00
+#> 12:    20191030.BX_ITCH_50.gz       BX 2019-10-30  403851104 2019-10-31 12:15:00
+#> 13:   20191030.PSX_ITCH_50.gz      PSX 2019-10-30  443863576 2019-10-31 12:17:00
+#> 14:    20191230.BX_ITCH_50.gz       BX 2019-12-30  390561039 2019-12-31 01:14:00
+#> 15:   20191230.PSX_ITCH_50.gz      PSX 2019-12-30  531176933 2019-12-31 01:16:00
+#> 16:    20200130.BX_ITCH_50.gz       BX 2020-01-30  721906618 2020-01-31 01:20:00
+#> 17:   20200130.PSX_ITCH_50.gz      PSX 2020-01-30  964492140 2020-01-31 01:22:00
+```
+
 If you want to find out more about the protocol, have a look at the
 official protocol specification, which you can find here:
 <https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf>
+or if you are lazy, call `open_itch_specification()`.
 
 If you find this package useful or have any other kind of feedback, I’d
 be happy if you let me know. Otherwise, if you need more functionality
