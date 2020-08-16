@@ -43,8 +43,12 @@ get_date_from_filename <- function(file) {
 #' @examples
 #' get_exchange_from_filename("03302017.NASDAQ_ITCH50")
 #' get_exchange_from_filename("20170130.BX_ITCH_50.gz")
+#' get_exchange_from_filename("S030220-v50-bx.txt.gz")
 get_exchange_from_filename <- function(file) {
-  regmatches(file, regexpr("(?<=\\.)[A-Z]+(?=_)", file, perl = TRUE))
+  res <- regmatches(file, regexpr("(?<=\\.)[A-Z]+(?=_)", file, perl = TRUE))
+  if (length(res) == 0)
+    res <- regmatches(file, regexpr("(?<=-v50-)[a-z]+", file, perl = TRUE))
+  toupper(res)
 }
 
 
