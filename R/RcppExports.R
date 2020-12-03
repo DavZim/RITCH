@@ -17,6 +17,14 @@ getModifications_impl <- function(filename, startMsgCount, endMsgCount, bufferSi
     .Call('_RITCH_getModifications_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
+getSystemEvents_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getSystemEvents_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
+getStockDirectory_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getStockDirectory_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
 }

@@ -148,4 +148,79 @@ public:
   Rcpp::NumericVector   new_order_ref;
 };
 
+/*
+ * #############################################################################
+ * # Other classes, i.e., system information, circuit breakers etc...
+ * #############################################################################
+ * 
+ */
+
+/**
+ * @brief      A class that parses the System Event (message type 'S')
+ */
+class SystemEvents : public MessageType {
+public:
+  SystemEvents() : MessageType(
+    {'S'}, 
+    {ITCH::POS::S},
+    {"msg_type", "locate_code", "tracking_number", "timestamp", "event_code"}
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector event_code;
+};
+
+
+/**
+ * @brief      A class that parses the Stock Directory (message type 'R')
+ */
+class StockDirectory : public MessageType {
+public:
+  StockDirectory() : MessageType(
+  {'R'}, 
+  {ITCH::POS::R},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", 
+   "market_category", "financial_status", "lot_size", "round_lots_only",
+   "issue_classification", "issue_subtype", "authentic", "short_sell_closeout",
+   "ipo_flag", "luld_price_tier", "etp_flag", "etp_leverage", "inverse"}
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::CharacterVector market_category;
+  Rcpp::CharacterVector financial_status;
+  Rcpp::IntegerVector   lot_size;
+  Rcpp::LogicalVector   round_lots_only;
+  Rcpp::CharacterVector issue_classification;
+  Rcpp::CharacterVector issue_subtype;
+  Rcpp::CharacterVector authentic; // authentic true = P (Live/Production) false = T (Test)
+  Rcpp::LogicalVector   short_sell_closeout;
+  Rcpp::LogicalVector   ipo_flag;
+  Rcpp::CharacterVector luld_price_tier;
+  Rcpp::LogicalVector   etp_flag;
+  Rcpp::IntegerVector   etp_leverage;
+  Rcpp::LogicalVector   inverse;
+};
+
+
+
+
 #endif //MESSAGES_H

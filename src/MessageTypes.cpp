@@ -405,39 +405,39 @@ bool Modifications::loadMessage(unsigned char* buf) {
     std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
     break;
     
-    case 'X':
-      shares[current_idx] = get4bytes(&buf[19]); // cancelled shares
-      // empty assigns
-      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
-      printable[current_idx] = NA_LOGICAL;
-      price[current_idx]     = NA_REAL;
-      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
-      break;
-      
-    case 'D':
-      // empty assigns
-      shares[current_idx]    = NA_INTEGER;
-      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
-      printable[current_idx] = NA_LOGICAL;
-      price[current_idx]     = NA_REAL;
-      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
-      break;
-      
-    case 'U':
-      // the order ref is the original order reference, 
-      // the new order reference is the new order reference
-      tmp = get8bytes(&buf[19]);
-      std::memcpy(&(new_order_ref[current_idx]), &tmp, sizeof(double));
-      shares[current_idx] = get4bytes(&buf[27]);
-      price[current_idx]  = (double) get4bytes(&buf[31]) / 10000.0;
-      // empty assigns
-      std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
-      printable[current_idx] = NA_LOGICAL;
-      break;
-      
-    default:
-      Rcpp::Rcout << "Unkown message type: " << buf[0] << "\n";
+  case 'X':
+    shares[current_idx] = get4bytes(&buf[19]); // cancelled shares
+    // empty assigns
+    std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
+    printable[current_idx] = NA_LOGICAL;
+    price[current_idx]     = NA_REAL;
+    std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
     break;
+    
+  case 'D':
+    // empty assigns
+    shares[current_idx]    = NA_INTEGER;
+    std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
+    printable[current_idx] = NA_LOGICAL;
+    price[current_idx]     = NA_REAL;
+    std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
+    break;
+    
+  case 'U':
+    // the order ref is the original order reference, 
+    // the new order reference is the new order reference
+    tmp = get8bytes(&buf[19]);
+    std::memcpy(&(new_order_ref[current_idx]), &tmp, sizeof(double));
+    shares[current_idx] = get4bytes(&buf[27]);
+    price[current_idx]  = (double) get4bytes(&buf[31]) / 10000.0;
+    // empty assigns
+    std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
+    printable[current_idx] = NA_LOGICAL;
+    break;
+    
+  default:
+    Rcpp::Rcout << "Unkown message type: " << buf[0] << "\n";
+  break;
   }
   
   // increase the number of this message type
@@ -484,3 +484,197 @@ void Modifications::reserve(int64_t size) {
   new_order_ref   = data["new_order_ref"]   = Rcpp::NumericVector(size);
   data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
+
+
+
+// ################################################################################
+// ################################ System Event Messages #########################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from system event messages into the class, type 'S'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool SystemEvents::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  event_code[current_idx]      = std::string(1, buf[11]);
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame SystemEvents::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void SystemEvents::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
+  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
+  timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
+  event_code      = data["event_code"]      = Rcpp::CharacterVector(size);
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+}
+
+
+// ################################################################################
+// ################################ Stock Directory ###############################
+// ################################################################################
+
+/**
+ * @brief      Loads the stock directory messages into the class, type 'R'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool StockDirectory::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const unsigned char white = ' ';
+  std::string stock_string, issue_string;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[11 + i] != white) stock_string += buf[11 + i];
+  }
+  stock[current_idx]            = stock_string;
+  market_category[current_idx]  = std::string(1, buf[19]);
+  financial_status[current_idx] = std::string(1, buf[20]);
+  lot_size[current_idx] = get4bytes(&buf[21]);
+  round_lots_only[current_idx] = buf[25] == 'Y';
+  issue_classification[current_idx] = std::string(1, buf[26]);
+  issue_string = buf[27] + buf[28];
+  issue_subtype[current_idx] = issue_string;
+  authentic[current_idx] = buf[29] == 'P'; // P is live/production, T is Test
+  short_sell_closeout[current_idx] = buf[30] == 'Y' ? true : buf[30] == 'N' ? false : NA_LOGICAL;
+  ipo_flag[current_idx] = buf[31] == 'Y' ? true : buf[31] == 'N' ? false : NA_LOGICAL;
+  luld_price_tier[current_idx] = std::string(1, buf[32]);
+  etp_flag[current_idx] = buf[33] == 'Y' ? true : buf[33] == 'N' ? false : NA_LOGICAL;
+  etp_leverage[current_idx] = get4bytes(&buf[34]);;
+  inverse[current_idx] = buf[38] == 'Y';
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame StockDirectory::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void StockDirectory::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type              = data["msg_type"]              = Rcpp::CharacterVector(size);
+  locate_code           = data["locate_code"]           = Rcpp::IntegerVector(size);
+  tracking_number       = data["tracking_number"]       = Rcpp::IntegerVector(size);
+  timestamp             = data["timestamp"]             = Rcpp::NumericVector(size);
+  stock                 = data["stock"]                 = Rcpp::CharacterVector(size);
+  market_category       = data["market_category"]       = Rcpp::CharacterVector(size);
+  financial_status      = data["financial_status"]      = Rcpp::CharacterVector(size);
+  lot_size              = data["lot_size"]              = Rcpp::IntegerVector(size);
+  round_lots_only       = data["round_lots_only"]       = Rcpp::LogicalVector(size);
+  issue_classification  = data["issue_classification"]  = Rcpp::CharacterVector(size);
+  issue_subtype         = data["issue_subtype"]         = Rcpp::CharacterVector(size);
+  authentic             = data["authentic"]             = Rcpp::CharacterVector(size);
+  short_sell_closeout   = data["short_sell_closeout"]   = Rcpp::LogicalVector(size);
+  ipo_flag              = data["ipo_flag"]              = Rcpp::LogicalVector(size);
+  luld_price_tier       = data["luld_price_tier"]       = Rcpp::CharacterVector(size);
+  etp_flag              = data["etp_flag"]              = Rcpp::LogicalVector(size);
+  etp_leverage          = data["etp_leverage"]          = Rcpp::IntegerVector(size);
+  inverse               = data["inverse"]               = Rcpp::LogicalVector(size);
+  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+}
+

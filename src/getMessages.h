@@ -20,22 +20,34 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
                                     int64_t bufferSize = 1e8,
                                     bool quiet = false);
 
-Rcpp::DataFrame getOrders(std::string filename, 
-                          int64_t startMsgCount = 0,
-                          int64_t endMsgCount = 0,
-                          int64_t bufferSize = 1e8,
-                          bool quiet = false);
+Rcpp::DataFrame getOrders_impl(std::string filename, 
+                               int64_t startMsgCount = 0,
+                               int64_t endMsgCount = 0,
+                               int64_t bufferSize = 1e8,
+                               bool quiet = false);
 
-Rcpp::DataFrame getTrades(std::string filename, 
-                          int64_t startMsgCount = 0,
-                          int64_t endMsgCount = 0,
-                          int64_t bufferSize = 1e8,
-                          bool quiet = false);
+Rcpp::DataFrame getTrades_impl(std::string filename, 
+                               int64_t startMsgCount = 0,
+                               int64_t endMsgCount = 0,
+                               int64_t bufferSize = 1e8,
+                               bool quiet = false);
 
-Rcpp::DataFrame getModifications(std::string filename, 
-                                 int64_t startMsgCount = 0,
-                                 int64_t endMsgCount = 0,
-                                 int64_t bufferSize = 1e8,
-                                 bool quiet = false);
+Rcpp::DataFrame getModifications_impl(std::string filename, 
+                                      int64_t startMsgCount = 0,
+                                      int64_t endMsgCount = 0,
+                                      int64_t bufferSize = 1e8,
+                                      bool quiet = false);
+
+Rcpp::DataFrame getSystemEvents_impl(std::string filename, 
+                                     int64_t startMsgCount = 0,
+                                     int64_t endMsgCount = 0,
+                                     int64_t bufferSize = 1e8,
+                                     bool quiet = false);
+
+Rcpp::DataFrame getStockDirectory_impl(std::string filename, 
+                                       int64_t startMsgCount = 0,
+                                       int64_t endMsgCount = 0,
+                                       int64_t bufferSize = 1e8,
+                                       bool quiet = false);
 
 #endif //GETMESSAGES_H
