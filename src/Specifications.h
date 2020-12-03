@@ -14,8 +14,8 @@ const int64_t NA_INT64 = 1ULL << 63;
 namespace ITCH {
   // all messages in order
   const std::vector<unsigned char> TYPES = {'S','R','H','Y','L','V','W','K','J',
-                                            'A','F','E', 'C','X','D','U','P','Q',
-                                            'B','I','N'};
+                                            'h','A','F','E', 'C','X','D','U','P',
+                                            'Q','B','I','N'};
    // the size in bytes of each message
   namespace SIZE {
     const int64_t S = 12;
@@ -27,6 +27,7 @@ namespace ITCH {
     const int64_t W = 12;
     const int64_t K = 28;
     const int64_t J = 35;
+    const int64_t h = 21;
     const int64_t A = 36;
     const int64_t F = 40;
     const int64_t E = 31;
@@ -52,23 +53,24 @@ namespace ITCH {
     const int W = 6;
     const int K = 7;
     const int J = 8;
-    const int A = 9;
-    const int F = 10;
-    const int E = 11;
-    const int C = 12;
-    const int X = 13;
-    const int D = 14;
-    const int U = 15;
-    const int P = 16;
-    const int Q = 17;
-    const int B = 18;
-    const int I = 19;
-    const int N = 20;
+    const int h = 9;
+    const int A = 10;
+    const int F = 11;
+    const int E = 12;
+    const int C = 13;
+    const int X = 14;
+    const int D = 15;
+    const int U = 16;
+    const int P = 17;
+    const int Q = 18;
+    const int B = 19;
+    const int I = 20;
+    const int N = 21;
   }
   // all messages in a string, to make conversions easier
-  const std::vector<std::string> TYPESSTRING = {"S","R","H","Y","L","V","W","K","J",
-                                                "A","F","E", "C","X","D","U","P","Q",
-                                                "B","I","N"};
+  const std::vector<std::string> TYPESSTRING = {"S","R","H","Y","L","V","W","K",
+                                                "J","h","A","F","E", "C","X","D",
+                                                "U","P","Q","B","I","N"};
 }
 
 #endif //SPECIFICATIONS_H

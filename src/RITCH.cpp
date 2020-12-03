@@ -9,50 +9,29 @@
  */
 int64_t getMessageLength(unsigned char msgType) {
   switch (msgType) {
-  case 'S':
-    return ITCH::SIZE::S;
-  case 'R':
-    return ITCH::SIZE::R;
-  case 'H':
-    return ITCH::SIZE::H;
-  case 'Y':
-    return ITCH::SIZE::Y;
-  case 'L':
-    return ITCH::SIZE::L;
-  case 'V':
-    return ITCH::SIZE::V;
-  case 'W':
-    return ITCH::SIZE::W;
-  case 'K':
-    return ITCH::SIZE::K;
-  case 'J':
-    return ITCH::SIZE::J;
-  case 'A':
-    return ITCH::SIZE::A;
-  case 'F':
-    return ITCH::SIZE::F;
-  case 'E':
-    return ITCH::SIZE::E;
-  case 'C':
-    return ITCH::SIZE::C;
-  case 'X':
-    return ITCH::SIZE::X;
-  case 'D':
-    return ITCH::SIZE::D;
-  case 'U':
-    return ITCH::SIZE::U;
-  case 'P':
-    return ITCH::SIZE::P;
-  case 'Q':
-    return ITCH::SIZE::Q;
-  case 'B':
-    return ITCH::SIZE::B;
-  case 'I':
-    return ITCH::SIZE::I;
-  case 'N':
-    return ITCH::SIZE::N;
-  default:
-    Rcpp::Rcout << "Unkown Message Type\n";
+  case 'S': return ITCH::SIZE::S;
+  case 'R': return ITCH::SIZE::R;
+  case 'H': return ITCH::SIZE::H;
+  case 'Y': return ITCH::SIZE::Y;
+  case 'L': return ITCH::SIZE::L;
+  case 'V': return ITCH::SIZE::V;
+  case 'W': return ITCH::SIZE::W;
+  case 'K': return ITCH::SIZE::K;
+  case 'J': return ITCH::SIZE::J;
+  case 'h': return ITCH::SIZE::h;
+  case 'A': return ITCH::SIZE::A;
+  case 'F': return ITCH::SIZE::F;
+  case 'E': return ITCH::SIZE::E;
+  case 'C': return ITCH::SIZE::C;
+  case 'X': return ITCH::SIZE::X;
+  case 'D': return ITCH::SIZE::D;
+  case 'U': return ITCH::SIZE::U;
+  case 'P': return ITCH::SIZE::P;
+  case 'Q': return ITCH::SIZE::Q;
+  case 'B': return ITCH::SIZE::B;
+  case 'I': return ITCH::SIZE::I;
+  case 'N': return ITCH::SIZE::N;
+  default: Rcpp::Rcout << "Unkown Message Type\n";
   return 1;
   }
 }
@@ -66,50 +45,29 @@ int64_t getMessageLength(unsigned char msgType) {
  */
 int getMessagePosition(unsigned char msgType) {
   switch (msgType) {
-  case 'S':
-    return 0;
-  case 'R':
-    return 1;
-  case 'H':
-    return 2;
-  case 'Y':
-    return 3;
-  case 'L':
-    return 4;
-  case 'V':
-    return 5;
-  case 'W':
-    return 6;
-  case 'K':
-    return 7;
-  case 'J':
-    return 8;
-  case 'A':
-    return 9;
-  case 'F':
-    return 10;
-  case 'E':
-    return 11;
-  case 'C':
-    return 12;
-  case 'X':
-    return 13;
-  case 'D':
-    return 14;
-  case 'U':
-    return 15;
-  case 'P':
-    return 16;
-  case 'Q':
-    return 17;
-  case 'B':
-    return 18;
-  case 'I':
-    return 19;
-  case 'N':
-    return 20;
-  default:
-    Rcpp::Rcout << "Unkown Message Type\n";
+  case 'S': return 0;
+  case 'R': return 1;
+  case 'H': return 2;
+  case 'Y': return 3;
+  case 'L': return 4;
+  case 'V': return 5;
+  case 'W': return 6;
+  case 'K': return 7;
+  case 'J': return 8;
+  case 'h': return 9;
+  case 'A': return 10;
+  case 'F': return 11;
+  case 'E': return 12;
+  case 'C': return 13;
+  case 'X': return 14;
+  case 'D': return 15;
+  case 'U': return 16;
+  case 'P': return 17;
+  case 'Q': return 18;
+  case 'B': return 19;
+  case 'I': return 20;
+  case 'N': return 21;
+  default: Rcpp::Rcout << "Unkown Message Type\n";
   return 0;
   }
 }

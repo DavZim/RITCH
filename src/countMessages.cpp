@@ -84,7 +84,7 @@ std::vector<int64_t> countMessages(std::string filename,
  */
 void countMessageByType(std::vector<int64_t>& count, unsigned char msg) {
   switch(msg) {
-    case 'S':
+    case 'S': 
       count[ITCH::POS::S]++;
       break;
     case 'R':
@@ -110,6 +110,9 @@ void countMessageByType(std::vector<int64_t>& count, unsigned char msg) {
       break;
     case 'J':
       count[ITCH::POS::J]++;
+      break;
+    case 'h':
+      count[ITCH::POS::h]++;
       break;
     case 'A':
       count[ITCH::POS::A]++;
