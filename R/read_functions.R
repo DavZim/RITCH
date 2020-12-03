@@ -11,6 +11,10 @@
 #' If the file is too large to be loaded into the workspace at once,
 #' you can specify different start_msg_count/end_msg_counts to load only some messages.
 #' 
+#' @details 
+#' The specifications of the different messages types can be obtained from the official
+#' ITCH specififation (see also \code{\link{open_itch_specification}})
+#' 
 #' @param file the path to the input file, either a gz-file or a plain-text file
 #' @param type the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.
 #' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
@@ -139,9 +143,13 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
 
 #' @rdname read_functions
 #' @export
-#' @details Order messages refer to message type 'A' and 'F'
+#' @details
+#' \itemize{
+#'  \item{\code{read_orders()}}{ Order messages refer to message type 'A' and 'F'}
+#' }
 #' @examples 
-#' ## read_orders
+#' 
+#' ## read_orders()
 #' file <- "20191230.BX_ITCH_50"
 #' read_orders(file)
 read_orders <- function(file, ...) {
@@ -153,24 +161,13 @@ read_orders <- function(file, ...) {
 
 #' @rdname read_functions
 #' @export
-#' @details Order messages refer to message type 'E', 'C', 'X', 'D', and 'U'
+#' @details 
+#' \itemize{
+#'  \item{\code{read_trades()}}{ Trade messages refer to message type 'P', 'Q', and 'B'}
+#' }
 #' @examples 
-#' ## read_modifications
-#' file <- "20191230.BX_ITCH_50"
-#' read_modifications(file)
-read_modifications <- function(file, ...) {
-  dots <- list(...)
-  dots$file <- file
-  dots$type <- "modifications"
-  do.call(read_ITCH, dots)
-}
-
-
-#' @rdname read_functions
-#' @export
-#' @details Trade messages refer to message type 'P', 'Q', and 'B'
-#' @examples 
-#' ## read_trades
+#' 
+#' ## read_trades()
 #' file <- "20191230.BX_ITCH_50"
 #' read_trades(file)
 read_trades <- function(file, ...) {
@@ -180,15 +177,36 @@ read_trades <- function(file, ...) {
   do.call(read_ITCH, dots)
 }
 
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_modifications()}}{ Modification messages refer to message type 'E', 'C', 'X', 'D', and 'U'}
+#' }
+#' @examples 
+#' 
+#' ## read_modifications()
+#' file <- "20191230.BX_ITCH_50"
+#' read_modifications(file)
+read_modifications <- function(file, ...) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "modifications"
+  do.call(read_ITCH, dots)
+}
 
 #' @rdname read_functions
 #' @param add_descriptions add longer descriptions to shortened variables
 #' The added information is taken from the official ITCH documentation section 4.1, 
 #' see also \code{\link{open_itch_specification}}
 #' @export
-#' @details System event messages refer to message type 'S'
+#' @details 
+#' \itemize{
+#'  \item{\code{read_system_events()}}{ System event messages refer to message type 'S'}
+#' }
 #' @examples 
-#' ## read_system_events
+#' 
+#' ## read_system_events()
 #' file <- "20191230.BX_ITCH_50"
 #' read_system_events(file)
 #' read_system_events(file, add_descriptions)
@@ -224,9 +242,13 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
 #' The added information is taken from the official ITCH documentation section 4.2.1, 
 #' see also \code{\link{open_itch_specification}}
 #' @export
-#' @details Stock directory messages refer to message type 'R'
+#' @details 
+#' \itemize{
+#'  \item{\code{read_stock_directory()}}{ Stock directory messages refer to message type 'R'}
+#' }
 #' @examples 
-#' ## read_stock_directory
+#' 
+#' ## read_stock_directory()
 #' file <- "20191230.BX_ITCH_50"
 #' read_stock_directory(file)
 #' read_stock_directory(file, add_descriptions = TRUE)
@@ -287,9 +309,13 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
 #' The added information is taken from the official ITCH documentation section 4.2.2 and 4.2.8
 #' see also \code{\link{open_itch_specification}}
 #' @export
-#' @details Trading Status messages refer to message type 'H' and 'h' (operational reason)
+#' @details 
+#' \itemize{
+#'  \item{\code{read_trading_status()}}{ Trading Status messages refer to message type 'H' and 'h' (operational reason)}
+#' }
 #' @examples 
-#' ## read_trading_status
+#' 
+#' ## read_trading_status()
 #' file <- "20191230.BX_ITCH_50"
 #' read_trading_status(file)
 #' read_trading_status(file, add_descriptions = TRUE)

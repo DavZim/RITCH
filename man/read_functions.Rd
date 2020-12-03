@@ -4,11 +4,12 @@
 \alias{read_functions}
 \alias{read_ITCH}
 \alias{read_orders}
-\alias{read_modifications}
 \alias{read_trades}
+\alias{read_modifications}
 \alias{read_system_events}
 \alias{read_stock_directory}
 \alias{read_trading_status}
+\alias{read_reg_sho}
 \title{Reads certain messages of an ITCH-file into a data.table}
 \usage{
 read_ITCH(
@@ -24,9 +25,9 @@ read_ITCH(
 
 read_orders(file, ...)
 
-read_modifications(file, ...)
-
 read_trades(file, ...)
+
+read_modifications(file, ...)
 
 read_system_events(file, ..., add_descriptions = FALSE)
 
@@ -71,17 +72,32 @@ If the file is too large to be loaded into the workspace at once,
 you can specify different start_msg_count/end_msg_counts to load only some messages.
 }
 \details{
-Order messages refer to message type 'A' and 'F'
+The specifications of the different messages types can be obtained from the official
+ITCH specififation (see also \code{\link{open_itch_specification}})
 
-Order messages refer to message type 'E', 'C', 'X', 'D', and 'U'
+\itemize{
+ \item{\code{read_orders()}}{ Order messages refer to message type 'A' and 'F'}
+}
 
-Trade messages refer to message type 'P', 'Q', and 'B'
+\itemize{
+ \item{\code{read_trades()}}{ Trade messages refer to message type 'P', 'Q', and 'B'}
+}
 
-System event messages refer to message type 'S'
+\itemize{
+ \item{\code{read_modifications()}}{ Modification messages refer to message type 'E', 'C', 'X', 'D', and 'U'}
+}
 
-Stock directory messages refer to message type 'R'
+\itemize{
+ \item{\code{read_system_events()}}{ System event messages refer to message type 'S'}
+}
 
-Trading Status messages refer to message type 'H' and 'h' (operational reason)
+\itemize{
+ \item{\code{read_stock_directory()}}{ Stock directory messages refer to message type 'R'}
+}
+
+\itemize{
+ \item{\code{read_trading_status()}}{ Trading Status messages refer to message type 'H' and 'h' (operational reason)}
+}
 }
 \examples{
 file <- "20191230.BX_ITCH_50"
@@ -117,24 +133,30 @@ str(md)
   get_orders(raw_file, msg_count)
 }
 
-## read_orders
+
+## read_orders()
 file <- "20191230.BX_ITCH_50"
 read_orders(file)
-## read_modifications
-file <- "20191230.BX_ITCH_50"
-read_modifications(file)
-## read_trades
+
+## read_trades()
 file <- "20191230.BX_ITCH_50"
 read_trades(file)
-## read_system_events
+
+## read_modifications()
+file <- "20191230.BX_ITCH_50"
+read_modifications(file)
+
+## read_system_events()
 file <- "20191230.BX_ITCH_50"
 read_system_events(file)
 read_system_events(file, add_descriptions)
-## read_stock_directory
+
+## read_stock_directory()
 file <- "20191230.BX_ITCH_50"
 read_stock_directory(file)
 read_stock_directory(file, add_descriptions = TRUE)
-## read_trading_status
+
+## read_trading_status()
 file <- "20191230.BX_ITCH_50"
 read_trading_status(file)
 read_trading_status(file, add_descriptions = TRUE)

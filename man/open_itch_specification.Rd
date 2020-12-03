@@ -10,7 +10,7 @@ open_itch_specification()
 
 }
 \description{
-Opens the ITCH Specification URL
+The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
 }
 \examples{
 \dontrun{
