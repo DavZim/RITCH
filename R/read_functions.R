@@ -81,7 +81,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "system_events" = "S",
     "stock_directory" = "R",
     "trading_status" = c("H", "h"),
-    "reg_sho" = "Y"
+    "reg_sho" = "Y",
+    "participant_states" = "L"
   )
   
   imp_calls <- list(
@@ -91,7 +92,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "system_events" = getSystemEvents_impl,
     "stock_directory" = getStockDirectory_impl,
     "trading_status" = getTradingStatus_impl,
-    "reg_sho" = getRegSHO_impl
+    "reg_sho" = getRegSHO_impl,
+    "participant_states" = getParticipantStates_impl
   )
   
   stopifnot(type %in% names(msg_types))
@@ -376,6 +378,46 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
     )
     
     res <- merge(res, ac, by = "regsho_action", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  res
+}
+
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_market_participant_states()}}{ Market participants status messages refer to message type 'L'}
+#' }
+#' @examples 
+#' 
+#' ## read_market_participant_states()
+#' file <- "20191230.BX_ITCH_50"
+#' read_market_participant_states(file)
+#' read_market_participant_states(file, add_descriptions = TRUE)
+read_market_participant_states <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "participant_states"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    mmm <- data.table::data.table(
+      mm_mode = c("N", "P", "S", "R", "L"),
+      mm_mode_note = c("Normal", "Passive", "Syndicate", "Pre-Syndicate", "Penalty")
+    )
+    
+    res <- merge(res, mmm, by = "mm_mode", all.x = TRUE)
+    
+    ps <- data.table::data.table(
+      participant_state = c("A", "E", "W", "S", "D"),
+      participant_state_note = c("Active", "Excused/withdrawn", "Withdrawn", 
+                                 "Suspended", "Deleted")
+    )
+    res <- merge(res, ps, by = "participant_state", all.x = TRUE)
     
     data.table::setcolorder(res, names_)
   }

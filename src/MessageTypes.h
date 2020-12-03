@@ -281,6 +281,36 @@ public:
   Rcpp::CharacterVector regsho_action;
 };
 
+/**
+ * @brief      A class that parses Market Participant Status messages (message type 'L')
+ */
+class ParticipantStates : public MessageType {
+public:
+  ParticipantStates() : MessageType(
+  {'L'}, 
+  {ITCH::POS::L},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "mpid", "stock",
+   "primary_mm", "mm_mode", "participant_state"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector mpid;
+  Rcpp::CharacterVector stock;
+  Rcpp::LogicalVector   primary_mm;
+  Rcpp::CharacterVector mm_mode;
+  Rcpp::CharacterVector participant_state;
+};
+
 
 
 

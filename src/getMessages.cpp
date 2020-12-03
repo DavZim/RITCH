@@ -239,6 +239,33 @@ Rcpp::DataFrame getRegSHO_impl(std::string filename,
   return df;  
 }
 
+// @brief      Returns the Market Participants Status from a file as a dataframe
+// 
+// Message Types considered are 'L'
+//
+// @param[in]  filename       The filename to a plain-text-file
+// @param[in]  startMsgCount  The start message count, the message (order) count at which we 
+//                              start to save the messages, the defaults to 0 (first message)
+// @param[in]  endMsgCount    The end message count, the message count at which we stop to 
+//                              stop to save the messages, defaults to 0, which will be 
+//                              substituted to all messages
+// @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
+// @param[in]  quiet          If true, no status message is printed, defaults to false
+//
+// @return     The information in a data.frame
+// [[Rcpp::export]]
+Rcpp::DataFrame getParticipantStates_impl(std::string filename,
+                                          int64_t startMsgCount,
+                                          int64_t endMsgCount,
+                                          int64_t bufferSize,
+                                          bool quiet) {
+  
+  ParticipantStates trad;
+  Rcpp::DataFrame df = getMessagesTemplate(trad, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
+
+
 
 
 
