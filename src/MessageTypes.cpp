@@ -980,6 +980,119 @@ void ParticipantStates::reserve(int64_t size) {
   data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
+// ################################################################################
+// ################################ MWCB ##########################################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from system event messages into the class, type 'L'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool MWCB::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  switch (buf[0]) {
+  case 'V':
+    tmp = get8bytes(&buf[11]);
+    std::memcpy(&(level1[current_idx]), &tmp, sizeof(double));
+    tmp = get8bytes(&buf[19]);
+    std::memcpy(&(level2[current_idx]), &tmp, sizeof(double));
+    tmp = get8bytes(&buf[27]);
+    std::memcpy(&(level3[current_idx]), &tmp, sizeof(double));
+    // fill NAs from W
+    breached_level[current_idx] = NA_INTEGER;
+    break;
+    
+    case 'W':
+      breached_level[current_idx] = buf[11] - '0';
+      // fill NAs from V
+      std::memcpy(&(level1[current_idx]), &NA_INT64, sizeof(double));
+      std::memcpy(&(level2[current_idx]), &NA_INT64, sizeof(double));
+      std::memcpy(&(level3[current_idx]), &NA_INT64, sizeof(double));
+      break;
+      
+      default:
+        Rcpp::Rcout << "Unkown Type: " << buf[0] << "\n";
+      break;
+  }
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame MWCB::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  Rcpp::NumericVector lvl1 = data["level1"];
+  Rcpp::NumericVector lvl2 = data["level2"];
+  Rcpp::NumericVector lvl3 = data["level3"];
+  ts.attr("class") = "integer64";
+  lvl1.attr("class") = "integer64";
+  lvl2.attr("class") = "integer64";
+  lvl3.attr("class") = "integer64";
+  
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void MWCB::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
+  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
+  timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
+  level1            = data["level1"]            = Rcpp::NumericVector(size);
+  level2            = data["level2"]            = Rcpp::NumericVector(size);
+  level3            = data["level3"]            = Rcpp::NumericVector(size);
+  breached_level    = data["breached_level"]    = Rcpp::IntegerVector(size);
+  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+}
+
 
 
 

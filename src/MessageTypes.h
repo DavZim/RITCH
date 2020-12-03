@@ -310,8 +310,37 @@ public:
   Rcpp::CharacterVector mm_mode;
   Rcpp::CharacterVector participant_state;
 };
-
-
+/**
+ * @brief      A class that parses MWCB information (message type 'V' and 'W')
+ */
+class MWCB : public MessageType {
+public:
+  MWCB() : MessageType(
+  {'V', 'W'}, 
+  {ITCH::POS::V, ITCH::POS::W},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", 
+   // message type 'V'
+   "level1", "level2", "level3",
+   // message type 'W'
+   "breached_level"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   level1;
+  Rcpp::NumericVector   level2;
+  Rcpp::NumericVector   level3;
+  Rcpp::IntegerVector   breached_level;
+};
 
 
 #endif //MESSAGES_H

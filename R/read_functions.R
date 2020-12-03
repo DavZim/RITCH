@@ -13,7 +13,7 @@
 #' 
 #' @details 
 #' The specifications of the different messages types can be obtained from the official
-#' ITCH specififation (see also \code{\link{open_itch_specification}})
+#' ITCH specification (see also \code{\link{open_itch_specification}})
 #' 
 #' @param file the path to the input file, either a gz-file or a plain-text file
 #' @param type the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.
@@ -82,7 +82,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "stock_directory" = "R",
     "trading_status" = c("H", "h"),
     "reg_sho" = "Y",
-    "participant_states" = "L"
+    "participant_states" = "L",
+    "mwcb" = c("V", "W")
   )
   
   imp_calls <- list(
@@ -93,7 +94,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "stock_directory" = getStockDirectory_impl,
     "trading_status" = getTradingStatus_impl,
     "reg_sho" = getRegSHO_impl,
-    "participant_states" = getParticipantStates_impl
+    "participant_states" = getParticipantStates_impl,
+    "mwcb" = getMWCB_impl
   )
   
   stopifnot(type %in% names(msg_types))
@@ -424,6 +426,27 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
   
   res
 }
+
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_mwcb()}}{ MWCB (Market Wide Circuit Breaker) messages refer to message types 'V' and 'W'}
+#' }
+#' @examples 
+#' 
+#' ## read_mwcb()
+#' file <- "20191230.BX_ITCH_50"
+#' read_mwcb(file)
+read_mwcb <- function(file, ...) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "mwcb"
+  do.call(read_ITCH, dots)
+}
+
+
+
 
 
 

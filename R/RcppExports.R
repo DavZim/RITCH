@@ -37,6 +37,10 @@ getParticipantStates_impl <- function(filename, startMsgCount, endMsgCount, buff
     .Call('_RITCH_getParticipantStates_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
+getMWCB_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getMWCB_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
 }

@@ -11,6 +11,7 @@
 \alias{read_trading_status}
 \alias{read_reg_sho}
 \alias{read_market_participant_states}
+\alias{read_mwcb}
 \title{Reads certain messages of an ITCH-file into a data.table}
 \usage{
 read_ITCH(
@@ -39,6 +40,8 @@ read_trading_status(file, ..., add_descriptions = FALSE)
 read_reg_sho(file, ..., add_descriptions = FALSE)
 
 read_market_participant_states(file, ..., add_descriptions = FALSE)
+
+read_mwcb(file, ...)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
@@ -78,7 +81,7 @@ you can specify different start_msg_count/end_msg_counts to load only some messa
 }
 \details{
 The specifications of the different messages types can be obtained from the official
-ITCH specififation (see also \code{\link{open_itch_specification}})
+ITCH specification (see also \code{\link{open_itch_specification}})
 
 \itemize{
  \item{\code{read_orders()}}{ Order messages refer to message type 'A' and 'F'}
@@ -110,6 +113,10 @@ ITCH specififation (see also \code{\link{open_itch_specification}})
 
 \itemize{
  \item{\code{read_market_participant_states()}}{ Market participants status messages refer to message type 'L'}
+}
+
+\itemize{
+ \item{\code{read_mwcb()}}{ MWCB (Market Wide Circuit Breaker) messages refer to message types 'V' and 'W'}
 }
 }
 \examples{
@@ -182,4 +189,8 @@ read_reg_sho(file)
 file <- "20191230.BX_ITCH_50"
 read_market_participant_states(file)
 read_market_participant_states(file, add_descriptions = TRUE)
+
+## read_mwcb()
+file <- "20191230.BX_ITCH_50"
+read_mwcb(file)
 }
