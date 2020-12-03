@@ -56,7 +56,6 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   return msg.getDF();
 }
 
-
 // @brief      Returns the Orders from a file as a dataframe
 // 
 // Order Types considered are 'A' (add order) and 'F' (add order with MPID)
@@ -82,7 +81,6 @@ Rcpp::DataFrame getOrders_impl(std::string filename,
   Rcpp::DataFrame df = getMessagesTemplate(orders, filename, startMsgCount, endMsgCount, bufferSize, quiet);
   return df;  
 }
-
 
 // @brief      Returns the Trades from a file as a dataframe
 // 
@@ -163,7 +161,6 @@ Rcpp::DataFrame getSystemEvents_impl(std::string filename,
   return df;  
 }
 
-
 // @brief      Returns the Stock Directory from a file as a dataframe
 // 
 // Message Types considered are 'R'
@@ -190,7 +187,6 @@ Rcpp::DataFrame getStockDirectory_impl(std::string filename,
   return df;  
 }
 
-
 // @brief      Returns the Trading Status from a file as a dataframe
 // 
 // Message Types considered are 'H' and 'h'
@@ -207,15 +203,43 @@ Rcpp::DataFrame getStockDirectory_impl(std::string filename,
 // @return     The information in a data.frame
 // [[Rcpp::export]]
 Rcpp::DataFrame getTradingStatus_impl(std::string filename,
-                                       int64_t startMsgCount,
-                                       int64_t endMsgCount,
-                                       int64_t bufferSize,
-                                       bool quiet) {
+                                      int64_t startMsgCount,
+                                      int64_t endMsgCount,
+                                      int64_t bufferSize,
+                                      bool quiet) {
   
   TradingStatus trad;
   Rcpp::DataFrame df = getMessagesTemplate(trad, filename, startMsgCount, endMsgCount, bufferSize, quiet);
   return df;  
 }
+
+// @brief      Returns the Reg SHO from a file as a dataframe
+// 
+// Message Types considered are 'Y'
+//
+// @param[in]  filename       The filename to a plain-text-file
+// @param[in]  startMsgCount  The start message count, the message (order) count at which we 
+//                              start to save the messages, the defaults to 0 (first message)
+// @param[in]  endMsgCount    The end message count, the message count at which we stop to 
+//                              stop to save the messages, defaults to 0, which will be 
+//                              substituted to all messages
+// @param[in]  bufferSize     The buffer size in bytes, defaults to 100MB
+// @param[in]  quiet          If true, no status message is printed, defaults to false
+//
+// @return     The information in a data.frame
+// [[Rcpp::export]]
+Rcpp::DataFrame getRegSHO_impl(std::string filename,
+                                      int64_t startMsgCount,
+                                      int64_t endMsgCount,
+                                      int64_t bufferSize,
+                                      bool quiet) {
+  
+  RegSHO trad;
+  Rcpp::DataFrame df = getMessagesTemplate(trad, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
+
+
 
 
 

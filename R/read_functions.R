@@ -26,7 +26,10 @@
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
 #' @param force_cleanup only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
 #' @param ... Additional arguments passed to \code{read_ITCH}
-#' 
+#' @param add_descriptions add longer descriptions to shortened variables.
+#' The added information is taken from the official ITCH documentation
+#' see also \code{\link{open_itch_specification}}
+
 #' @return a data.table containing the messages
 #'
 #' @examples
@@ -77,7 +80,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "modifications" = c("E", "C", "X", "D", "U"),
     "system_events" = "S",
     "stock_directory" = "R",
-    "trading_status" = c("H", "h")
+    "trading_status" = c("H", "h"),
+    "reg_sho" = "Y"
   )
   
   imp_calls <- list(
@@ -86,7 +90,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "modifications" = getModifications_impl,
     "system_events" = getSystemEvents_impl,
     "stock_directory" = getStockDirectory_impl,
-    "trading_status" = getTradingStatus_impl
+    "trading_status" = getTradingStatus_impl,
+    "reg_sho" = getRegSHO_impl
   )
   
   stopifnot(type %in% names(msg_types))
@@ -196,9 +201,6 @@ read_modifications <- function(file, ...) {
 }
 
 #' @rdname read_functions
-#' @param add_descriptions add longer descriptions to shortened variables
-#' The added information is taken from the official ITCH documentation section 4.1, 
-#' see also \code{\link{open_itch_specification}}
 #' @export
 #' @details 
 #' \itemize{
@@ -238,9 +240,6 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
 }
 
 #' @rdname read_functions
-#' @param add_descriptions add longer descriptions to shortened variables
-#' The added information is taken from the official ITCH documentation section 4.2.1, 
-#' see also \code{\link{open_itch_specification}}
 #' @export
 #' @details 
 #' \itemize{
@@ -305,9 +304,6 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
 
 
 #' @rdname read_functions
-#' @param add_descriptions add longer descriptions to shortened variables
-#' The added information is taken from the official ITCH documentation section 4.2.2 and 4.2.8
-#' see also \code{\link{open_itch_specification}}
 #' @export
 #' @details 
 #' \itemize{
@@ -344,6 +340,42 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
       market_code_note = c("Nasdaq", "BX", "PSX")
     )
     res <- merge(res, mkt, by = "market_code", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  res
+}
+
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_reg_sho()}}{ Reg SHO Status messages refer to message type 'Y'}
+#' }
+#' @examples 
+#' 
+#' ## read_reg_sho()
+#' file <- "20191230.BX_ITCH_50"
+#' read_reg_sho(file)
+read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "reg_sho"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    ac <- data.table::data.table(
+      regsho_action = c("0", "1", "2"),
+      regsho_action_note = c(
+        "No price test in place",
+        "Reg SHO Short Sale Price Test Restriction in effect due to an intra-day price drop in security",
+        "Reg SHO Short Sale Price Test Restriction remains in effect"
+      )
+    )
+    
+    res <- merge(res, ac, by = "regsho_action", all.x = TRUE)
     
     data.table::setcolorder(res, names_)
   }

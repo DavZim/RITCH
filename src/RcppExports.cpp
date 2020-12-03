@@ -108,6 +108,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getRegSHO_impl
+Rcpp::DataFrame getRegSHO_impl(std::string filename, int64_t startMsgCount, int64_t endMsgCount, int64_t bufferSize, bool quiet);
+RcppExport SEXP _RITCH_getRegSHO_impl(SEXP filenameSEXP, SEXP startMsgCountSEXP, SEXP endMsgCountSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type startMsgCount(startMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type endMsgCount(endMsgCountSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
+    Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(getRegSHO_impl(filename, startMsgCount, endMsgCount, bufferSize, quiet));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gunzipFile_impl
 void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize);
 RcppExport SEXP _RITCH_gunzipFile_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP bufferSizeSEXP) {
@@ -129,6 +144,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_getSystemEvents_impl", (DL_FUNC) &_RITCH_getSystemEvents_impl, 5},
     {"_RITCH_getStockDirectory_impl", (DL_FUNC) &_RITCH_getStockDirectory_impl, 5},
     {"_RITCH_getTradingStatus_impl", (DL_FUNC) &_RITCH_getTradingStatus_impl, 5},
+    {"_RITCH_getRegSHO_impl", (DL_FUNC) &_RITCH_getRegSHO_impl, 5},
     {"_RITCH_gunzipFile_impl", (DL_FUNC) &_RITCH_gunzipFile_impl, 3},
     {NULL, NULL, 0}
 };

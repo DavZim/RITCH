@@ -34,6 +34,8 @@ read_system_events(file, ..., add_descriptions = FALSE)
 read_stock_directory(file, ..., add_descriptions = FALSE)
 
 read_trading_status(file, ..., add_descriptions = FALSE)
+
+read_reg_sho(file, ..., add_descriptions = FALSE)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
@@ -56,8 +58,8 @@ if set to TRUE, the existing file is overwritten. Default value is FALSE}
 
 \item{...}{Additional arguments passed to \code{read_ITCH}}
 
-\item{add_descriptions}{add longer descriptions to shortened variables
-The added information is taken from the official ITCH documentation section 4.2.2 and 4.2.8
+\item{add_descriptions}{add longer descriptions to shortened variables.
+The added information is taken from the official ITCH documentation
 see also \code{\link{open_itch_specification}}}
 }
 \value{
@@ -97,6 +99,10 @@ ITCH specififation (see also \code{\link{open_itch_specification}})
 
 \itemize{
  \item{\code{read_trading_status()}}{ Trading Status messages refer to message type 'H' and 'h' (operational reason)}
+}
+
+\itemize{
+ \item{\code{read_reg_sho()}}{ Reg SHO Status messages refer to message type 'Y'}
 }
 }
 \examples{
@@ -160,4 +166,8 @@ read_stock_directory(file, add_descriptions = TRUE)
 file <- "20191230.BX_ITCH_50"
 read_trading_status(file)
 read_trading_status(file, add_descriptions = TRUE)
+
+## read_reg_sho()
+file <- "20191230.BX_ITCH_50"
+read_reg_sho(file)
 }

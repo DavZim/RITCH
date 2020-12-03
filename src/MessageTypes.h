@@ -222,7 +222,7 @@ public:
 
 
 /**
- * @brief      A class that parses the Stock Directory (message type 'R')
+ * @brief      A class that parses the Stock Directory (message type 'H' and 'h')
  */
 class TradingStatus : public MessageType {
 public:
@@ -253,6 +253,32 @@ public:
   Rcpp::CharacterVector reason;
   Rcpp::CharacterVector market_code;
   Rcpp::LogicalVector   operation_halted;
+};
+
+/**
+ * @brief      A class that parses Reg SHO messages (message type 'Y')
+ */
+class RegSHO : public MessageType {
+public:
+  RegSHO() : MessageType(
+  {'Y'}, 
+  {ITCH::POS::Y},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", "regsho_action"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::CharacterVector regsho_action;
 };
 
 

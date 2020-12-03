@@ -796,3 +796,91 @@ void TradingStatus::reserve(int64_t size) {
   data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
+
+// ################################################################################
+// ################################ Reg SHO Messages ##############################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from system event messages into the class, type 'S'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool RegSHO::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const unsigned char white = ' ';
+  std::string stock_string, reas;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[11 + i] != white) stock_string += buf[11 + i];
+  }
+  stock[current_idx] = stock_string;
+  regsho_action[current_idx] = std::string(1, buf[19]);
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame RegSHO::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void RegSHO::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type         = data["msg_type"]         = Rcpp::CharacterVector(size);
+  locate_code      = data["locate_code"]      = Rcpp::IntegerVector(size);
+  tracking_number  = data["tracking_number"]  = Rcpp::IntegerVector(size);
+  timestamp        = data["timestamp"]        = Rcpp::NumericVector(size);
+  stock            = data["stock"]            = Rcpp::CharacterVector(size);
+  regsho_action    = data["regsho_action"]    = Rcpp::CharacterVector(size);
+  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+}
+
