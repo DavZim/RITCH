@@ -23,6 +23,7 @@ Rcpp::DataFrame getMessageCountDF(std::string filename,
   for (int64_t i : count) {
   	nMessages += i;
   }
+  
   if (!quiet) Rcpp::Rcout << formatThousands(nMessages) << " messages found\n";
   if (!quiet) Rcpp::Rcout << "[Converting] to data.table\n";
 

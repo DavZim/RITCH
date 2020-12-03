@@ -191,7 +191,7 @@ void Orders::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from an trades into the class, either of type 'P', 'Q', or 'B'
+ * @brief      Loads the information from trades into the class, either of type 'P', 'Q', or 'B'
  *
  * @param      buf   The buffer
  *
@@ -342,7 +342,7 @@ void Trades::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from an trades into the class, either of type 'P', 'Q', or 'B'
+ * @brief      Loads the information from trades modifications into the class, either of type 'E', 'C', 'X', 'D', 'U', 'D'
  *
  * @param      buf   The buffer
  *
@@ -350,7 +350,7 @@ void Trades::reserve(int64_t size) {
  *              thus the loading process can be aborted, otherwise true
  */
 bool Modifications::loadMessage(unsigned char* buf) {
-
+  
   // first check if this is the wrong message
   bool rightMessage = false;
   for (unsigned char type : validTypes) {
@@ -359,13 +359,13 @@ bool Modifications::loadMessage(unsigned char* buf) {
   
   // if the message is of the wrong type, terminate here, but continue with the next message
   if (!rightMessage) return true;
-
+  
   // if the message is out of bounds (i.e., we dont want to collect it yet!)
   if (messageCount < startMsgCount) {
     ++messageCount;
     return true;
   }
-
+  
   // if the message is out of bounds (i.e., we dont want to collect it ever, 
   // thus aborting the information gathering (return false!))
   // no need to iterate over all the other messages.
@@ -374,7 +374,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
   // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
   int64_t tmp;
-
+  
   msg_type[current_idx]        = std::string(1, buf[0]);
   locate_code[current_idx]     = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
@@ -384,27 +384,27 @@ bool Modifications::loadMessage(unsigned char* buf) {
   std::memcpy(&(order_ref[current_idx]), &tmp, sizeof(double));
   
   switch (buf[0]) {
-    case 'E':
-      shares[current_idx]       = get4bytes(&buf[19]);// executed shares
-
-      tmp = get8bytes(&buf[23]);
-      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
-      // empty assigns
-      printable[current_idx]    = NA_LOGICAL;
-      price[current_idx]        = NA_REAL;
-      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
-      break;
-
-    case 'C':
-      shares[current_idx]       = get4bytes(&buf[19]);// executed shares
-      tmp = get8bytes(&buf[23]);
-      std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
-      printable[current_idx]    = buf[31] == 'P';
-      price[current_idx]        = (double) get4bytes(&buf[32]) / 10000.0;
-      // empty assigns
-      std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
-      break;
-
+  case 'E':
+    shares[current_idx]       = get4bytes(&buf[19]);// executed shares
+    
+    tmp = get8bytes(&buf[23]);
+    std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
+    // empty assigns
+    printable[current_idx]    = NA_LOGICAL;
+    price[current_idx]        = NA_REAL;
+    std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
+    break;
+    
+  case 'C':
+    shares[current_idx]       = get4bytes(&buf[19]);// executed shares
+    tmp = get8bytes(&buf[23]);
+    std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
+    printable[current_idx]    = buf[31] == 'P';
+    price[current_idx]        = (double) get4bytes(&buf[32]) / 10000.0;
+    // empty assigns
+    std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
+    break;
+    
     case 'X':
       shares[current_idx] = get4bytes(&buf[19]); // cancelled shares
       // empty assigns
@@ -413,7 +413,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
       price[current_idx]     = NA_REAL;
       std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
-
+      
     case 'D':
       // empty assigns
       shares[current_idx]    = NA_INTEGER;
@@ -422,7 +422,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
       price[current_idx]     = NA_REAL;
       std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
       break;
-
+      
     case 'U':
       // the order ref is the original order reference, 
       // the new order reference is the new order reference
@@ -434,12 +434,12 @@ bool Modifications::loadMessage(unsigned char* buf) {
       std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
       printable[current_idx] = NA_LOGICAL;
       break;
-
+      
     default:
       Rcpp::Rcout << "Unkown message type: " << buf[0] << "\n";
     break;
   }
-
+  
   // increase the number of this message type
   ++messageCount;
   ++current_idx;
@@ -460,7 +460,7 @@ Rcpp::DataFrame Modifications::getDF() {
   mtch.attr("class") = "integer64";
   Rcpp::NumericVector nor = data["new_order_ref"];
   nor.attr("class") = "integer64";
-
+  
   return data;
 }
 
