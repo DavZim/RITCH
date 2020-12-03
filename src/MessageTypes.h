@@ -221,6 +221,41 @@ public:
 };
 
 
+/**
+ * @brief      A class that parses the Stock Directory (message type 'R')
+ */
+class TradingStatus : public MessageType {
+public:
+  TradingStatus() : MessageType(
+  {'H', 'h'}, 
+  {ITCH::POS::H, ITCH::POS::h},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+   // type H
+   "trading_state", "reserved", "reason",
+   // type h"
+   "market_code", "operation_halted"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::CharacterVector trading_state;
+  Rcpp::CharacterVector reserved;
+  Rcpp::CharacterVector reason;
+  Rcpp::CharacterVector market_code;
+  Rcpp::LogicalVector   operation_halted;
+};
+
+
 
 
 #endif //MESSAGES_H

@@ -72,7 +72,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "orders" = c("A", "F"),
     "modifications" = c("E", "C", "X", "D", "U"),
     "system_events" = "S",
-    "stock_directory" = "R"
+    "stock_directory" = "R",
+    "trading_status" = c("H", "h")
   )
   
   imp_calls <- list(
@@ -80,7 +81,8 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "orders" = getOrders_impl,
     "modifications" = getModifications_impl,
     "system_events" = getSystemEvents_impl,
-    "stock_directory" = getStockDirectory_impl
+    "stock_directory" = getStockDirectory_impl,
+    "trading_status" = getTradingStatus_impl
   )
   
   stopifnot(type %in% names(msg_types))
@@ -180,7 +182,7 @@ read_trades <- function(file, ...) {
 
 
 #' @rdname read_functions
-#' @param add_event_information if additional event information should be added, default value is FALSE.
+#' @param add_descriptions add longer descriptions to shortened variables
 #' The added information is taken from the official ITCH documentation section 4.1, 
 #' see also \code{\link{open_itch_specification}}
 #' @export
@@ -189,18 +191,20 @@ read_trades <- function(file, ...) {
 #' ## read_system_events
 #' file <- "20191230.BX_ITCH_50"
 #' read_system_events(file)
-read_system_events <- function(file, ..., add_event_information = FALSE) {
+#' read_system_events(file, add_descriptions)
+read_system_events <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
   dots$type <- "system_events"
   res <- do.call(read_ITCH, dots)
   
-  if (add_event_information) {
+  if (add_descriptions) {
     names_ <- names(res)
+    
     ei <- data.table::data.table(
       event_code = c("O", "S", "Q", "M", "E", "C"),
       event_name = c("Start of Messages", "Start of System Hours", "Start of Market Hours", "End of Market Hours", "End of System Hours", "End of Messages"),
-      event_explanation = c(
+      event_note = c(
         "Outside of time stamp messages, the start of day message is the first message sent in any trading day",
         "This message indicates that NASDAQ is open and ready to start accepting orders",
         "This message is intended to indicate that Market Hours orders are available for execution",
@@ -209,7 +213,7 @@ read_system_events <- function(file, ..., add_event_information = FALSE) {
         "This is always the last message sent in any trading day."
         )
     )
-    res <- data.table::merge(res, ei, by = "event_code")
+    res <- merge(res, ei, by = "event_code", all.x = TRUE)
     data.table::setcolorder(res, names_)
   }
   return(res)
@@ -217,6 +221,8 @@ read_system_events <- function(file, ..., add_event_information = FALSE) {
 
 #' @rdname read_functions
 #' @param add_descriptions add longer descriptions to shortened variables
+#' The added information is taken from the official ITCH documentation section 4.2.1, 
+#' see also \code{\link{open_itch_specification}}
 #' @export
 #' @details Stock directory messages refer to message type 'R'
 #' @examples 
@@ -229,11 +235,13 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
   dots$file <- file
   dots$type <- "stock_directory"
   res <- do.call(read_ITCH, dots)
+  
   if (add_descriptions) {
     names_ <- names(res)
+    
     mcat <- data.table::data.table(
       market_category = c("Q", "G", "S", "N", "A", "P", "Z", "V", " "),
-      market_category_definition = c(
+      market_category_note = c(
         "Nasdaq Global Select Market",
         "Nasdaq Global Market",
         "Nasdaq Capital Market",
@@ -245,39 +253,81 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
         NA_character_
       )
     )
-    res <- merge(res, mcat, by = "market_category")
+    res <- merge(res, mcat, by = "market_category", all.x = TRUE)
     
     finstat <- data.table::data.table(
       financial_status = c("D", "E", "Q", "S", "G", "H", "J", "K", "C", "N", " "),
-      financial_status_definition = c(
+      financial_status_note = c(
         "Deficient", "Delinquent", "Bankrupt", "Suspended", "Deficient and Bankrupt",
         "Deficient and Delinquent", "Delinquent and Bankrupt", "Deficient, Delinquent and Bankrupt",
         "Creations and/or Redemptions Suspended for Exchange Traded Product",
         "Normal", NA_character_
       )
     )
-    res <- merge(res, finstat, by = "financial_status")
+    res <- merge(res, finstat, by = "financial_status", all.x = TRUE)
     
     luld <- data.table::data.table(
       luld_price_tier = c("1", "2", " "),
-      luld_price_tier_definition = c(
+      luld_price_tier_note = c(
         "Tier 1 NMS Stock and selected ETPs",
         "Tier 2 NMS Stocks",
         NA_character_
       )
     )
     
-    res <- merge(res, luld, by = "luld_price_tier")
+    res <- merge(res, luld, by = "luld_price_tier", all.x = TRUE)
     data.table::setcolorder(res, names_)
   }
   res
 }
 
 
+#' @rdname read_functions
+#' @param add_descriptions add longer descriptions to shortened variables
+#' The added information is taken from the official ITCH documentation section 4.2.2 and 4.2.8
+#' see also \code{\link{open_itch_specification}}
+#' @export
+#' @details Trading Status messages refer to message type 'H' and 'h' (operational reason)
+#' @examples 
+#' ## read_trading_status
+#' file <- "20191230.BX_ITCH_50"
+#' read_trading_status(file)
+#' read_trading_status(file, add_descriptions = TRUE)
+read_trading_status <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "trading_status"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    
+    trs <- data.table::data.table(
+      trading_state = c("H", "P", "Q", "T"),
+      trading_state_note = c(
+        "Halted across all US equity markets / SROs",
+        "Paused across all US equity markets / SROs (Nasdaq-listed securities only",
+        "Quotation only period for cross-SRO halt or pause",
+        "Trading on Nasdaq"
+      )
+    )
+    res <- merge(res, trs, by = "trading_state", all.x = TRUE)
+    
+    mkt <- data.table::data.table(
+      market_code = c("Q", "B", "X"),
+      market_code_note = c("Nasdaq", "BX", "PSX")
+    )
+    res <- merge(res, mkt, by = "market_code", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  res
+}
 
 
 
-# For backwards compatability only...
+# For backwards compatibility only...
 #' @export
 get_modifications <- read_modifications
 #' @export

@@ -25,6 +25,10 @@ getStockDirectory_impl <- function(filename, startMsgCount, endMsgCount, bufferS
     .Call('_RITCH_getStockDirectory_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
+getTradingStatus_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getTradingStatus_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
 }

@@ -50,4 +50,11 @@ Rcpp::DataFrame getStockDirectory_impl(std::string filename,
                                        int64_t bufferSize = 1e8,
                                        bool quiet = false);
 
+Rcpp::DataFrame getTradingStatus_impl(std::string filename, 
+                                      int64_t startMsgCount = 0,
+                                      int64_t endMsgCount = 0,
+                                      int64_t bufferSize = 1e8,
+                                      bool quiet = false);
+
+
 #endif //GETMESSAGES_H

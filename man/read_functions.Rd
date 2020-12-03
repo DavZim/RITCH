@@ -8,6 +8,7 @@
 \alias{read_trades}
 \alias{read_system_events}
 \alias{read_stock_directory}
+\alias{read_trading_status}
 \title{Reads certain messages of an ITCH-file into a data.table}
 \usage{
 read_ITCH(
@@ -27,9 +28,11 @@ read_modifications(file, ...)
 
 read_trades(file, ...)
 
-read_system_events(file, ..., add_event_information = FALSE)
+read_system_events(file, ..., add_descriptions = FALSE)
 
 read_stock_directory(file, ..., add_descriptions = FALSE)
+
+read_trading_status(file, ..., add_descriptions = FALSE)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
@@ -52,11 +55,9 @@ if set to TRUE, the existing file is overwritten. Default value is FALSE}
 
 \item{...}{Additional arguments passed to \code{read_ITCH}}
 
-\item{add_event_information}{if additional event information should be added, default value is FALSE.
-The added information is taken from the official ITCH documentation section 4.1, 
+\item{add_descriptions}{add longer descriptions to shortened variables
+The added information is taken from the official ITCH documentation section 4.2.2 and 4.2.8
 see also \code{\link{open_itch_specification}}}
-
-\item{add_descriptions}{add longer descriptions to shortened variables}
 }
 \value{
 a data.table containing the messages
@@ -79,6 +80,8 @@ Trade messages refer to message type 'P', 'Q', and 'B'
 System event messages refer to message type 'S'
 
 Stock directory messages refer to message type 'R'
+
+Trading Status messages refer to message type 'H' and 'h' (operational reason)
 }
 \examples{
 file <- "20191230.BX_ITCH_50"
@@ -126,8 +129,13 @@ read_trades(file)
 ## read_system_events
 file <- "20191230.BX_ITCH_50"
 read_system_events(file)
+read_system_events(file, add_descriptions)
 ## read_stock_directory
 file <- "20191230.BX_ITCH_50"
 read_stock_directory(file)
 read_stock_directory(file, add_descriptions = TRUE)
+## read_trading_status
+file <- "20191230.BX_ITCH_50"
+read_trading_status(file)
+read_trading_status(file, add_descriptions = TRUE)
 }
