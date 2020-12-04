@@ -131,7 +131,7 @@ bool Orders::loadMessage(unsigned char* buf) {
     if (buf[24 + i] != white) stock_string += buf[24 + i];
   }
   stock[current_idx] = stock_string;
-  price[current_idx] = (double) get4bytes(&buf[32]) / 10000.0;
+  price[current_idx] = ((double) get4bytes(&buf[32])) / 10000.0;
   
   // 4 characters make up the MPID-string (if message type 'F')
   std::string mpid_string = "";
@@ -248,7 +248,7 @@ bool Trades::loadMessage(unsigned char* buf) {
         if (buf[24 + i] != white) stock_string += buf[24 + i];
       }
       stock[current_idx]  = stock_string;
-      price[current_idx]  = (double) get4bytes(&buf[32]) / 10000.0;
+      price[current_idx]  = ((double) get4bytes(&buf[32])) / 10000.0;
       tmp = get8bytes(&buf[36]);
       std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       // empty assigns
@@ -266,7 +266,7 @@ bool Trades::loadMessage(unsigned char* buf) {
         if (buf[19 + i] != white) stock_string += buf[19 + i];
       }
       stock[current_idx]      = stock_string;
-      price[current_idx]      = (double) get4bytes(&buf[27]) / 10000.0;
+      price[current_idx]      = ((double) get4bytes(&buf[27])) / 10000.0;
       tmp = get8bytes(&buf[31]);
       std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
       cross_type[current_idx] = buf[39];
@@ -400,7 +400,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
     tmp = get8bytes(&buf[23]);
     std::memcpy(&(match_number[current_idx]), &tmp, sizeof(double));
     printable[current_idx]    = buf[31] == 'P';
-    price[current_idx]        = (double) get4bytes(&buf[32]) / 10000.0;
+    price[current_idx]        = ((double) get4bytes(&buf[32])) / 10000.0;
     // empty assigns
     std::memcpy(&(new_order_ref[current_idx]), &NA_INT64, sizeof(double));
     break;
@@ -429,7 +429,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
     tmp = get8bytes(&buf[19]);
     std::memcpy(&(new_order_ref[current_idx]), &tmp, sizeof(double));
     shares[current_idx] = get4bytes(&buf[27]);
-    price[current_idx]  = (double) get4bytes(&buf[31]) / 10000.0;
+    price[current_idx]  = ((double) get4bytes(&buf[31])) / 10000.0;
     // empty assigns
     std::memcpy(&(match_number[current_idx]), &NA_INT64, sizeof(double));
     printable[current_idx] = NA_LOGICAL;
