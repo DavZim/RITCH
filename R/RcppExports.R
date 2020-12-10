@@ -41,6 +41,22 @@ getMWCB_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet
     .Call('_RITCH_getMWCB_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
 }
 
+getIPO_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getIPO_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
+getLULD_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getLULD_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
+getNOII_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getNOII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
+getRPII_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
+    .Call('_RITCH_getRPII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+}
+
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
 }

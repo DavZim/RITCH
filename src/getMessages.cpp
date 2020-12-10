@@ -200,8 +200,61 @@ Rcpp::DataFrame getMWCB_impl(std::string filename,
   return df;  
 }
 
+// @brief      Returns the IPO from a file as a dataframe
+// Message Types considered are 'K'
+// [[Rcpp::export]]
+Rcpp::DataFrame getIPO_impl(std::string filename,
+                             int64_t startMsgCount,
+                             int64_t endMsgCount,
+                             int64_t bufferSize,
+                             bool quiet) {
+  
+  IPO ipo;
+  Rcpp::DataFrame df = getMessagesTemplate(ipo, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
 
+// @brief      Returns the LULD from a file as a dataframe
+// Message Types considered are 'J'
+// [[Rcpp::export]]
+Rcpp::DataFrame getLULD_impl(std::string filename,
+                             int64_t startMsgCount,
+                             int64_t endMsgCount,
+                             int64_t bufferSize,
+                             bool quiet) {
+  
+  LULD luld;
+  Rcpp::DataFrame df = getMessagesTemplate(luld, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
 
+// @brief      Returns the NOII from a file as a dataframe
+// Message Types considered are 'I'
+// [[Rcpp::export]]
+Rcpp::DataFrame getNOII_impl(std::string filename,
+                             int64_t startMsgCount,
+                             int64_t endMsgCount,
+                             int64_t bufferSize,
+                             bool quiet) {
+  
+  NOII noii;
+  Rcpp::DataFrame df = getMessagesTemplate(noii, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
+
+// @brief      Returns the RPII from a file as a dataframe
+// Message Types considered are 'N'
+// [[Rcpp::export]]
+Rcpp::DataFrame getRPII_impl(std::string filename,
+                             int64_t startMsgCount,
+                             int64_t endMsgCount,
+                             int64_t bufferSize,
+                             bool quiet) {
+  
+  RPII rpii;
+  Rcpp::DataFrame df = getMessagesTemplate(rpii, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  return df;  
+}
 
 
 

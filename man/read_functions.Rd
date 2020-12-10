@@ -12,6 +12,10 @@
 \alias{read_reg_sho}
 \alias{read_market_participant_states}
 \alias{read_mwcb}
+\alias{read_ipo}
+\alias{read_luld}
+\alias{read_noii}
+\alias{read_rpii}
 \title{Reads certain messages of an ITCH-file into a data.table}
 \usage{
 read_ITCH(
@@ -42,6 +46,14 @@ read_reg_sho(file, ..., add_descriptions = FALSE)
 read_market_participant_states(file, ..., add_descriptions = FALSE)
 
 read_mwcb(file, ...)
+
+read_ipo(file, ..., add_descriptions = FALSE)
+
+read_luld(file, ...)
+
+read_noii(file, ..., add_descriptions = FALSE)
+
+read_rpii(file, ..., add_descriptions = FALSE)
 }
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain-text file}
@@ -118,6 +130,22 @@ ITCH specification (see also \code{\link{open_itch_specification}})
 \itemize{
  \item{\code{read_mwcb()}}{ MWCB (Market Wide Circuit Breaker) messages refer to message types 'V' and 'W'}
 }
+
+\itemize{
+ \item{\code{read_ipo()}}{ IPO messages refer to message type 'K'}
+}
+
+\itemize{
+ \item{\code{read_luld()}}{ LULD messages refer to message type 'J'}
+}
+
+\itemize{
+ \item{\code{read_noii()}}{ NOII messages refer to message type 'I'}
+}
+
+\itemize{
+ \item{\code{read_rpii()}}{ RPII messages refer to message type 'N'}
+}
 }
 \examples{
 file <- "20191230.BX_ITCH_50"
@@ -193,4 +221,26 @@ read_market_participant_states(file, add_descriptions = TRUE)
 ## read_mwcb()
 file <- "20191230.BX_ITCH_50"
 read_mwcb(file)
+
+## read_ipo()
+file <- "20191230.BX_ITCH_50"
+read_ipo(file)
+read_ipo(file, add_descriptions = TRUE)
+
+## read_luld()
+file <- "20191230.BX_ITCH_50"
+read_luld(file)
+
+## read_noii()
+file <- "20191230.BX_ITCH_50"
+read_noii(file)
+read_noii(file, add_descriptions = TRUE)
+
+## read_rpii()
+file <- "20191230.BX_ITCH_50"
+read_rpii(file)
+read_rpii(file, add_descriptions = TRUE)
+}
+\references{
+\url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}
 }

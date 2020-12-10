@@ -1082,10 +1082,384 @@ void MWCB::reserve(int64_t size) {
   level2            = data["level2"]            = Rcpp::NumericVector(size);
   level3            = data["level3"]            = Rcpp::NumericVector(size);
   breached_level    = data["breached_level"]    = Rcpp::IntegerVector(size);
-  
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
+// ################################################################################
+// ################################ IPO ###########################################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from IPO messages into the class, type 'K'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool IPO::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const char white = ' ';
+  std::string stock_string;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[11 + i] != white) stock_string += buf[11 + i];
+  }
+  stock[current_idx]        = stock_string;
+  release_time[current_idx] = get4bytes(&buf[19]);
+  release_qualifier[current_idx] = std::string(1, buf[23]);
+  ipo_price = ((double) get4bytes(&buf[24])) / 10000.0;
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame IPO::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void IPO::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
+  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
+  timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
+  stock             = data["stock"]             = Rcpp::CharacterVector(size);
+  release_time      = data["release_time"]      = Rcpp::IntegerVector(size);
+  release_qualifier = data["release_qualifier"] = Rcpp::CharacterVector(size);
+  ipo_price         = data["ipo_price"]         = Rcpp::NumericVector(size);
+}
+
+// ################################################################################
+// ################################ LULD ##########################################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from LULD messages into the class, type 'J'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool LULD::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const char white = ' ';
+  std::string stock_string;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[11 + i] != white) stock_string += buf[11 + i];
+  }
+  stock[current_idx]           = stock_string;
+  reference_price[current_idx] = ((double) get4bytes(&buf[19])) / 10000.0;
+  upper_price[current_idx]     = ((double) get4bytes(&buf[23])) / 10000.0;
+  lower_price[current_idx]     = ((double) get4bytes(&buf[27])) / 10000.0;
+  extension[current_idx]       = get4bytes(&buf[31]);
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame LULD::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void LULD::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
+  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
+  timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
+  stock             = data["stock"]             = Rcpp::CharacterVector(size);
+  reference_price   = data["reference_price"]   = Rcpp::NumericVector(size);
+  upper_price       = data["upper_price"]       = Rcpp::NumericVector(size);
+  lower_price       = data["lower_price"]       = Rcpp::NumericVector(size);
+  extension         = data["extension"]         = Rcpp::IntegerVector(size);
+}
 
 
+// ################################################################################
+// ################################ NOII ##########################################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from NOII messages into the class, type 'I'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool NOII::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const char white = ' ';
+  std::string stock_string;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  tmp = get8bytes(&buf[11]);
+  std::memcpy(&(paired_shares[current_idx]), &tmp, sizeof(double));
+  tmp = get8bytes(&buf[19]);
+  std::memcpy(&(imbalance_shares[current_idx]), &tmp, sizeof(double));
+  
+  imbalance_direction[current_idx] = std::string(1, buf[27]);
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[28 + i] != white) stock_string += buf[28 + i];
+  }
+  stock[current_idx]           = stock_string;
+  far_price[current_idx]       = ((double) get4bytes(&buf[36])) / 10000.0;
+  near_price[current_idx]      = ((double) get4bytes(&buf[40])) / 10000.0;
+  reference_price[current_idx] = ((double) get4bytes(&buf[44])) / 10000.0;
+  cross_type[current_idx] = std::string(1, buf[48]);
+  variation_indicator[current_idx] = std::string(1, buf[49]);
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame NOII::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  Rcpp::NumericVector ps = data["paired_shares"];
+  Rcpp::NumericVector is = data["imbalance_shares"];
+  ts.attr("class") = "integer64";
+  ps.attr("class") = "integer64";
+  is.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void NOII::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type            = data["msg_type"]            = Rcpp::CharacterVector(size);
+  locate_code         = data["locate_code"]         = Rcpp::IntegerVector(size);
+  tracking_number     = data["tracking_number"]     = Rcpp::IntegerVector(size);
+  timestamp           = data["timestamp"]           = Rcpp::NumericVector(size);
+  paired_shares       = data["paired_shares"]       = Rcpp::NumericVector(size);
+  imbalance_shares    = data["imbalance_shares"]    = Rcpp::NumericVector(size);
+  imbalance_direction = data["imbalance_direction"] = Rcpp::CharacterVector(size);
+  stock               = data["stock"]               = Rcpp::CharacterVector(size);
+  far_price           = data["far_price"]           = Rcpp::NumericVector(size);
+  near_price          = data["near_price"]          = Rcpp::NumericVector(size);
+  reference_price     = data["reference_price"]     = Rcpp::NumericVector(size);
+  cross_type          = data["cross_type"]          = Rcpp::CharacterVector(size);
+  variation_indicator = data["variation_indicator"] = Rcpp::CharacterVector(size);
+}
+
+// ################################################################################
+// ################################ RPII ##########################################
+// ################################################################################
+
+/**
+ * @brief      Loads the information from RPII messages into the class, type 'N'
+ *
+ * @param      buf   The buffer
+ *
+ * @return     false if the boundaries are broken (all necessary messages are already loaded), 
+ *              thus the loading process can be aborted, otherwise true
+ */
+bool RPII::loadMessage(unsigned char* buf) {
+  
+  // first check if this is the wrong message
+  bool rightMessage = false;
+  for (unsigned char type : validTypes) {
+    rightMessage = rightMessage || buf[0] == type;
+  }
+  
+  // if the message is of the wrong type, terminate here, but continue with the next message
+  if (!rightMessage) return true;
+  
+  // if the message is out of bounds (i.e., we dont want to collect it yet!)
+  if (messageCount < startMsgCount) {
+    ++messageCount;
+    return true;
+  }
+  
+  // if the message is out of bounds (i.e., we dont want to collect it ever, 
+  // thus aborting the information gathering (return false!))
+  // no need to iterate over all the other messages.
+  if (messageCount > endMsgCount) return false;
+  
+  // begin parsing the messages
+  // else, we can continue to parse the message to the content vectors
+  int64_t tmp;
+  const char white = ' ';
+  std::string stock_string;
+  
+  msg_type[current_idx]        = std::string(1, buf[0]);
+  locate_code[current_idx]     = get2bytes(&buf[1]);
+  tracking_number[current_idx] = get2bytes(&buf[3]);
+  tmp = get6bytes(&buf[5]);
+  std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
+  
+  for (unsigned int i = 0; i < 8U; ++i) {
+    if (buf[11 + i] != white) stock_string += buf[11 + i];
+  }
+  stock[current_idx]           = stock_string;
+  interest_flag[current_idx]   = std::string(1, buf[19]);
+  
+  // increase the number of this message type
+  ++messageCount;
+  ++current_idx;
+  return true;
+}
+
+/**
+ * @brief      Converts the stored information into an Rcpp::DataFrame
+ *
+ * @return     The Rcpp::DataFrame
+ */
+Rcpp::DataFrame RPII::getDF() {
+  Rcpp::NumericVector ts = data["timestamp"];
+  ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
+  return data;
+}
+
+/**
+ * @brief      Reserves the sizes of the content vectors (allows for faster code-execution)
+ *
+ * @param[in]  size  The size which should be reserved
+ */
+void RPII::reserve(int64_t size) {
+  data = Rcpp::List(colnames.size());
+  data.names() = colnames;
+  msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
+  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
+  timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
+  stock           = data["stock"]           = Rcpp::CharacterVector(size);
+  interest_flag   = data["interest_flag"]   = Rcpp::CharacterVector(size);
+}

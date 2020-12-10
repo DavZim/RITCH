@@ -29,7 +29,9 @@
 #' @param add_descriptions add longer descriptions to shortened variables.
 #' The added information is taken from the official ITCH documentation
 #' see also \code{\link{open_itch_specification}}
-
+#'  
+#' @references \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}
+#' 
 #' @return a data.table containing the messages
 #'
 #' @examples
@@ -83,7 +85,11 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "trading_status" = c("H", "h"),
     "reg_sho" = "Y",
     "participant_states" = "L",
-    "mwcb" = c("V", "W")
+    "mwcb" = c("V", "W"),
+    "ipo" = "K",
+    "luld" = "J",
+    "noii" = "I",
+    "rpii" = "N"
   )
   
   imp_calls <- list(
@@ -95,7 +101,11 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     "trading_status" = getTradingStatus_impl,
     "reg_sho" = getRegSHO_impl,
     "participant_states" = getParticipantStates_impl,
-    "mwcb" = getMWCB_impl
+    "mwcb" = getMWCB_impl,
+    "ipo" = getIPO_impl,
+    "luld" = getLULD_impl,
+    "noii" = getNOII_impl,
+    "rpii" = getRPII_impl
   )
   
   stopifnot(type %in% names(msg_types))
@@ -308,7 +318,6 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
   return(res)
 }
 
-
 #' @rdname read_functions
 #' @export
 #' @details 
@@ -447,9 +456,158 @@ read_mwcb <- function(file, ...) {
   do.call(read_ITCH, dots)
 }
 
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_ipo()}}{ IPO messages refer to message type 'K'}
+#' }
+#' @examples 
+#' 
+#' ## read_ipo()
+#' file <- "20191230.BX_ITCH_50"
+#' read_ipo(file)
+#' read_ipo(file, add_descriptions = TRUE)
+read_ipo <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "ipo"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    desc <- data.table::data.table(
+      release_qualifier = c("A", "C"),
+      release_qualifier_note = c(
+        "Anticipated Quotation Release Time: This value would be used when Nasdaq Market Operations initially enters the IPO instrument for release",
+        "IPO Release Canceled/Postponed: This value would be sued when Nasdaq Market Operations cancels or postpones the release of the new IPO instrument"
+      )
+    )
+    res <- merge(res, desc, by = "release_qualifier", all.x = TRUE)
+      
+    data.table::setcolorder(res, names_)
+  }
+  
+  return(res)
+}
 
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_luld()}}{ LULD messages refer to message type 'J'}
+#' }
+#' @examples 
+#' 
+#' ## read_luld()
+#' file <- "20191230.BX_ITCH_50"
+#' read_luld(file)
+read_luld <- function(file, ...) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "luld"
+  do.call(read_ITCH, dots)
+}
 
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_noii()}}{ NOII messages refer to message type 'I'}
+#' }
+#' @examples 
+#' 
+#' ## read_noii()
+#' file <- "20191230.BX_ITCH_50"
+#' read_noii(file)
+#' read_noii(file, add_descriptions = TRUE)
+read_noii <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "noii"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    desc <- data.table::data.table(
+      imbalance_direction = c("B", "S", "N", "O"),
+      imbalance_direction_note = c("Buy Imbalance", "Sell Imbalance", "No Imbalance", "Insufficient Orders to Calculate")
+    )
+    res <- merge(res, desc, by = "imbalance_direction", all.x = TRUE)
+    
+    desc <- data.table::data.table(
+      cross_type = c("O", "C", "H"),
+      cross_type_note = c("Nasdaq Opening Cross", "Nasdaq Closing Cross",
+                          "Cross for IPO and halted/paused securities")
+    )
+    res <- merge(res, desc, by = "cross_type", all.x = TRUE)
+    
+    ll <- list(
+      "L" = "Less than 1%",
+      "1" = "1 to 1.99%",
+      "2" = "2 to 2.99%",
+      "2" = "2 to 2.99%",
+      "3" = "3 to 3.99%",
+      "4" = "4 to 4.99%",
+      "5" = "5 to 5.99%",
+      "6" = "6 to 6.99%",
+      "7" = "7 to 7.99%",
+      "8" = "8 to 8.99%",
+      "9" = "9 to 9.99%",
+      "A" = "10 to 19.99%",
+      "B" = "20 to 29.99%",
+      "C" = "30% or greater",
+      " " = "Cannot be calculated"
+    )
+    
+    desc <- data.table::data.table(
+      variation_indicator = names(ll),
+      variation_indicator_note = as.character(ll)
+    )
+    res <- merge(res, desc, by = "variation_indicator", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  return(res)
+}
 
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_rpii()}}{ RPII messages refer to message type 'N'}
+#' }
+#' @examples 
+#' 
+#' ## read_rpii()
+#' file <- "20191230.BX_ITCH_50"
+#' read_rpii(file)
+#' read_rpii(file, add_descriptions = TRUE)
+read_rpii <- function(file, ..., add_descriptions = FALSE) {
+  dots <- list(...)
+  dots$file <- file
+  dots$type <- "rpii"
+  res <- do.call(read_ITCH, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    desc <- data.table::data.table(
+      interest_flag = c("B", "S", "A", "N"),
+      interest_flag_note = c(
+        "RPI orders available on the buy side",
+        "RPI orders available on the sell side",
+        "RPI orders available on both sides (buy and sell)",
+        "No RPI orders available"
+      )
+    )
+    res <- merge(res, desc, by = "interest_flag", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  return(res)
+}
 
 
 # For backwards compatibility only...

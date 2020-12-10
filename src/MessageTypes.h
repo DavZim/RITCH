@@ -342,5 +342,126 @@ public:
   Rcpp::IntegerVector   breached_level;
 };
 
+/**
+ * @brief      A class that parses IPO information (message type 'V' and 'W')
+ */
+class IPO : public MessageType {
+public:
+  IPO() : MessageType(
+  {'K'}, 
+  {ITCH::POS::K},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+   "release_time", "release_qualifier", "ipo_price"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::IntegerVector   release_time;
+  Rcpp::CharacterVector release_qualifier;
+  Rcpp::NumericVector   ipo_price;
+};
+
+/**
+ * @brief      A class that parses LULD information (message type 'J')
+ */
+class LULD : public MessageType {
+public:
+  LULD() : MessageType(
+  {'J'}, 
+  {ITCH::POS::J},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+   "reference_price", "upper_price", "lower_price", "extension"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   reference_price;
+  Rcpp::NumericVector   upper_price;
+  Rcpp::NumericVector   lower_price;
+  Rcpp::IntegerVector   extension;
+};
+
+
+/**
+ * @brief      A class that parses NOII information (message type 'I')
+ */
+class NOII : public MessageType {
+public:
+  NOII() : MessageType(
+  {'I'}, 
+  {ITCH::POS::I},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "paired_shares",
+   "imbalance_shares", "imbalance_direction", "stock", "far_price", 
+   "near_price", "reference_price", "cross_type", "variation_indicator"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::NumericVector   paired_shares;
+  Rcpp::NumericVector   imbalance_shares;
+  Rcpp::CharacterVector imbalance_direction;
+  Rcpp::CharacterVector stock;
+  Rcpp::NumericVector   far_price;
+  Rcpp::NumericVector   near_price;
+  Rcpp::NumericVector   reference_price;
+  Rcpp::CharacterVector cross_type;
+  Rcpp::CharacterVector variation_indicator;
+};
+
+/**
+ * @brief      A class that parses RPII information (message type 'N')
+ */
+class RPII : public MessageType {
+public:
+  RPII() : MessageType(
+  {'N'}, 
+  {ITCH::POS::N},
+  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", "interest_flag"
+  }
+  ) {}
+  
+  // Functions
+  bool loadMessage(unsigned char* buf);
+  void reserve(int64_t size);
+  Rcpp::DataFrame getDF();
+  
+  // Members
+  Rcpp::CharacterVector msg_type;
+  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   tracking_number;
+  Rcpp::NumericVector   timestamp;
+  Rcpp::CharacterVector stock;
+  Rcpp::CharacterVector interest_flag;
+};
+
 
 #endif //MESSAGES_H
