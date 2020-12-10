@@ -36,4 +36,7 @@ void loadToMessages(std::string filename,
 std::string formatThousands(int64_t num, 
                             const std::string sep = ",", 
                             std::string s = "");
+
+void countMessageByType(std::vector<int64_t>& count, unsigned char msg);
+
 #endif //RITCH_H
