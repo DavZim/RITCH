@@ -240,6 +240,7 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
     res <- merge(res, ei, by = "event_code", all.x = TRUE)
     data.table::setcolorder(res, names_)
   }
+  
   return(res)
 }
 
@@ -303,7 +304,8 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
     res <- merge(res, luld, by = "luld_price_tier", all.x = TRUE)
     data.table::setcolorder(res, names_)
   }
-  res
+  
+  return(res)
 }
 
 
@@ -348,7 +350,7 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
   
-  res
+  return(res)
 }
 
 #' @rdname read_functions
@@ -384,7 +386,7 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
   
-  res
+  return(res)
 }
 
 #' @rdname read_functions
@@ -424,7 +426,7 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
     data.table::setcolorder(res, names_)
   }
   
-  res
+  return(res)
 }
 
 #' @rdname read_functions

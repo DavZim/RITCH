@@ -160,7 +160,7 @@ Rcpp::DataFrame Orders::getDF() {
   ts.attr("class") = "integer64";
   Rcpp::NumericVector oref = data["order_ref"];
   oref.attr("class") = "integer64";
-  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -182,7 +182,6 @@ void Orders::reserve(int64_t size) {
   stock           = data["stock"]           = Rcpp::CharacterVector(size);
   price           = data["price"]           = Rcpp::NumericVector(size);
   mpid            = data["mpid"]            = Rcpp::CharacterVector(size);
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -310,7 +309,7 @@ Rcpp::DataFrame Trades::getDF() {
   oref.attr("class") = "integer64";
   Rcpp::NumericVector mtch = data["match_number"];
   mtch.attr("class") = "integer64";
-
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -333,7 +332,6 @@ void Trades::reserve(int64_t size) {
   price           = data["price"]           = Rcpp::NumericVector(size);
   match_number    = data["match_number"]    = Rcpp::NumericVector(size);
   cross_type      = data["cross_type"]      = Rcpp::CharacterVector(size);
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -460,7 +458,7 @@ Rcpp::DataFrame Modifications::getDF() {
   mtch.attr("class") = "integer64";
   Rcpp::NumericVector nor = data["new_order_ref"];
   nor.attr("class") = "integer64";
-  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -482,7 +480,6 @@ void Modifications::reserve(int64_t size) {
   printable       = data["printable"]       = Rcpp::LogicalVector(size);
   price           = data["price"]           = Rcpp::NumericVector(size);
   new_order_ref   = data["new_order_ref"]   = Rcpp::NumericVector(size);
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -546,6 +543,7 @@ bool SystemEvents::loadMessage(unsigned char* buf) {
 Rcpp::DataFrame SystemEvents::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
   ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -562,7 +560,6 @@ void SystemEvents::reserve(int64_t size) {
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   event_code      = data["event_code"]      = Rcpp::CharacterVector(size);
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -618,18 +615,18 @@ bool StockDirectory::loadMessage(unsigned char* buf) {
   stock[current_idx]            = stock_string;
   market_category[current_idx]  = std::string(1, buf[19]);
   financial_status[current_idx] = std::string(1, buf[20]);
-  lot_size[current_idx] = get4bytes(&buf[21]);
-  round_lots_only[current_idx] = buf[25] == 'Y';
+  lot_size[current_idx]         = get4bytes(&buf[21]);
+  round_lots_only[current_idx]  = buf[25] == 'Y';
   issue_classification[current_idx] = std::string(1, buf[26]);
-  issue_string = buf[27] + buf[28];
-  issue_subtype[current_idx] = issue_string;
-  authentic[current_idx] = buf[29] == 'P'; // P is live/production, T is Test
+  issue_string                  = buf[27] + buf[28];
+  issue_subtype[current_idx]    = issue_string;
+  authentic[current_idx]        = buf[29] == 'P'; // P is live/production, T is Test
   short_sell_closeout[current_idx] = buf[30] == 'Y' ? true : buf[30] == 'N' ? false : NA_LOGICAL;
-  ipo_flag[current_idx] = buf[31] == 'Y' ? true : buf[31] == 'N' ? false : NA_LOGICAL;
-  luld_price_tier[current_idx] = std::string(1, buf[32]);
-  etp_flag[current_idx] = buf[33] == 'Y' ? true : buf[33] == 'N' ? false : NA_LOGICAL;
-  etp_leverage[current_idx] = get4bytes(&buf[34]);;
-  inverse[current_idx] = buf[38] == 'Y';
+  ipo_flag[current_idx]         = buf[31] == 'Y' ? true : buf[31] == 'N' ? false : NA_LOGICAL;
+  luld_price_tier[current_idx]  = std::string(1, buf[32]);
+  etp_flag[current_idx]         = buf[33] == 'Y' ? true : buf[33] == 'N' ? false : NA_LOGICAL;
+  etp_leverage[current_idx]     = get4bytes(&buf[34]);;
+  inverse[current_idx]          = buf[38] == 'Y';
   
   // increase the number of this message type
   ++messageCount;
@@ -645,6 +642,7 @@ bool StockDirectory::loadMessage(unsigned char* buf) {
 Rcpp::DataFrame StockDirectory::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
   ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -674,8 +672,6 @@ void StockDirectory::reserve(int64_t size) {
   etp_flag              = data["etp_flag"]              = Rcpp::LogicalVector(size);
   etp_leverage          = data["etp_leverage"]          = Rcpp::IntegerVector(size);
   inverse               = data["inverse"]               = Rcpp::LogicalVector(size);
-  
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -684,7 +680,7 @@ void StockDirectory::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from system event messages into the class, type 'S'
+ * @brief      Loads the information from stock trading status messages into the class, type 'S'
  *
  * @param      buf   The buffer
  *
@@ -771,6 +767,7 @@ bool TradingStatus::loadMessage(unsigned char* buf) {
 Rcpp::DataFrame TradingStatus::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
   ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -792,8 +789,6 @@ void TradingStatus::reserve(int64_t size) {
   reason           = data["reason"]           = Rcpp::CharacterVector(size);
   market_code      = data["market_code"]      = Rcpp::CharacterVector(size);
   operation_halted = data["operation_halted"] = Rcpp::LogicalVector(size);
-  
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 
@@ -802,7 +797,7 @@ void TradingStatus::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from system event messages into the class, type 'Y'
+ * @brief      Loads the information from Reg SHO messages into the class, type 'Y'
  *
  * @param      buf   The buffer
  *
@@ -863,6 +858,7 @@ bool RegSHO::loadMessage(unsigned char* buf) {
 Rcpp::DataFrame RegSHO::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
   ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -880,8 +876,6 @@ void RegSHO::reserve(int64_t size) {
   timestamp        = data["timestamp"]        = Rcpp::NumericVector(size);
   stock            = data["stock"]            = Rcpp::CharacterVector(size);
   regsho_action    = data["regsho_action"]    = Rcpp::CharacterVector(size);
-  
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 // ################################################################################
@@ -889,7 +883,7 @@ void RegSHO::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from system event messages into the class, type 'L'
+ * @brief      Loads the information from market participant status messages into the class, type 'L'
  *
  * @param      buf   The buffer
  *
@@ -956,6 +950,7 @@ bool ParticipantStates::loadMessage(unsigned char* buf) {
 Rcpp::DataFrame ParticipantStates::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
   ts.attr("class") = "integer64";
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
@@ -976,8 +971,6 @@ void ParticipantStates::reserve(int64_t size) {
   primary_mm        = data["primary_mm"]        = Rcpp::LogicalVector(size);
   mm_mode           = data["mm_mode"]           = Rcpp::CharacterVector(size);
   participant_state = data["participant_state"] = Rcpp::CharacterVector(size);
-  
-  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
 }
 
 // ################################################################################
@@ -985,7 +978,7 @@ void ParticipantStates::reserve(int64_t size) {
 // ################################################################################
 
 /**
- * @brief      Loads the information from system event messages into the class, type 'L'
+ * @brief      Loads the information from MWCB messages into the class, type 'L'
  *
  * @param      buf   The buffer
  *
@@ -1069,7 +1062,7 @@ Rcpp::DataFrame MWCB::getDF() {
   lvl1.attr("class") = "integer64";
   lvl2.attr("class") = "integer64";
   lvl3.attr("class") = "integer64";
-  
+  data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }
 
