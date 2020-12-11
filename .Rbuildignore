@@ -6,4 +6,5 @@
 ^.+_ITCH_50$
 ^.+_ITCH_50\.gz$
 ^README_cache$
-^NQTVITCHspecification.pdf$
+^NQTVITCHspecification.*\.pdf$
+^debug/*$
