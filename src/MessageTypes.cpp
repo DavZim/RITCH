@@ -1019,12 +1019,9 @@ bool MWCB::loadMessage(unsigned char* buf) {
   
   switch (buf[0]) {
   case 'V':
-    tmp = get8bytes(&buf[11]);
-    std::memcpy(&(level1[current_idx]), &tmp, sizeof(double));
-    tmp = get8bytes(&buf[19]);
-    std::memcpy(&(level2[current_idx]), &tmp, sizeof(double));
-    tmp = get8bytes(&buf[27]);
-    std::memcpy(&(level3[current_idx]), &tmp, sizeof(double));
+    level1[current_idx] = ((double) get8bytes(&buf[11])) / 100000000.0;
+    level2[current_idx] = ((double) get8bytes(&buf[19])) / 100000000.0;
+    level3[current_idx] = ((double) get8bytes(&buf[27])) / 100000000.0;
     // fill NAs from W
     breached_level[current_idx] = NA_INTEGER;
     break;
@@ -1032,9 +1029,9 @@ bool MWCB::loadMessage(unsigned char* buf) {
     case 'W':
       breached_level[current_idx] = buf[11] - '0';
       // fill NAs from V
-      std::memcpy(&(level1[current_idx]), &NA_INT64, sizeof(double));
-      std::memcpy(&(level2[current_idx]), &NA_INT64, sizeof(double));
-      std::memcpy(&(level3[current_idx]), &NA_INT64, sizeof(double));
+      level1[current_idx] = NA_REAL;
+      level2[current_idx] = NA_REAL;
+      level3[current_idx] = NA_REAL;
       break;
       
       default:
@@ -1055,13 +1052,7 @@ bool MWCB::loadMessage(unsigned char* buf) {
  */
 Rcpp::DataFrame MWCB::getDF() {
   Rcpp::NumericVector ts = data["timestamp"];
-  Rcpp::NumericVector lvl1 = data["level1"];
-  Rcpp::NumericVector lvl2 = data["level2"];
-  Rcpp::NumericVector lvl3 = data["level3"];
   ts.attr("class") = "integer64";
-  lvl1.attr("class") = "integer64";
-  lvl2.attr("class") = "integer64";
-  lvl3.attr("class") = "integer64";
   data.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
   return data;
 }

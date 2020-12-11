@@ -211,7 +211,7 @@ public:
   Rcpp::LogicalVector   round_lots_only;
   Rcpp::CharacterVector issue_classification;
   Rcpp::CharacterVector issue_subtype;
-  Rcpp::LogicalVector authentic; // authentic true = P (Live/Production) false = T (Test)
+  Rcpp::LogicalVector   authentic; // authentic true = P (Live/Production) false = T (Test)
   Rcpp::LogicalVector   short_sell_closeout;
   Rcpp::LogicalVector   ipo_flag;
   Rcpp::CharacterVector luld_price_tier;
