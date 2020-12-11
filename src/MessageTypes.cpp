@@ -618,7 +618,7 @@ bool StockDirectory::loadMessage(unsigned char* buf) {
   lot_size[current_idx]         = get4bytes(&buf[21]);
   round_lots_only[current_idx]  = buf[25] == 'Y';
   issue_classification[current_idx] = std::string(1, buf[26]);
-  issue_string                  = buf[27] + buf[28];
+  issue_string                  = std::string(1, buf[27]) + std::string(1, buf[28]);
   issue_subtype[current_idx]    = issue_string;
   authentic[current_idx]        = buf[29] == 'P'; // P is live/production, T is Test
   short_sell_closeout[current_idx] = buf[30] == 'Y' ? true : buf[30] == 'N' ? false : NA_LOGICAL;
@@ -665,7 +665,7 @@ void StockDirectory::reserve(int64_t size) {
   round_lots_only       = data["round_lots_only"]       = Rcpp::LogicalVector(size);
   issue_classification  = data["issue_classification"]  = Rcpp::CharacterVector(size);
   issue_subtype         = data["issue_subtype"]         = Rcpp::CharacterVector(size);
-  authentic             = data["authentic"]             = Rcpp::CharacterVector(size);
+  authentic             = data["authentic"]             = Rcpp::LogicalVector(size);
   short_sell_closeout   = data["short_sell_closeout"]   = Rcpp::LogicalVector(size);
   ipo_flag              = data["ipo_flag"]              = Rcpp::LogicalVector(size);
   luld_price_tier       = data["luld_price_tier"]       = Rcpp::CharacterVector(size);
