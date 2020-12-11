@@ -1026,17 +1026,17 @@ bool MWCB::loadMessage(unsigned char* buf) {
     breached_level[current_idx] = NA_INTEGER;
     break;
     
-    case 'W':
-      breached_level[current_idx] = buf[11] - '0';
-      // fill NAs from V
-      level1[current_idx] = NA_REAL;
-      level2[current_idx] = NA_REAL;
-      level3[current_idx] = NA_REAL;
-      break;
-      
-      default:
-        Rcpp::Rcout << "Unkown Type: " << buf[0] << "\n";
-      break;
+  case 'W':
+    breached_level[current_idx] = buf[11] - '0';
+    // fill NAs from V
+    level1[current_idx] = NA_REAL;
+    level2[current_idx] = NA_REAL;
+    level3[current_idx] = NA_REAL;
+    break;
+    
+    default:
+      Rcpp::Rcout << "Unkown Type: " << buf[0] << "\n";
+    break;
   }
   
   // increase the number of this message type
@@ -1129,7 +1129,7 @@ bool IPO::loadMessage(unsigned char* buf) {
   stock[current_idx]        = stock_string;
   release_time[current_idx] = get4bytes(&buf[19]);
   release_qualifier[current_idx] = std::string(1, buf[23]);
-  ipo_price = ((double) get4bytes(&buf[24])) / 10000.0;
+  ipo_price[current_idx] = ((double) get4bytes(&buf[24])) / 10000.0;
   
   // increase the number of this message type
   ++messageCount;
@@ -1212,7 +1212,6 @@ bool LULD::loadMessage(unsigned char* buf) {
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
-  
   
   for (unsigned int i = 0; i < 8U; ++i) {
     if (buf[11 + i] != white) stock_string += buf[11 + i];
