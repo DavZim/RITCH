@@ -1052,6 +1052,74 @@ uint64_t parse_rpii_at(unsigned char * buf, Rcpp::DataFrame df,
   return i;
 }
 
+// loads from df at position msg_ct one message into the buffer
+int64_t load_message_to_buffer(unsigned char * buf, int64_t &msg_ct, Rcpp::DataFrame df) {
+  int64_t i = 0;
+  Rcpp::CharacterVector vec = df["msg_type"];
+  const char msg = Rcpp::as<char>(vec[0]);
+  switch (msg) {
+    case 'A': case 'F':
+      // orders
+      i += parse_orders_at(&buf[i], df, msg_ct);
+      break;
+    // trades
+    case 'P': case 'Q': case 'B':
+      i += parse_trades_at(&buf[i], df, msg_ct);
+      break;
+    // modifications
+    case 'E': case 'C': case 'X': case 'D': case 'U':
+      i += parse_modifications_at(&buf[i], df, msg_ct);
+      break;
+    // system_events
+    case 'S':
+      i += parse_system_events_at(&buf[i], df, msg_ct);
+      break;
+    // stock_directory
+    case 'R':
+      i += parse_stock_directory_at(&buf[i], df, msg_ct);
+      break;
+    // trading stats
+    case 'H': case 'h':
+      i += parse_trading_status_at(&buf[i], df, msg_ct);
+      break;
+    // reg_sho
+    case 'Y':
+      i += parse_reg_sho_at(&buf[i], df, msg_ct);
+      break;
+    // market_participants_states
+    case 'L':
+      i += parse_market_participants_states_at(&buf[i], df, msg_ct);
+      break;
+    // mwcb
+    case 'W': case 'V': 
+      i += parse_mwcb_at(&buf[i], df, msg_ct);
+      break;
+    // IPO
+    case 'K': 
+      i += parse_ipo_at(&buf[i], df, msg_ct);
+      break;
+    // luld
+    case 'J': 
+      i += parse_luld_at(&buf[i], df, msg_ct);
+      break;
+    // noii
+    case 'I': 
+      i += parse_noii_at(&buf[i], df, msg_ct);
+      break;
+    // rpii
+    case 'N': 
+      i += parse_rpii_at(&buf[i], df, msg_ct);
+      break;
+    default:
+      Rprintf("Message type '%c' not implemented, skipping\n", msg);
+    Rcpp::stop("Unkown Message Type\n");
+    break;
+  }
+  
+  msg_ct++;
+  return i;
+}
+
 /*
  * ############################################################################
  * Messages to hex
@@ -1066,7 +1134,7 @@ std::string dbg_messages_to_hex(Rcpp::DataFrame df) {
   // Rprintf("Found %i order messages\n", total_messages);
   unsigned char * buf;
   
-  uint64_t req_size = 0;
+  int64_t req_size = 0;
   for (int i = 0; i < total_messages; i++) {
     const char msg = Rcpp::as<char>(msgs[i]);
     req_size += getMessageLength(msg) + 2;
@@ -1076,73 +1144,11 @@ std::string dbg_messages_to_hex(Rcpp::DataFrame df) {
   // allocate memory to the buffer and initialise it to 0
   buf = (unsigned char*) calloc(req_size, sizeof(char));
   
-  uint64_t i = 0;
-  uint64_t msg_ct = 0;
+  int64_t i = 0;
+  int64_t msg_ct = 0;
   while (msg_ct < total_messages) {
     // Rprintf("Parsing Message %i\n", msg_ct);
-    Rcpp::CharacterVector vec = df["msg_type"];
-    const char msg = Rcpp::as<char>(vec[0]);
-
-    switch (msg) {
-      case 'A': case 'F':
-        // orders
-        i += parse_orders_at(&buf[i], df, msg_ct);
-        break;
-      // trades
-      case 'P': case 'Q': case 'B':
-        i += parse_trades_at(&buf[i], df, msg_ct);
-        break;
-      // modifications
-      case 'E': case 'C': case 'X': case 'D': case 'U':
-        i += parse_modifications_at(&buf[i], df, msg_ct);
-        break;
-      // system_events
-      case 'S':
-        i += parse_system_events_at(&buf[i], df, msg_ct);
-        break;
-      // stock_directory
-      case 'R':
-        i += parse_stock_directory_at(&buf[i], df, msg_ct);
-        break;
-      // trading stats
-      case 'H': case 'h':
-        i += parse_trading_status_at(&buf[i], df, msg_ct);
-        break;
-      // reg_sho
-      case 'Y':
-        i += parse_reg_sho_at(&buf[i], df, msg_ct);
-        break;
-      // market_participants_states
-      case 'L':
-        i += parse_market_participants_states_at(&buf[i], df, msg_ct);
-        break;
-      // mwcb
-      case 'W': case 'V': 
-        i += parse_mwcb_at(&buf[i], df, msg_ct);
-        break;
-      // IPO
-      case 'K': 
-        i += parse_ipo_at(&buf[i], df, msg_ct);
-        break;
-      // luld
-      case 'J': 
-        i += parse_luld_at(&buf[i], df, msg_ct);
-        break;
-      // noii
-      case 'I': 
-        i += parse_noii_at(&buf[i], df, msg_ct);
-        break;
-      // rpii
-      case 'N': 
-        i += parse_rpii_at(&buf[i], df, msg_ct);
-        break;
-      default:
-        Rprintf("Message type '%c' not implemented, skipping\n", msg);
-        Rcpp::stop("Unkown Message Type\n");
-      break;
-    }
-    
-    msg_ct++;
+    i += load_message_to_buffer(&(buf[i]), msg_ct, df);
   }
   
   std::stringstream ss;
