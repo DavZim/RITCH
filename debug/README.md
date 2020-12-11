@@ -39,9 +39,9 @@ dbg_get_message_length(c("A", "F"))
 
     -   msg type, e.g., `A`, `H`, `h` to see the next instance of that
         message type
-    -   numeric value, e.g., `10` to see the next N values
+    -   numeric value, e.g., `3` to see the next N values
 
-    For example
+    For example:
 
 ``` r
 file <- "20191230.BX_ITCH_50"
