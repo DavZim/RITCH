@@ -525,3 +525,56 @@ dt_n <- data.table(
 )
 
 test_hex_to_dt(hex_n, dt_n, dbg_hex_to_rpii)
+
+################################################################################
+################################################################################
+# Testing File Write
+################################################################################
+################################################################################
+
+# This code is used to construct the list
+# file <- "20191230.BX_ITCH_50"
+# sy <- read_system_events(file, start_msg_count = 1, end_msg_count = 3)
+# tr <- read_trades(file, start_msg_count = 1, end_msg_count = 3)
+# od <- read_orders(file, start_msg_count = 1, end_msg_count = 3)
+# ll <- list(sy, tr, od[3:1])
+# ll
+# ll_hex <- lapply(ll, dbg_messages_to_hex)
+# dput(ll_hex)
+
+# Have a list of 9 messages, 3 of sytem_events, trades, and orders each.
+# Note that orders are reversed time-wise
+ll_hex <- list(
+  system_events = paste(
+    "00 00 53 00 00 00 00 0a 2d f4 92 1d 67 4f 00 00 53 00 00 00 00 16 eb 55 0d",
+    "e8 e2 53 00 00 53 00 00 00 00 1f 1a ce dc 13 b1 51"
+    ), 
+  trades = paste(
+    "00 00 50 1f bc 00 02 17 fa ea ab e4 15 00 00 00 00 00 00 00 00 42 00 00",
+    "00 64 55 47 41 5a 20 20 20 20 00 0b 9a b4 00 00 00 00 00 00 45 8b 00 00",
+    "50 07 c3 00 02 1a 5e f6 4d eb 6d 00 00 00 00 00 00 00 00 42 00 00 00 64",
+    "44 47 41 5a 20 20 20 20 00 1a cc f0 00 00 00 00 00 00 45 96 00 00 50 07",
+    "c3 00 02 1a 5e f6 56 ce c6 00 00 00 00 00 00 00 00 42 00 00 00 64 44 47",
+    "41 5a 20 20 20 20 00 1a cb c4 00 00 00 00 00 00 45 97"
+  ),
+  orders = paste(
+    "00 00 41 1f a5 00 00 16 eb 55 2c e8 93 00 00 00 00 00 00 00 08 42 00 00 05", 
+    "dc 55 43 4f 20 20 20 20 20 00 03 35 7c 00 00 41 08 ac 00 00 16 eb 55 2c 94",
+    "65 00 00 00 00 00 00 7c f5 42 00 00 3a 98 44 57 54 20 20 20 20 20 00 00 84", 
+    "08 00 00 41 20 2c 00 00 16 eb 55 2c 88 24 00 00 00 00 00 00 00 04 42 00 00", 
+    "2e 7c 55 53 4f 20 20 20 20 20 00 01 fa 40"
+  )
+)
+
+# convert to messages
+funcs <- list(dbg_hex_to_system_events, dbg_hex_to_trades, dbg_hex_to_orders)
+ll <- mapply(function(f, l) f(l), f = funcs, l = ll_hex)
+ll
+
+file <- tempfile()
+dbg_write_itch_impl(ll, file)
+
+read_funcs <- list(read_system_events, read_trades, read_orders)
+ll_conv <- lapply(read_funcs, function(f) f(file)[, -c("date", "datetime", "exchange")])
+
+expect_equal(ll, ll_conv)

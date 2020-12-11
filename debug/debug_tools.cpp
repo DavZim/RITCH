@@ -1158,3 +1158,88 @@ std::string dbg_messages_to_hex(Rcpp::DataFrame df) {
   
   return res.substr(0, res.size() - 1);
 }
+
+// returns the index at which the min value sits in the index
+int get_min_val_pos(std::vector<int64_t> &x) {
+  const auto min_el = std::min_element(x.begin(), x.end());
+  return std::distance(x.begin(), min_el);  
+}
+
+// [[Rcpp::export]]
+std::string dbg_write_itch_impl(Rcpp::List ll, std::string filename) {
+  
+  const int list_length = ll.size();
+  int64_t msg_length = 0, total_msgs = 0;
+
+  const int64_t max_val = std::numeric_limits<int64_t>::max();
+  std::vector<int64_t> indices (list_length);
+  std::vector<int64_t> timestamps (list_length);
+  
+  // initiate the indices, timestamps as well as count the required buffer size
+  for (int ii = 0; ii < list_length; ii++) {
+    Rcpp::List df = ll.at(ii);
+    Rcpp::CharacterVector mt = df["msg_type"];
+    Rcpp::NumericVector ts = df["timestamp"];
+    
+    // populate the indices
+    indices[ii] = 0;
+    
+    // populate the timestamps
+    std::memcpy(&(timestamps[ii]), &(ts[0]), sizeof(int64_t));
+    // Rprintf("ts[0] is %+" PRId64 "; ts is now +" PRId64 "\n", ts[0], timestamps[ii]);
+    
+    for (int l = 0; l < mt.size(); l++) {
+      const char msg = Rcpp::as<char>(mt[l]);
+      msg_length += getMessageLength(msg) + 2;
+      total_msgs++;
+    }
+  }
+  
+  // Rprintf("Need a Buffer of size '%" PRId64 "' for '%" PRId64 "' messages\n", 
+  //         msg_length, total_msgs);
+  
+  unsigned char * buf;
+  buf = (unsigned char*) calloc(msg_length, sizeof(char));
+  int64_t msg_ct = 0, i = 0;
+  
+  while (msg_ct < total_msgs) {
+    // find at which list position (lp) the lowest timestamp is
+    const int lp = get_min_val_pos(timestamps);
+    Rcpp::List df = ll[lp];
+    int64_t lp_idx = indices[lp];
+    
+    Rcpp::NumericVector ts = df["timestamp"];
+    
+    // load the message to the buffer
+    i += load_message_to_buffer(&(buf[i]), lp_idx, df);
+    
+    // lp_idx was increased in load_message_to_buffer by one!
+    if (lp_idx == ts.size()) {
+      // take the max value if the end of this df is reached
+      std::memcpy(&(timestamps[lp]), &max_val, sizeof(int64_t));
+    } else {
+      std::memcpy(&(timestamps[lp]), &(ts[lp_idx]), sizeof(int64_t));
+    }
+    // at position lp, the index is increased by one, next loop, take the next value
+    indices[lp] += 1;
+    msg_ct++;
+  }
+  
+  // Rprintf("Write data to file '%s'\n", filename.c_str());
+  FILE* outfile;
+  outfile = fopen(filename.c_str(), "wb");
+  if (outfile == NULL) Rcpp::stop("File Error!\n");
+  fwrite(&buf[0], 1, i, outfile);
+  fclose(outfile);
+  
+  return filename;
+}
+
+/***R
+dbg_write_itch <- function(ll, filename) {
+  ll <- lapply(ll, data.table::setorder, timestamp)
+  
+  f <- dbg_write_itch_impl(ll, filename)
+  return(invisible(f))
+}
+*/
