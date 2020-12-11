@@ -13,4 +13,8 @@ expect_equal(
   get_date_from_filename("S030220-v50-bx.txt.gz"),
   as.POSIXct("2020-03-02", "GMT")
 )
+expect_equal(
+  get_date_from_filename("unknown_file_format"),
+  NA
+)
 

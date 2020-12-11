@@ -13,4 +13,9 @@ expect_equal(
   get_exchange_from_filename("S030220-v50-bx.txt.gz"),
   "BX"
 )
+expect_equal(
+  get_exchange_from_filename("unknown_file_format"),
+  NA
+)
+
 

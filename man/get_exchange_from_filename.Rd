@@ -19,4 +19,5 @@ Returns the exchange from an ITCH-filename
 get_exchange_from_filename("03302017.NASDAQ_ITCH50")
 get_exchange_from_filename("20170130.BX_ITCH_50.gz")
 get_exchange_from_filename("S030220-v50-bx.txt.gz")
+get_exchange_from_filename("Unknown_file_format")
 }

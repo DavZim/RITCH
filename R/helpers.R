@@ -10,6 +10,7 @@
 #' get_date_from_filename("03302017.NASDAQ_ITCH50")
 #' get_date_from_filename("20170130.BX_ITCH_50.gz")
 #' get_date_from_filename("S030220-v50-bx.txt.gz")
+#' get_date_from_filename("unknown_file_format")
 get_date_from_filename <- function(file) {
   date_ <- data.table::fifelse(
     grepl("S\\d{6}", file),
@@ -29,7 +30,8 @@ get_date_from_filename <- function(file) {
                         )
   )
   
-  date_ <- as.POSIXct(date_, tz = "GMT")
+  date_ <- try(as.POSIXct(date_, tz = "GMT"), silent = TRUE)
+  if (inherits(date_, "try-error")) date_ <- NA
   return(date_)
 }
 
@@ -44,11 +46,14 @@ get_date_from_filename <- function(file) {
 #' get_exchange_from_filename("03302017.NASDAQ_ITCH50")
 #' get_exchange_from_filename("20170130.BX_ITCH_50.gz")
 #' get_exchange_from_filename("S030220-v50-bx.txt.gz")
+#' get_exchange_from_filename("Unknown_file_format")
 get_exchange_from_filename <- function(file) {
   res <- regmatches(file, regexpr("(?<=\\.)[A-Z]+(?=_)", file, perl = TRUE))
   if (length(res) == 0)
     res <- regmatches(file, regexpr("(?<=-v50-)[a-z]+", file, perl = TRUE))
-  toupper(res)
+  res <- toupper(res)
+  if (length(res) == 0) res <- NA
+  return(res)
 }
 
 
