@@ -180,9 +180,9 @@ ITCH specification (see also \code{\link{open_itch_specification}})
 }
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-od <- get_orders(file)
-tr <- get_trades(file)
-md <- get_modifications(file)
+od <- read_orders(file)
+tr <- read_trades(file)
+md <- read_modifications(file)
 
 ## Alternatively 
 od <- read_ITCH(file, "orders")
@@ -194,10 +194,10 @@ str(md)
 # additional options:
 
 # turn off feedback
-od <- get_orders(file, quiet = TRUE)
+od <- read_orders(file, quiet = TRUE)
 
 # take only subset of messages
-tr <- get_trades(file, start_msg_count = 10, end_msg_count = 20)
+tr <- read_trades(file, start_msg_count = 10, end_msg_count = 20)
 
 # a message count can be provided for slightly faster reads
 msg_count <- count_messages(file)
@@ -207,11 +207,11 @@ od <- read_orders(file, msg_count)
   # .gz files will be automatically unzipped
   gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
   read_orders(gz_file)
-  get_orders(gz_file, quiet = TRUE)
+  read_orders(gz_file, quiet = TRUE)
   
   # a message count can be provided for slightly faster reads
-  msg_count <- count_messages(raw_file)
-  read_orders(raw_file, msg_count)
+  msg_count <- count_messages(file)
+  read_orders(file, msg_count)
 }
 
 

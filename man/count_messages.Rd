@@ -34,16 +34,11 @@ a data.table containing the message-type and their counts
 Counts the messages of an ITCH-file
 }
 \examples{
-\dontrun{
-  raw_file <- "20170130.PSX_ITCH_50"
-  count_messages(raw_file)
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+count_messages(file)
+count_messages(file, add_meta_data = TRUE)
 
-  count_messages(raw_file, TRUE)
-}
+gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+count_messages(gz_file)
 
-\dontrun{
-  gz_file <- "20170130.PSX_ITCH_50.gz"
-  count_messages(gz_file)
-  count_messages(gz_file, TRUE)
-}
 }

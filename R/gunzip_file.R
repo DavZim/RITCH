@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'   file <- "20191230.BX_ITCH_50.gz"
+#'   file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 #'   gunzip_file(file, "tmp")
 #' }
 gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
