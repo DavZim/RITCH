@@ -1166,7 +1166,7 @@ int get_min_val_pos(std::vector<int64_t> &x) {
 }
 
 // [[Rcpp::export]]
-std::string dbg_write_itch_impl(Rcpp::List ll, std::string filename) {
+std::string dbg_write_itch_impl(Rcpp::List ll, std::string filename, bool gz = false) {
   
   const int list_length = ll.size();
   int64_t msg_length = 0, total_msgs = 0;
@@ -1226,20 +1226,28 @@ std::string dbg_write_itch_impl(Rcpp::List ll, std::string filename) {
   }
   
   // Rprintf("Write data to file '%s'\n", filename.c_str());
-  FILE* outfile;
-  outfile = fopen(filename.c_str(), "wb");
-  if (outfile == NULL) Rcpp::stop("File Error!\n");
-  fwrite(&buf[0], 1, i, outfile);
-  fclose(outfile);
+  if (!gz) {
+    FILE* outfile;
+    outfile = fopen(filename.c_str(), "wb");
+    if (outfile == NULL) Rcpp::stop("File Error!\n");
+    fwrite(&buf[0], 1, i, outfile);
+    fclose(outfile);
+  } else {
+    filename += ".gz";
+    gzFile gzfile = gzopen(filename.c_str(), "wb");
+    if (gzfile == NULL) Rcpp::stop("File Error!\n");
+    gzwrite(gzfile, &buf[0], i);
+    gzclose(gzfile);
+  }
   
   return filename;
 }
 
 /***R
-dbg_write_itch <- function(ll, filename) {
+dbg_write_itch <- function(ll, filename, gz = FALSE) {
   ll <- lapply(ll, data.table::setorder, timestamp)
   
-  f <- dbg_write_itch_impl(ll, filename)
+  f <- dbg_write_itch_impl(ll, filename, gz)
   return(invisible(f))
 }
 */

@@ -83,6 +83,7 @@ vignettes/*.pdf
 *.*_ITCH_50
 *.*_ITCH_50.gz
 !/inst/extdata/*.*_ITCH_50
+!/inst/extdata/*.*_ITCH_50.gz
 
 # ITCH Documentation
 NQTVITCHspecification*.pdf

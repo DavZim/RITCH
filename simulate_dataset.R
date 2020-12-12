@@ -213,6 +213,8 @@ ll <- list(
 if (!dir.exists("inst/extdata")) dir.create("inst/extdata")
 outfile <- "inst/extdata/ex20101224.TEST_ITCH_50"
 dbg_write_itch(ll, outfile)
+dbg_write_itch(ll, outfile, gz = TRUE)
+
 cat(sprintf("Wrote sample dataset to '%s' with size '%.2f'KB\n", 
             outfile, file.info(outfile)[["size"]] / 1024))
 
