@@ -16,11 +16,11 @@ The dataset is used in the examples and unit tests of the package.
 
 The data contains the following count of messages:
  \itemize{
- \item{6 system event (message type \code{S})}
- \item{3 stock directory (message type \code{R})}
- \item{3 trading status (message type \code{H})}
- \item{5000 orders (4997 message type \code{A} and 3 \code{F})}
- \item{2000 modifications (198 \code{F}, 45 \code{X}, 1745 \code{D}, and 12 \code{U} message types)}
+   \item{6 system event (message type \code{S})}
+   \item{3 stock directory (message type \code{R})}
+   \item{3 trading status (message type \code{H})}
+   \item{5000 orders (4997 message type \code{A} and 3 \code{F})}
+   \item{2000 modifications (198 \code{F}, 45 \code{X}, 1745 \code{D}, and 12 \code{U} message types)}
 }
 
 The file is also available as \code{ex20101224.TEST_ITCH_50.gz}.

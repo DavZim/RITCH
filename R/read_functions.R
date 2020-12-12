@@ -3,25 +3,34 @@
 #'
 #' @title Reads certain messages of an ITCH-file into a data.table
 #' 
-#' @description  
-#' The read functions consist of \code{read_trades}, \code{read_orders}, and \code{read_modifications}.
+#' @description
 #' 
-#' TODO: Document here the different functions, which messages they read and what they imply...
+#' For faster file-reads (at the tradeoff of increased memory usages), you can
+#' increase the \code{buffer_size} to 1GB (1e9) or more.
 #' 
-#' If the file is too large to be loaded into the workspace at once,
-#' you can specify different start_msg_count/end_msg_counts to load only some messages.
+#' If you read multiple different message types from the same file, you can 
+#' provide the message counts as outputted from \code{\link{count_messages}} to
+#' the \code{start_msg_count} argument, this allows skipping one pass over the 
+#' file per read instruction. 
+#'
+#' If the file is too large to be loaded into the workspace at once, you can
+#' specify different \code{start_msg_count}/\code{end_msg_counts} to load only
+#' a specific range of messages.
 #' 
-#' @details 
-#' The specifications of the different messages types can be obtained from the official
-#' ITCH specification (see also \code{\link{open_itch_specification}})
+#' Note that all read functions allow both plain ITCH files as well as gzipped 
+#' files. If a gzipped file is found, it will look for a plain ITCH file with
+#' the same name and use that instead. If this file is not found, it will be 
+#' created. Use \code{force_cleanup = TRUE} to force the deletion of the 
+#' unzipped file after use.
 #' 
-#' @param file the path to the input file, either a gz-file or a plain-text file
+#' @param file the path to the input file, either a gz-file or a plain ITCH file
 #' @param type the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.
 #' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 #' if you have a large amount of RAM, 1e9 (1GB) might be faster 
 #' @param start_msg_count the start count of the messages, defaults to 0, or a data.frame of msg_types and counts, as returned by \code{\link{count_messages}}
 #' @param end_msg_count the end count of the messages, defaults to all messages
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
+#' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
 #' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
 #' @param force_cleanup only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
@@ -29,13 +38,21 @@
 #' @param add_descriptions add longer descriptions to shortened variables.
 #' The added information is taken from the official ITCH documentation
 #' see also \code{\link{open_itch_specification}}
-#'  
+#' 
+#' @details
+#' The details of the different messages types can be found in the official
+#' ITCH specification (see also \code{\link{open_itch_specification}})
+#'
+#' \itemize{
+#'  \item{\code{read_ITCH}: Generic function called by the other read 
+#'    functions.}
+#' }
 #' @references \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}
 #' 
 #' @return a data.table containing the messages
 #'
 #' @examples
-#' file <- "20191230.BX_ITCH_50"
+#' file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 #' od <- get_orders(file)
 #' tr <- get_trades(file)
 #' md <- get_modifications(file)
@@ -47,33 +64,35 @@
 #' str(tr)
 #' str(md)
 #' 
-#' \dontrun{
-#'   raw_file <- "20170130.PSX_ITCH_50"
-#'   get_orders(raw_file)
-#'   # turn off the feedback from the reading process
-#'   get_orders(raw_file, quiet = TRUE)
+#' # additional options:
 #' 
-#'   # load only the message 20, 21, 22 (index starts at 1)
-#'   get_orders(raw_file, startMsgCount = 20, endMsgCount = 22)
-#' }
+#' # turn off feedback
+#' od <- get_orders(file, quiet = TRUE)
 #' 
+#' # take only subset of messages
+#' tr <- get_trades(file, start_msg_count = 10, end_msg_count = 20)
+#' 
+#' # a message count can be provided for slightly faster reads
+#' msg_count <- count_messages(file)
+#' od <- read_orders(file, msg_count)
+#'   
 #' \dontrun{
 #'   # .gz files will be automatically unzipped
-#'   gz_file <- "20170130.PSX_ITCH_50.gz"
-#'   get_orders(gz_file)
+#'   gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+#'   read_orders(gz_file)
 #'   get_orders(gz_file, quiet = TRUE)
 #'   
 #'   # a message count can be provided for slightly faster reads
 #'   msg_count <- count_messages(raw_file)
-#'   get_orders(raw_file, msg_count)
+#'   read_orders(raw_file, msg_count)
 #' }
-#' 
+#'
 NULL
 
 #' @rdname read_functions
 #' @export
 read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1, 
-                      buffer_size = -1, quiet = FALSE,
+                      buffer_size = -1, quiet = FALSE, add_meta = TRUE,
                       force_gunzip = FALSE, force_cleanup = FALSE) {
   type <- tolower(type)
   msg_types <- list(
@@ -147,10 +166,12 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
   if (!quiet) cat("\n[Converting] to data.table\n")
   df <- data.table::setalloccol(df)
   
-  # add the date and exchange
-  df[, date := filedate]
-  df[, datetime := nanotime(as.Date(filedate)) + timestamp]
-  df[, exchange := get_exchange_from_filename(file)]
+  if (add_meta) {
+    # add the date and exchange
+    df[, date := filedate]
+    df[, datetime := nanotime(as.Date(filedate)) + timestamp]
+    df[, exchange := get_exchange_from_filename(file)]
+  }
   
   a <- gc()
   
@@ -164,12 +185,12 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
 #' @export
 #' @details
 #' \itemize{
-#'  \item{\code{read_orders()}}{ Order messages refer to message type 'A' and 'F'}
+#'  \item{\code{read_orders}: Reads order messages. Message type \code{A} and 
+#'    \code{F}}
 #' }
 #' @examples 
 #' 
 #' ## read_orders()
-#' file <- "20191230.BX_ITCH_50"
 #' read_orders(file)
 read_orders <- function(file, ...) {
   dots <- list(...)
@@ -182,12 +203,12 @@ read_orders <- function(file, ...) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_trades()}}{ Trade messages refer to message type 'P', 'Q', and 'B'}
+#'  \item{\code{read_trades}: Reads trade messages. Message type \code{P}, 
+#'    \code{Q} and \code{B}}
 #' }
 #' @examples 
 #' 
 #' ## read_trades()
-#' file <- "20191230.BX_ITCH_50"
 #' read_trades(file)
 read_trades <- function(file, ...) {
   dots <- list(...)
@@ -200,12 +221,12 @@ read_trades <- function(file, ...) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_modifications()}}{ Modification messages refer to message type 'E', 'C', 'X', 'D', and 'U'}
+#'  \item{\code{read_modifications}: Reads order modification messages. Message 
+#'    type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}}
 #' }
 #' @examples 
 #' 
 #' ## read_modifications()
-#' file <- "20191230.BX_ITCH_50"
 #' read_modifications(file)
 read_modifications <- function(file, ...) {
   dots <- list(...)
@@ -218,12 +239,12 @@ read_modifications <- function(file, ...) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_system_events()}}{ System event messages refer to message type 'S'}
+#'  \item{\code{read_system_events}: Reads system event messages. Message type 
+#'    \code{S}}
 #' }
 #' @examples 
 #' 
 #' ## read_system_events()
-#' file <- "20191230.BX_ITCH_50"
 #' read_system_events(file)
 #' read_system_events(file, add_descriptions)
 read_system_events <- function(file, ..., add_descriptions = FALSE) {
@@ -258,12 +279,12 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_stock_directory()}}{ Stock directory messages refer to message type 'R'}
+#'  \item{\code{read_stock_directory}: Reads stock trading messages. Message 
+#'    type \code{R}}
 #' }
 #' @examples 
 #' 
 #' ## read_stock_directory()
-#' file <- "20191230.BX_ITCH_50"
 #' read_stock_directory(file)
 #' read_stock_directory(file, add_descriptions = TRUE)
 read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
@@ -322,12 +343,12 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_trading_status()}}{ Trading Status messages refer to message type 'H' and 'h' (operational reason)}
+#'  \item{\code{read_trading_status}: Reads trading status messages. Message 
+#'    type \code{H} and \code{h}}
 #' }
 #' @examples 
 #' 
 #' ## read_trading_status()
-#' file <- "20191230.BX_ITCH_50"
 #' read_trading_status(file)
 #' read_trading_status(file, add_descriptions = TRUE)
 read_trading_status <- function(file, ..., add_descriptions = FALSE) {
@@ -366,12 +387,12 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_reg_sho()}}{ Reg SHO Status messages refer to message type 'Y'}
+#'  \item{\code{read_reg_sho}: Reads messages regarding reg SHO. Message type 
+#'    \code{Y}}
 #' }
 #' @examples 
 #' 
 #' ## read_reg_sho()
-#' file <- "20191230.BX_ITCH_50"
 #' read_reg_sho(file)
 read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
@@ -402,12 +423,12 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_market_participant_states()}}{ Market participants status messages refer to message type 'L'}
+#'  \item{\code{read_market_participant_states}: Reads messages regarding the 
+#'    status of market participants. Message type \code{L}}
 #' }
 #' @examples 
 #' 
 #' ## read_market_participant_states()
-#' file <- "20191230.BX_ITCH_50"
 #' read_market_participant_states(file)
 #' read_market_participant_states(file, add_descriptions = TRUE)
 read_market_participant_states <- function(file, ..., add_descriptions = FALSE) {
@@ -442,12 +463,12 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_mwcb()}}{ MWCB (Market Wide Circuit Breaker) messages refer to message types 'V' and 'W'}
+#'  \item{\code{read_mwcb}: Reads messages regarding Market-Wide-Circuit-Breakers
+#'    (MWCB). Message type \code{V} and \code{W}}
 #' }
 #' @examples 
 #' 
 #' ## read_mwcb()
-#' file <- "20191230.BX_ITCH_50"
 #' read_mwcb(file)
 read_mwcb <- function(file, ...) {
   dots <- list(...)
@@ -460,12 +481,11 @@ read_mwcb <- function(file, ...) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_ipo()}}{ IPO messages refer to message type 'K'}
+#'  \item{\code{read_ipo}: Reads messages regarding IPOs. Message type \code{K}}
 #' }
 #' @examples 
 #' 
 #' ## read_ipo()
-#' file <- "20191230.BX_ITCH_50"
 #' read_ipo(file)
 #' read_ipo(file, add_descriptions = TRUE)
 read_ipo <- function(file, ..., add_descriptions = FALSE) {
@@ -495,12 +515,12 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_luld()}}{ LULD messages refer to message type 'J'}
+#'  \item{\code{read_luld}: Reads messages regarding LULDs (limit up-limit down)
+#'    auction collars. Message type \code{J}}
 #' }
 #' @examples 
 #' 
 #' ## read_luld()
-#' file <- "20191230.BX_ITCH_50"
 #' read_luld(file)
 read_luld <- function(file, ...) {
   dots <- list(...)
@@ -513,12 +533,12 @@ read_luld <- function(file, ...) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_noii()}}{ NOII messages refer to message type 'I'}
+#'  \item{\code{read_noii}: Reads Net Order Imbalance Indicatio (NOII) messages. 
+#'    Message type \code{I}}
 #' }
 #' @examples 
 #' 
 #' ## read_noii()
-#' file <- "20191230.BX_ITCH_50"
 #' read_noii(file)
 #' read_noii(file, add_descriptions = TRUE)
 read_noii <- function(file, ..., add_descriptions = FALSE) {
@@ -576,12 +596,12 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
 #' @export
 #' @details 
 #' \itemize{
-#'  \item{\code{read_rpii()}}{ RPII messages refer to message type 'N'}
+#'  \item{\code{read_rpii}: Reads Retail Price Improvement Indicator (RPII) 
+#'    messages. Message type \code{N}}
 #' }
 #' @examples 
 #' 
 #' ## read_rpii()
-#' file <- "20191230.BX_ITCH_50"
 #' read_rpii(file)
 #' read_rpii(file, add_descriptions = TRUE)
 read_rpii <- function(file, ..., add_descriptions = FALSE) {
