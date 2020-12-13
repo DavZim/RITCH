@@ -57,7 +57,7 @@ get_exchange_from_filename <- function(file) {
 }
 
 
-#' Opens the ITCH Specification URL
+#' Opens the ITCH Specification PDF
 #'
 #' The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
 #' 
@@ -70,6 +70,23 @@ get_exchange_from_filename <- function(file) {
 #' }
 open_itch_specification <- function() {
   url <- "https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf"
+  browseURL(url)
+  return(invisible(url))
+}
+
+#' Opens the ITCH sample FTP page
+#'
+#' The FTP server can be found at \url{ftp://emi.nasdaq.com/ITCH/}.
+#' 
+#' @return the URL (invisible)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' open_itch_ftp()
+#' }
+open_itch_ftp <- function() {
+  url <- "ftp://emi.nasdaq.com/ITCH/"
   browseURL(url)
   return(invisible(url))
 }

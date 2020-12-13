@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{open_itch_specification}
 \alias{open_itch_specification}
-\title{Opens the ITCH Specification URL}
+\title{Opens the ITCH Specification PDF}
 \usage{
 open_itch_specification()
 }
