@@ -22,10 +22,10 @@ Rcpp::sourceCpp("debug/debug_tools.cpp")
 # take 3 most traded stocks in orders, trades
 file <- "20191230.BX_ITCH_50"
 
-loc_code <- download_locate_code("BX", "2019-12-30")
-trades   <- read_trades(file, add_meta = FALSE)
-orders   <- read_orders(file, add_meta = FALSE)
-mods     <- read_modifications(file, add_meta = FALSE)
+loc_code <- download_locate_code("BX", "2019-12-30", quiet = TRUE)
+trades   <- read_trades(file, add_meta = FALSE, quiet = TRUE)
+orders   <- read_orders(file, add_meta = FALSE, quiet = TRUE)
+mods     <- read_modifications(file, add_meta = FALSE, quiet = TRUE)
 
 names_trades <- names(trades)
 names_orders <- names(orders)
@@ -46,8 +46,6 @@ loc_codes <- loc_code[ticker %chin% names(stock_select)][, .(stock_old = ticker,
                                                              old_loc_code = locate_code,
                                                              stock = stock_select[ticker],
                                                              locate_code = 1:.N)]
-
-
 
 # removes price outliers outside of a given sigma range...
 remove_price_outliers <- function(dt, sigma = 3) {
@@ -95,6 +93,7 @@ sys_ev[, timestamp := timestamp + rnorm(.N, 0, 1e10)]
 set.seed(76411948)
 
 stock_dir <- read_stock_directory(file, add_meta = FALSE)
+names_dir <- names(stock_dir)
 sdir <- stock_dir[stock %chin% names(stock_select)][, stock := stock_select[stock]][]
 
 valid_market_cat <- c("Q", "G", "S", "N", "A", "P", "Z", "V", " ")
@@ -104,8 +103,11 @@ sdir[, ':='(
   issue_classification = "A",
   ipo_flag = FALSE,
   luld_price_tier = 2,
-  etp_leverage = 0
+  etp_leverage = 0,
+  locate_code = NULL
 )]
+sdir <- sdir[loc_codes[, .(stock, locate_code)], on = "stock"]
+setcolorder(sdir, names_dir)
 
 ######################
 # Prepare Trading Status Messages
