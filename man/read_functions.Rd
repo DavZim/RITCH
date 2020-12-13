@@ -21,7 +21,7 @@
 read_ITCH(
   file,
   type,
-  skip = -1,
+  skip = 0,
   n_max = -1,
   buffer_size = -1,
   quiet = FALSE,
@@ -210,11 +210,12 @@ od <- read_orders(file, msg_count)
   # .gz files will be automatically unzipped
   gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
   read_orders(gz_file)
-  read_orders(gz_file, quiet = TRUE)
+  # force a decompress and delete the decompressed file afterwards
+  read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
   
   # a message count can be provided for slightly faster reads
   msg_count <- count_messages(file)
-  read_orders(file, msg_count)
+  read_orders(file, n_max = msg_count)
 }
 
 
