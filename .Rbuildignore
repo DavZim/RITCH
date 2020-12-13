@@ -3,8 +3,8 @@
 ^\.travis\.yml$
 ^LICENSE\.md$
 ^README\.Rmd$
-^.+_ITCH_50$
-^.+_ITCH_50\.gz$
+^[^/]+_ITCH_50$
+^[^/]+_ITCH_50\.gz$
 ^README_cache$
 ^NQTVITCHspecification.*\.pdf$
 ^debug/*$
