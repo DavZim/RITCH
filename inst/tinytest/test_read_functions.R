@@ -1,15 +1,26 @@
 library(RITCH)
 library(tinytest)
+library(data.table)
 
-nanotime_class <- "nanotime"
-attr(nanotime_class, "package") <- "nanotime"
 as.int64 <- bit64::as.integer64
+# overload table for better comparison
+table <- function(x) {
+  tb <- base::table(x)
+  res <- as.numeric(tb)
+  names(res) <- names(tb)
+  res
+}
 
 # Begin Tests
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+gzfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+file_raw <- strsplit(file, "/")[[1]]
+file_raw <- file_raw[length(file_raw)]
 
 expect_true(file.exists(file))
-expect_true(file.info(file)[["size"]] > 0)
+expect_true(file.info(file)[["size"]] == 465048)
+expect_true(file.exists(gzfile))
+expect_true(file.info(gzfile)[["size"]] == 159979)
 
 #### Count messages
 ct <- count_messages(file, quiet = TRUE)
@@ -23,6 +34,19 @@ ct_exp <- data.table(
 expect_equal(class(ct), c("data.table", "data.frame"))
 expect_equal(nrow(ct), 22)
 expect_equal(ct, ct_exp)
+
+ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE, 
+                      force_cleanup = FALSE)
+expect_equal(ct, ct2)
+expect_true(file.exists(file_raw))
+unlink(file_raw)
+
+# check that force_cleanup works
+ct3 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE, 
+                      force_cleanup = TRUE)
+expect_equal(ct, ct3)
+expect_false(file.exists(file_raw))
+
 
 #### Orders
 od <- read_orders(file, quiet = TRUE)
@@ -39,20 +63,31 @@ classes_exp <- list(
   price = "numeric",
   mpid = "character",
   date = c("POSIXct", "POSIXt"),
-  datetime = nanotime_class,
+  datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
 expect_equal(class(od), c("data.table", "data.frame"))
-expect_equal(nrow(od), 5000)
 expect_equal(names(od), names(classes_exp))
 expect_equal(lapply(od, class), classes_exp)
+expect_equal(nrow(od), 5000)
 expect_equal(table(od$msg_type), c("A" = 4997, "F" = 3))
 expect_equal(table(od$buy), c("FALSE" = 2568, "TRUE" = 2432))
 expect_equal(table(od$stock), c("ALC" = 950, "BOB" = 2482, "CHAR" = 1568))
 expect_equal(unique(od$date), as.POSIXct("2010-12-24", "GMT"))
 expect_equal(unique(od$exchange), "TEST")
 
+# test n_max = ct
+od2 <- read_orders(file, quiet = TRUE, n_max = ct)
+expect_equal(class(od2), c("data.table", "data.frame"))
+expect_equal(names(od2), names(classes_exp))
+expect_equal(lapply(od2, class), classes_exp)
+expect_equal(nrow(od2), 5000)
+expect_equal(od, od2)
+
+# test skip and n_max
+od3 <- read_orders(file, quiet = TRUE, skip = 3, n_max = 10)
+expect_equal(od3[1:10], od[4:13])
 
 #### Trades
 tr <- read_trades(file, quiet = TRUE)
@@ -70,7 +105,7 @@ classes_exp <- list(
   match_number = "integer64",
   cross_type = "character",
   date = c("POSIXct", "POSIXt"),
-  datetime = nanotime_class,
+  datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
@@ -85,9 +120,215 @@ expect_equal(unique(tr$date), as.POSIXct("2010-12-24", "GMT"))
 expect_equal(unique(tr$exchange), "TEST")
 
 #### Modifications
+md <- read_modifications(file, quiet = TRUE)
+
+classes_exp <- list(
+  msg_type = "character",
+  locate_code = "integer",
+  tracking_number = "integer",
+  timestamp = "integer64",
+  order_ref = "integer64",
+  shares = "integer",
+  match_number = "integer64",
+  printable = "logical",
+  price = "numeric",
+  new_order_ref = "integer64",
+  date = c("POSIXct", "POSIXt"),
+  datetime = structure("nanotime", package = "nanotime"),
+  exchange = "character"
+)
+
+expect_equal(class(md), c("data.table", "data.frame"))
+expect_equal(nrow(md), 2000)
+expect_equal(names(md), names(classes_exp))
+expect_equal(lapply(md, class), classes_exp)
+expect_equal(table(md$msg_type), c("D" = 1745, "E" = 198, "U" = 12, "X" = 45))
+expect_equal(table(is.na(md$shares)), c("FALSE" = 255, "TRUE" = 1745))
+expect_equal(table(is.na(md$match_number)), c("FALSE" = 198, "TRUE" = 1802))
+expect_equal(table(is.na(md$printable)), c("TRUE" = 2000))
+expect_equal(table(is.na(md$price)), c("FALSE" = 12, "TRUE" = 1988))
+expect_equal(table(is.na(md$new_order_ref)), c("FALSE" = 12, "TRUE" = 1988))
+expect_equal(unique(md$date), as.POSIXct("2010-12-24", "GMT"))
+expect_equal(unique(md$exchange), "TEST")
 
 #### System Events
+sys <- read_system_events(file, quiet = TRUE)
+
+classes_exp <- list(
+  msg_type = "character",
+  locate_code = "integer",
+  tracking_number = "integer",
+  timestamp = "integer64",
+  event_code = "character",
+  date = c("POSIXct", "POSIXt"),
+  datetime = structure("nanotime", package = "nanotime"),
+  exchange = "character"
+)
+
+expect_equal(class(sys), c("data.table", "data.frame"))
+expect_equal(nrow(sys), 6)
+expect_equal(names(sys), names(classes_exp))
+expect_equal(lapply(sys, class), classes_exp)
+expect_equal(table(sys$msg_type), c("S" = 6))
+expect_equal(sys$event_code, c("O", "S", "Q", "M", "E", "C"))
+expect_equal(unique(sys$date), as.POSIXct("2010-12-24", "GMT"))
+expect_equal(unique(sys$exchange), "TEST")
 
 #### Stock Directory
+sdir <- read_stock_directory(file, quiet = TRUE)
+
+classes_exp <- list(
+  msg_type = "character",
+  locate_code = "integer",
+  tracking_number = "integer",
+  timestamp = "integer64",
+  stock = "character",
+  market_category = "character",
+  financial_status = "character",
+  lot_size = "integer",
+  round_lots_only = "logical", 
+  issue_classification = "character",
+  issue_subtype = "character", 
+  authentic = "logical", 
+  short_sell_closeout = "logical", 
+  ipo_flag = "logical", 
+  luld_price_tier = "character",
+  etp_flag = "logical", 
+  etp_leverage = "integer", 
+  inverse = "logical",
+  date = c("POSIXct", "POSIXt"),
+  datetime = structure("nanotime", package = "nanotime"),
+  exchange = "character"
+)
+
+expect_equal(class(sdir), c("data.table", "data.frame"))
+expect_equal(nrow(sdir), 3)
+expect_equal(names(sdir), names(classes_exp))
+expect_equal(lapply(sdir, class), classes_exp)
+expect_equal(table(sdir$msg_type), c("R" = 3))
+expect_equal(sdir$locate_code, 1:3)
+expect_equal(unique(sdir$date), as.POSIXct("2010-12-24", "GMT"))
+expect_equal(unique(sdir$exchange), "TEST")
 
 #### Trading Status
+tstat <- read_trading_status(file, quiet = TRUE)
+
+classes_exp <- list(
+  msg_type = "character",
+  locate_code = "integer", 
+  tracking_number = "integer", 
+  timestamp = "integer64",
+  stock = "character",
+  trading_state = "character", 
+  reserved = "character", 
+  reason = "character", 
+  market_code = "character", 
+  operation_halted = "logical",
+  date = c("POSIXct", "POSIXt"),
+  datetime = structure("nanotime", package = "nanotime"), 
+  exchange = "character"
+)
+
+expect_equal(class(tstat), c("data.table", "data.frame"))
+expect_equal(nrow(tstat), 3)
+expect_equal(names(tstat), names(classes_exp))
+expect_equal(lapply(tstat, class), classes_exp)
+expect_equal(table(tstat$msg_type), c("H" = 3))
+expect_equal(tstat$locate_code, 1:3)
+expect_equal(unique(tstat$trading_state), "T")
+expect_equal(unique(tstat$operation_halted), NA)
+expect_equal(unique(tstat$date), as.POSIXct("2010-12-24", "GMT"))
+expect_equal(unique(tstat$exchange), "TEST")
+
+######## Other empty message groups
+
+## Reg Sho
+rs <- read_reg_sho(file, quiet = TRUE)
+
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", stock = "character", regsho_action = "character", 
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  exchange = "character"
+)
+
+expect_equal(class(rs), c("data.table", "data.frame"))
+expect_equal(nrow(rs), 0)
+expect_equal(names(rs), names(classes_exp))
+expect_equal(lapply(rs, class), classes_exp)
+
+
+## Market Participant States
+mps <- read_market_participant_states(file, quiet = TRUE)
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", mpid = "character", stock = "character", 
+  primary_mm = "logical", mm_mode = "character", participant_state = "character", 
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  exchange = "character"
+)
+
+expect_equal(class(mps), c("data.table", "data.frame"))
+expect_equal(nrow(mps), 0)
+expect_equal(names(mps), names(classes_exp))
+expect_equal(lapply(mps, class), classes_exp)
+
+
+## MWCB
+mwcb <- read_mwcb(file, quiet = TRUE)
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", level1 = "numeric", level2 = "numeric", 
+  level3 = "numeric", breached_level = "integer", date = c("POSIXct", "POSIXt"),
+  datetime = structure("nanotime", package = "nanotime"), exchange = "character"
+)
+
+expect_equal(class(mwcb), c("data.table", "data.frame"))
+expect_equal(nrow(mwcb), 0)
+expect_equal(names(mwcb), names(classes_exp))
+expect_equal(lapply(mwcb, class), classes_exp)
+
+## IPO
+ipo <- read_ipo(file, quiet = TRUE)
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", stock = "character", release_time = "integer", 
+  release_qualifier = "character", ipo_price = "numeric", date = c("POSIXct", "POSIXt"), 
+  datetime = structure("nanotime", package = "nanotime"), exchange = "character"
+)
+
+expect_equal(class(ipo), c("data.table", "data.frame"))
+expect_equal(nrow(ipo), 0)
+expect_equal(names(ipo), names(classes_exp))
+expect_equal(lapply(ipo, class), classes_exp)
+
+## NOII
+noii <- read_noii(file, quiet = TRUE)
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", paired_shares = "integer64", imbalance_shares = "integer64", 
+  imbalance_direction = "character", stock = "character", far_price = "numeric", 
+  near_price = "numeric", reference_price = "numeric", cross_type = "character", 
+  variation_indicator = "character", date = c("POSIXct", "POSIXt"), 
+  datetime = structure("nanotime", package = "nanotime"), exchange = "character"
+)
+
+expect_equal(class(noii), c("data.table", "data.frame"))
+expect_equal(nrow(noii), 0)
+expect_equal(names(noii), names(classes_exp))
+expect_equal(lapply(noii, class), classes_exp)
+
+# RPII
+rpii <- read_rpii(file, quiet = TRUE)
+classes_exp <- list(
+  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  timestamp = "integer64", stock = "character", interest_flag = "character", 
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  exchange = "character"
+)
+
+expect_equal(class(rpii), c("data.table", "data.frame"))
+expect_equal(nrow(rpii), 0)
+expect_equal(names(rpii), names(classes_exp))
+expect_equal(lapply(rpii, class), classes_exp)
+
