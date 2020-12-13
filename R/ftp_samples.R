@@ -49,7 +49,7 @@ list_sample_files <- function() {
 #' @param force_download If the file should be downloaded even if it already exists locally. 
 #' Default value is FALSE.
 #' @param check_md5sum If the md5-sum (hash-value) of the downloaded file should be checked, default value is TRUE.
-#' @param verbose If the function should be verbose, default value is TRUE.
+#' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
 #'
 #' @return an invisible vector of the files
 #' @export
@@ -66,7 +66,7 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
                                  dir = ".",
                                  force_download = FALSE,
                                  check_md5sum = TRUE,
-                                 verbose = TRUE) {
+                                 quiet = FALSE) {
   choice <- match.arg(choice)
   
   url <- "ftp://emi.nasdaq.com/ITCH/"
@@ -75,7 +75,7 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
   if (length(exchanges) != 1 && !is.na(exchanges)) 
     df <- df[exchange %in% toupper(exchanges), ]
   
-  if (verbose) cat(paste0("Downloading '", choice, "' sample file(s)\n"))
+  if (!quiet) cat(paste0("Downloading '", choice, "' sample file(s)\n"))
   
   if (choice %in% c("smallest", "largest")) df <- df[order(file_size, decreasing = TRUE)]
   if (choice %in% c("earliest", "latest")) df <- df[order(date, decreasing = TRUE)]
@@ -100,32 +100,31 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
       txt <- paste0("File '", file_path, "' exists already, ")
       
       if (force_download) {
-        if (verbose) cat(paste0(txt, "downloading!\n"))
+        if (!quiet) cat(paste0(txt, "downloading!\n"))
       } else {
-        if (verbose) cat(paste0(txt, "not downloading it again!\n"))
+        if (!quiet) cat(paste0(txt, "not downloading it again!\n"))
         download_file <- FALSE
       }
     }
     file_url <- paste0(url, file)
     
-    
     if (download_file) {
-      if (verbose) cat(paste0("Downloading File '", file_path, "'.\n"))
-      download.file(file_url, destfile = file_path, mode = "wb", quiet = !verbose)
+      if (!quiet) cat(paste0("Downloading File '", file_path, "'.\n"))
+      download.file(file_url, destfile = file_path, mode = "wb", quiet = quiet)
     }
     
     if (check_md5sum) {
-      if (verbose) cat(paste0("Checking md5 sum of file '", file_path, "' ... "))
+      if (!quiet) cat(paste0("Checking md5 sum of file '", file_path, "' ... "))
       md5_url <- paste0(file_url, ".md5sum")
       md5 <- readLines(md5_url)
       expected <- strsplit(md5, " ")[[1]][1]
       got <- tools::md5sum(file_path)
       if (expected != got) {
-        if (verbose) cat("\n")
+        if (!quiet) cat("\n")
         warning(paste0("md5 hash for file '", file_path,
                        "' not matching.\nExpected '", expected, "' got '", got, "'!"))
       } else {
-        if (verbose) cat(paste0("matches '", expected, "' - success !\n"))
+        if (!quiet) cat(paste0("matches '", expected, "' - success !\n"))
       }
     }
     

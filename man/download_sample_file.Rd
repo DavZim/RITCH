@@ -10,7 +10,7 @@ download_sample_file(
   dir = ".",
   force_download = FALSE,
   check_md5sum = TRUE,
-  verbose = TRUE
+  quiet = FALSE
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ Default value is FALSE.}
 
 \item{check_md5sum}{If the md5-sum (hash-value) of the downloaded file should be checked, default value is TRUE.}
 
-\item{verbose}{If the function should be verbose, default value is TRUE.}
+\item{quiet}{if TRUE, the status messages are suppressed, defaults to FALSE}
 }
 \value{
 an invisible vector of the files
