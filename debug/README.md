@@ -11,16 +11,16 @@ They are not shipped with the package itself but need to be sourced
 independently.
 
 If you want to play around with the tools, clone the git repository and
-call:
+source the `debug/debug_tools.cpp` script:
 
 ``` r
-Rcpp::sourceCpp("debug_tools.cpp")
+Rcpp::sourceCpp("debug/debug_tools.cpp")
 ```
 
 Note that `debug_tools.cpp` includes `../src/RITCH.h` as well as
-`../src/MessageTypes.h`, if you have cloned the repository as is, it
-should work out of the box, otherwise, make sure that the two header
-files are found.
+`../src/MessageTypes.h` (relative from the `debug_tools.cpp` script), if
+you have cloned the repository as is, it should work out of the box,
+otherwise, make sure that the two header files are found.
 
 ## Debug Tools
 

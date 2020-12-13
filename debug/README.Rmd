@@ -10,16 +10,16 @@ This document quickly outlines the debugging tools of the `RITCH` library.
 
 These tools are used for debugging and understanding the data format. They are not shipped with the package itself but need to be sourced independently.
 
-If you want to play around with the tools, clone the git repository and call:
+If you want to play around with the tools, clone the git repository and source the `debug/debug_tools.cpp` script:
 
 ```{r, include=FALSE}
 Rcpp::sourceCpp("debug_tools.cpp")
 ```
 ```{r, eval=FALSE}
-Rcpp::sourceCpp("debug_tools.cpp")
+Rcpp::sourceCpp("debug/debug_tools.cpp")
 ```
 
-Note that `debug_tools.cpp` includes `../src/RITCH.h` as well as `../src/MessageTypes.h`, if you have cloned the repository as is, it should work out of the box, otherwise, make sure that the two header files are found.
+Note that `debug_tools.cpp` includes `../src/RITCH.h` as well as `../src/MessageTypes.h` (relative from the `debug_tools.cpp` script), if you have cloned the repository as is, it should work out of the box, otherwise, make sure that the two header files are found.
 
 ## Debug Tools
 
