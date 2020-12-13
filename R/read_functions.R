@@ -10,11 +10,11 @@
 #' 
 #' If you read multiple different message types from the same file, you can 
 #' provide the message counts as outputted from \code{\link{count_messages}} to
-#' the \code{start_msg_count} argument, this allows skipping one pass over the 
+#' the \code{n_max} argument, this allows skipping one pass over the 
 #' file per read instruction. 
 #'
 #' If the file is too large to be loaded into the workspace at once, you can
-#' specify different \code{start_msg_count}/\code{end_msg_counts} to load only
+#' specify different \code{skip} and \code{n_max} to load only
 #' a specific range of messages.
 #' 
 #' Note that all read functions allow both plain ITCH files as well as gzipped 
@@ -27,8 +27,11 @@
 #' @param type the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.
 #' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 #' if you have a large amount of RAM, 1e9 (1GB) might be faster 
-#' @param start_msg_count the start count of the messages, defaults to 0, or a data.frame of msg_types and counts, as returned by \code{\link{count_messages}}
-#' @param end_msg_count the end count of the messages, defaults to all messages
+#' @param skip Number of messages to skip before starting parsing messages, 
+#' note it only applies to messages of this type.
+#' @param n_max Maximum number of messages to parse, default is to read all values.
+#'  Can also be a data.frame of msg_types and counts, as returned by 
+#'  \code{\link{count_messages}}
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
 #' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
 #' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
@@ -70,7 +73,7 @@
 #' od <- read_orders(file, quiet = TRUE)
 #' 
 #' # take only subset of messages
-#' tr <- read_trades(file, start_msg_count = 10, end_msg_count = 20)
+#' tr <- read_trades(file, skip = 3, n_max = 10)
 #' 
 #' # a message count can be provided for slightly faster reads
 #' msg_count <- count_messages(file)
@@ -91,7 +94,7 @@ NULL
 
 #' @rdname read_functions
 #' @export
-read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1, 
+read_ITCH <- function(file, type, skip = 0, n_max = -1, 
                       buffer_size = -1, quiet = FALSE, add_meta = TRUE,
                       force_gunzip = FALSE, force_cleanup = FALSE) {
   type <- tolower(type)
@@ -143,21 +146,24 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
   
   filedate <- get_date_from_filename(file)
   
-  if (is.data.frame(start_msg_count)) {
-    if (!all(c("msg_type", "count") %in% names(start_msg_count))) 
-      stop("If start_msg_count is a data.frame/table, it must contain 'msg_type' and 'count'!")
-    dd <- start_msg_count
-    start_msg_count <- 1
-    end_msg_count <- as.integer(dd[msg_type %in% msg_types, sum(count)])
+  if (is.data.frame(n_max)) {
+    if (!all(c("msg_type", "count") %in% names(n_max))) 
+      stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
+    dd <- n_max
+    skip <- 0
+    n_max <- as.integer(dd[msg_type %in% msg_types, sum(count)])
   }
   
   orig_file <- file
   file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
   
-  # -1 because we want it 1 indexed (cpp is 0-indexed) 
+  # -1 because we want it 1 indexed (cpp is 0-indexed), +1 as we want to skip 
   # and max(0, xxx) b.c. the variable is unsigned!
-  start <- max(start_msg_count - 1, 0)
-  end <- max(end_msg_count - 1, -1)
+  start <- max(skip - 1 + 1, 0)
+  end <- max(skip + n_max - 1, -1)
+  if (is.numeric(n_max) && n_max != -1 && !quiet) 
+    cat("NOTE: as n_max overrides counting the messages, the numbers for messages may be off.\n")
+  
   df <- imp_calls[[type]](file, start, end, buffer_size, quiet)
   
   # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file 
@@ -172,6 +178,10 @@ read_ITCH <- function(file, type, start_msg_count = 0, end_msg_count = -1,
     df[, datetime := nanotime(as.Date(filedate)) + timestamp]
     df[, exchange := get_exchange_from_filename(file)]
   }
+  
+  # remove messages with empty msg_types, this can be the case if n_max was set
+  # to a large value
+  df <- df[msg_type != ""]
   
   a <- gc()
   

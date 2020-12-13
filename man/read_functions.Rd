@@ -21,8 +21,8 @@
 read_ITCH(
   file,
   type,
-  start_msg_count = 0,
-  end_msg_count = -1,
+  skip = -1,
+  n_max = -1,
   buffer_size = -1,
   quiet = FALSE,
   add_meta = TRUE,
@@ -61,9 +61,12 @@ read_rpii(file, ..., add_descriptions = FALSE)
 
 \item{type}{the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.}
 
-\item{start_msg_count}{the start count of the messages, defaults to 0, or a data.frame of msg_types and counts, as returned by \code{\link{count_messages}}}
+\item{skip}{Number of messages to skip before starting parsing messages, 
+note it only applies to messages of this type.}
 
-\item{end_msg_count}{the end count of the messages, defaults to all messages}
+\item{n_max}{Maximum number of messages to parse, default is to read all values.
+Can also be a data.frame of msg_types and counts, as returned by 
+\code{\link{count_messages}}}
 
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 if you have a large amount of RAM, 1e9 (1GB) might be faster}
@@ -92,11 +95,11 @@ increase the \code{buffer_size} to 1GB (1e9) or more.
 
 If you read multiple different message types from the same file, you can 
 provide the message counts as outputted from \code{\link{count_messages}} to
-the \code{start_msg_count} argument, this allows skipping one pass over the 
+the \code{n_max} argument, this allows skipping one pass over the 
 file per read instruction. 
 
 If the file is too large to be loaded into the workspace at once, you can
-specify different \code{start_msg_count}/\code{end_msg_counts} to load only
+specify different \code{skip} and \code{n_max} to load only
 a specific range of messages.
 
 Note that all read functions allow both plain ITCH files as well as gzipped 
@@ -197,7 +200,7 @@ str(md)
 od <- read_orders(file, quiet = TRUE)
 
 # take only subset of messages
-tr <- read_trades(file, start_msg_count = 10, end_msg_count = 20)
+tr <- read_trades(file, skip = 3, n_max = 10)
 
 # a message count can be provided for slightly faster reads
 msg_count <- count_messages(file)
