@@ -27,14 +27,25 @@ check_and_gunzip <- function(file, buffer_size, force_gunzip, quiet) {
   if (!grepl("\\.gz$", file)) return(file)
   
   raw_file <- gsub("\\.gz$", "", file)
-  # check if the raw-file already exists, if so use this (unless force_gunzip = TRUE)
-  if (file.exists(raw_file) && !quiet && !force_gunzip)
-    cat(sprintf("[INFO] Unzipped file %s already found, using that (overwrite with force_gunzip=TRUE)\n", raw_file))
+  # check if the raw-file at target directory already exists, if so use this (unless force_gunzip = TRUE)
+  if (file.exists(raw_file) && !quiet && !force_gunzip) {
+    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip=TRUE)\n", raw_file))
+    return(raw_file)
+  }
   
+  # look in current directory and extract to current directory if decompress needed
+  raw_file <- strsplit(raw_file, "/")[[1]]
+  raw_file <- raw_file[length(raw_file)]
+  
+  # check if the raw-file at current directory already exists, if so use this (unless force_gunzip = TRUE)
+  if (file.exists(raw_file) && !quiet && !force_gunzip) {
+    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip=TRUE)\n", raw_file))
+    return(raw_file)
+  }
   # if the unzipped file doesnt exist or the force_gunzip flag is set, unzip file
   if (!file.exists(raw_file) || force_gunzip) {
     unlink(raw_file)
-    if (!quiet) cat(sprintf("[Decompressing] %s\n", file))
+    if (!quiet) cat(sprintf("[Decompressing] '%s' to '%s'\n", file, raw_file))
     
     gunzip_file(file, raw_file, buffer_size)
   }
