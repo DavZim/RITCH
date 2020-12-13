@@ -151,7 +151,7 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
     if (!all(c("msg_type", "count") %in% names(n_max))) 
       stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
     skip <- 0
-    n_max <- as.integer(n_max[msg_type %in% msg_types, sum(count)])
+    n_max <- as.integer(n_max[msg_type %in% msg_types[[type]], sum(count)])
   }
   
   orig_file <- file
