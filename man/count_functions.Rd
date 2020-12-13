@@ -50,10 +50,74 @@ count_rpii(x)
 a numeric value of number of orders in x
 }
 \description{
-
+Counts the number of messages in a group from a data.table of message counts
 }
 \details{
 The count functions apply to all message groups.
+
+\itemize{
+ \item{\code{count_orders}: Counts order messages. Message type \code{A} and 
+   \code{F}}
+}
+
+\itemize{
+ \item{\code{count_trades}: Counts trade messages. Message type \code{P}, 
+   \code{Q} and \code{B}}
+}
+
+\itemize{
+ \item{\code{count_modifications}: Counts order modification messages. Message 
+   type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}}
+}
+
+\itemize{
+ \item{\code{count_system_events}: Counts system event messages. Message type 
+   \code{S}}
+}
+
+\itemize{
+ \item{\code{count_stock_directory}: Counts stock trading messages. Message 
+   type \code{R}}
+}
+
+\itemize{
+ \item{\code{count_trading_status}: Counts trading status messages. Message 
+   type \code{H} and \code{h}}
+}
+
+\itemize{
+ \item{\code{count_reg_sho}: Counts messages regarding reg SHO. Message type 
+   \code{Y}}
+}
+
+\itemize{
+ \item{\code{count_market_participant_states}: Counts messages regarding the 
+   status of market participants. Message type \code{L}}
+}
+
+\itemize{
+ \item{\code{count_mwcb}: Counts messages regarding Market-Wide-Circuit-Breakers
+   (MWCB). Message type \code{V} and \code{W}}
+}
+
+\itemize{
+ \item{\code{count_ipo}: Counts messages regarding IPOs. Message type \code{K}}
+}
+
+\itemize{
+ \item{\code{count_luld}: Counts messages regarding LULDs (limit up-limit down)
+   auction collars. Message type \code{J}}
+}
+
+\itemize{
+ \item{\code{count_noii}: Counts Net Order Imbalance Indicatio (NOII) messages. 
+   Message type \code{I}}
+}
+
+\itemize{
+ \item{\code{count_rpii}: Counts Retail Price Improvement Indicator (RPII) 
+   messages. Message type \code{N}}
+}
 }
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")

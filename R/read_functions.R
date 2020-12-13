@@ -73,24 +73,18 @@
 #' od <- read_orders(file, quiet = TRUE)
 #' 
 #' # take only subset of messages
-#' tr <- read_trades(file, skip = 3, n_max = 10)
+#' od <- read_orders(file, skip = 3, n_max = 10)
 #' 
 #' # a message count can be provided for slightly faster reads
 #' msg_count <- count_messages(file)
-#' od <- read_orders(file, msg_count)
+#' od <- read_orders(file, n_max = msg_count)
 #'   
-#' \dontrun{
-#'   # .gz files will be automatically unzipped
-#'   gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
-#'   read_orders(gz_file)
-#'   # force a decompress and delete the decompressed file afterwards
-#'   read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
-#'   
-#'   # a message count can be provided for slightly faster reads
-#'   msg_count <- count_messages(file)
-#'   read_orders(file, n_max = msg_count)
-#' }
-#'
+#' # .gz files will be automatically unzipped
+#' gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+#' od <- read_orders(gz_file)
+#' # force a decompress and delete the decompressed file afterwards
+#' od <- read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
+#' 
 NULL
 
 #' @rdname read_functions
@@ -256,7 +250,7 @@ read_modifications <- function(file, ...) {
 #' 
 #' ## read_system_events()
 #' read_system_events(file)
-#' read_system_events(file, add_descriptions)
+#' read_system_events(file, add_descriptions = TRUE)
 read_system_events <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -404,6 +398,7 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
 #' 
 #' ## read_reg_sho()
 #' read_reg_sho(file)
+#' read_reg_sho(file, add_descriptions = TRUE)
 read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -639,11 +634,26 @@ read_rpii <- function(file, ..., add_descriptions = FALSE) {
   return(res)
 }
 
-
 # For backwards compatibility only...
+
+#' @rdname read_functions
 #' @export
-get_modifications <- read_modifications
-#' @export
-get_trades <- read_trades
+#' @details 
+#' For backwards compatability reasons, the following functions are provided as
+#' well:
+#' \itemize{\item{\code{get_orders}: Redirects to \code{read_orders}}}
 #' @export
 get_orders <- read_orders
+
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{\item{\code{get_trades}: Redirects to \code{read_trades}}}
+#' @export
+get_trades <- read_trades
+
+#' @rdname read_functions
+#' @export
+#' @details 
+#' \itemize{\item{\code{get_modifications}: Redirects to \code{read_modifications}}}
+get_modifications <- read_modifications

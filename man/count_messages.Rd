@@ -40,5 +40,4 @@ count_messages(file, add_meta_data = TRUE)
 
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 count_messages(gz_file)
-
 }

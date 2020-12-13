@@ -14,6 +14,6 @@ Returns a data.table of the sample files on the FTP server
 }
 \examples{
 \dontrun{
-list_sample_files()
+  list_sample_files()
 }
 }

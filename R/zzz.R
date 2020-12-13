@@ -3,6 +3,7 @@
 #' @import data.table
 #' @importFrom nanotime nanotime
 #' @importFrom bit64 as.integer64
+#' @importFrom utils browseURL download.file
 NULL
 
 #' @title ITCH 50 Example Testing Dataset 

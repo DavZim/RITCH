@@ -18,7 +18,6 @@
 #' 
 #' gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 #' count_messages(gz_file)
-#' 
 count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1, quiet = FALSE,
                            force_gunzip = FALSE, force_cleanup = FALSE) {
   

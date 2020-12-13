@@ -6,7 +6,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' list_sample_files()
+#'   list_sample_files()
 #' }
 list_sample_files <- function() {
   

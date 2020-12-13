@@ -61,7 +61,7 @@ get_exchange_from_filename <- function(file) {
 #'
 #' The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
 #' 
-#' @return
+#' @return the URL (invisible)
 #' @export
 #'
 #' @examples
@@ -71,4 +71,5 @@ get_exchange_from_filename <- function(file) {
 open_itch_specification <- function() {
   url <- "https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf"
   browseURL(url)
+  return(invisible(url))
 }

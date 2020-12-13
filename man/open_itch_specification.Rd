@@ -7,7 +7,7 @@
 open_itch_specification()
 }
 \value{
-
+the URL (invisible)
 }
 \description{
 The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
