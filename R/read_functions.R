@@ -140,8 +140,8 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
   
   filedate <- get_date_from_filename(file)
-  
-  if (is.data.frame(n_max)) {
+  n_max_is_dataframe <- is.data.frame(n_max)
+  if (n_max_is_dataframe) {
     if (!all(c("msg_type", "count") %in% names(n_max))) 
       stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
     skip <- 0
@@ -155,7 +155,7 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
   # and max(0, xxx) b.c. the variable is unsigned!
   start <- max(skip - 1 + 1, 0)
   end <- max(skip + n_max - 1, -1)
-  if (is.numeric(n_max) && n_max != -1 && !quiet) 
+  if (is.numeric(n_max) && n_max != -1 && !quiet && !n_max_is_dataframe) 
     cat("NOTE: as n_max overrides counting the messages, the numbers for messages may be off.\n")
   
   df <- imp_calls[[type]](file, start, end, buffer_size, quiet)
