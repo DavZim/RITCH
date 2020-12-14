@@ -70,7 +70,7 @@ orders <- read_orders(file)
 #> [Counting]   5,000 messages found
 #> [Loading]    .
 #> [Converting] to data.table
-#> [Done]       in 0.08 secs
+#> [Done]       in 0.09 secs
 str(orders)
 #> Classes 'data.table' and 'data.frame':   5000 obs. of  13 variables:
 #>  $ msg_type       : chr  "A" "A" "F" "A" ...
@@ -198,8 +198,8 @@ action, 5000 trade, 5000 order, and 2000 order modification messages. As
 seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
-MASDAQ provides sample ITCH files on their [official FTP
-server](ftp://emi.nasdaq.com/ITCH/) (or in R use `open_itch_ftp()`).
+MASDAQ provides sample ITCH files on their official FTP server
+atftp://emi.nasdaq.com/ITCH/ (or in R use `open_itch_ftp()`).
 
 To interact with the sample files, use `list_sample_files()` and
 `download_sample_files()`. Note that the sample files are up to 5GB
