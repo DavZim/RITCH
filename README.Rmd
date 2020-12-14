@@ -20,210 +20,179 @@ knitr::opts_chunk$set(
 [![Travis build status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
 <!-- badges: end -->
 
-## The What?!
-This R package allows you to read files that use the ITCH protocol (version 5.0) of NASDAQ and parse it into a data.table. 
+The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol, which is used to distribute financial messages to participants.
+Messages include orders, trades, market status, and much more financial information.
+A full list of messages is shown later.
 
-The ITCH protocol allows NASDAQ to distribute financial information to market participants. The financial information includes orders, trades, order modifications, trading status, traded stocks, and more.
+The main purpose of this package is to parse the binary files to a `data.table` in `R`.
 
-## The Why?!
+The package leverages `Rcpp`/`C++` for efficient message parsing.
+As an example, parsing 100 million orders from the `01302020.NASDAQ_ITCH50.gz` NASDAQ sample file (13 GB uncompressed) takes around 30 seconds or 0.3 secs per 1 million orders.
 
-During my research I had to parse some ITCH files and couldn't find any R libraries. While parsing the files in pure R is certainly possible, this library uses `C++` and `Rcpp` to speed up the parsing process. 
+Note that the package provides a small simulated sample dataset in the `ITCH_50` format for testing and example purposes.
+Helper functions are provided to list and download sample files from NASDAQs official FTP server.
 
-A typical file containing a single trading day consists of something like 30-50 million messages (BX-exchange) up to 230 million messages (NASDAQ), thus speed makes a crucial difference. As the data is streamed from the file, the execution time mainly depends on the reading/writing speed of the hard-drive. 
+## Install
 
-As a general benchmark, it takes my machine about 20 seconds to count the messages of a plain-file (unzipped, 55 million order) and about 10 seconds longer for a `.gz`-file.
+To install `RITCH` you can use the following
 
-Enough of the talk, how can I use the package?
+```R
+# stable version:
+# not yet available 
+# install.packages("RITCH")
 
-
-## The How?!
-
-Currently the code only lives on GitHub but eventually it may find its way to CRAN. Until then, you have to use `remotes` or `devtools` to install `RITCH`:
-
-### Installation
-You can install the development version from [GitHub](https://github.com/DavZim/RITCH) with:
-
-``` r
+# development version:
 # install.packages("remotes")
 remotes::install_github("DavZim/RITCH")
 ```
 
-### Example Usage
+## Quick Overview
 
-As a first step, we want to count how often each message is found in a given file.
+The main functions of `RITCH` are read-related and are easily identified by their `read_` prefix.
 
-### Counting Messages
+Due to the inherent structural differences between message classes, each class has its own read function.
 
-RITCH is able to read gzipped (`*.XXX_ITCH_50.gz`) and unzipped files (`*.XXX_ITCH_50`), for speed reasons, we gunzipped the file by hand as we will use it multiple times throughout this example.
-
-As I don't own any rights to the data, the data is not included in this package, but can be downloaded from NASDAQs FTP server here: ftp://emi.nasdaq.com/ITCH/
+Example message classes used in this example are *orders* and *trades*.
+First we define the file to load and count the messages in the file, then we read in the orders and the first 100 trades
 
 ```{r}
 library(RITCH)
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+msg_count <- count_messages(file)
+str(msg_count)
 
-file <- "20191230.BX_ITCH_50"
+orders <- read_orders(file)
+str(orders)
 
-msg_count <- count_messages(file, add_meta_data = TRUE)
-msg_count
+trades <- read_trades(file, n_max = 100)
+str(trades)
 ```
+Note that the file can be a plain `ITCH_50` file or a gzipped `ITCH_50.gz` file, which will be decompressed to the current directory.
 
-As you can see, there are a lot of different message types. Currently this package parses only messages from the following groups
-- "Add Order Messages" (type 'A' and 'F'), 
-- "Modify Order Messages" (type 'E', 'C', 'X', 'D', and 'U'), 
-- and "Trade Messages" (type 'P', 'Q', and 'B'). 
+If you want to know more about the functions of the package, read on.
 
-To get an overview of this information, you can also use the `get_meta_data()` function. 
+## ITCH Messages
+
+There are a total of 22 different message types which are grouped into 13 classes by `RITCH`.
+
+The messages and their respective classes are:
+
+| Type   | Official Name                                      | `RITCH` class  | `RITCH` read function              | ITCH Section   |  
+| -----: | :-----                                             | ---:           | ---:                               | -------------: |  
+| `S`    | System Event Message                               |  System Events | `read_system_events()`             | 4.1            |  
+| `R`    | Stock Directory                                    |  Stock Directory| `read_stock_directory()`           | 4.2.1          |  
+| `H`    | Stock Trading Action                               |  Trading Status| `read_trading_status()`            | 4.2.2          |  
+| `Y`    | Reg SHO Short Sale Price Test Restricted Indicator |  Reg SHO       | `read_reg_sho()`                   | 4.2.3          |  
+| `L`    | Market Participant Position                        |  Market Participant States | `read_market_participant_states()` | 4.2.4          |  
+| `V`    | MWCB Decline Level Message                         |  MWCB          | `read_mwcb()`                      | 4.2.5.1        |  
+| `W`    | MWCB Status Message                                |  MWCB          | `read_mwcb()`                      | 4.2.5.2        |  
+| `K`    | IPO Quoting Period Update                          |  IPO           | `read_ipo()`                       | 4.2.6          |  
+| `J`    | Limit Up - Limit Down (LULD) Auction Collar        |  LULD          | `read_luld()`                      | 4.2.7          |  
+| `h`    | Operational Halt                                   |  Trading Status| `read_trading_status()`            | 4.2.8          |  
+| `A`    | Add Order - no MPID Attribution                    |  Orders        | `read_orders()`                    | 4.3.1          |  
+| `F`    | Add Order with MPID Attribution                    |  Orders        | `read_orders()`                    | 4.3.2          |  
+| `E`    | Order Executed Message                             |  Trades        | `read_trades()`                    | 4.4.1          |  
+| `C`    | Order Executed with Price Message                  |  Trades        | `read_trades()`                    | 4.4.2          |  
+| `X`    | Order Cancel Message                               |  Trades        | `read_trades()`                    | 4.4.3          |  
+| `D`    | Order Delete Message                               |  Trades        | `read_trades()`                    | 4.4.4          |  
+| `U`    | Order Replace Message                              |  Trades        | `read_trades()`                    | 4.4.5          |  
+| `P`    | Trade Message (Non-Cross)                          |  Modifications | `read_modifications()`             | 4.5.1          |  
+| `Q`    | Cross Trade Message                                |  Modifications | `read_modifications()`             | 4.5.2          |  
+| `B`    | Broken Trade/Order Execution Message               |  Modifications | `read_modifications()`             | 4.5.3          |  
+| `I`    | Net Order Imbalance Indicator (NOII) Message       |  NOII          | `read_noii()`                      | 4.6            |  
+| `N`    | Retail Price Improvement Indicator (RPII)          |  RPII          | `read_rpii()`                      | 4.7            |  
+
+
+Note that if you are interested in the exact definition of the messages and its components, you should look into the [official ITCH specification](https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf), which can also be opened by calling `open_itch_specification()`.
+
+
+## Data
+
+The `RITCH` package provides a small, artificial dataset in the ITCH format for example and testing purposes.
+To learn more about the dataset check `?ex20101224.TEST_ITCH_50`.
+
+To access the dataset use:
 ```{r}
-get_meta_data()
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+count_messages(file, quiet = TRUE)
 ```
+Note that the example dataset does not contain messages from all classes but is limited to 6 system messages, 3 stock directory, 3 stock trading action, 5000 trade, 5000 order, and 2000 order modification messages.
+As seen by the 3 stock directory messages, the file contains data about 3 made up stocks (see also the plot later in the Readme).
 
-You can extract the different message-types by using the functions `get_orders()`, `get_modifications()`, and `get_trades()`, respectively. The doc-number refers to the section in the official documentation (see link below).
+MASDAQ provides sample ITCH files on their [official FTP server](ftp://emi.nasdaq.com/ITCH/) (or in R use `open_itch_ftp()`).
 
-If you are annoyed by the feedback the function gives you (`[Counting] ... [Converting]...`), you can always turn the feedback off with the `quiet = TRUE` option (this applies to all functions of this package).
+To interact with the sample files, use `list_sample_files()` and `download_sample_files()`.
+Note that the sample files are up to 5GB compressed, which inflate to 13GB.
 
-If you need more message type compatibility, you are more than welcome to post an issue or open a pull request.
+## Notes
 
-### Retrieve Orders
-```{r}
-orders  <- get_orders(file)
-orders
-```
+There are some tweaks available to deal with memory and speed issues.
+For faster reading speeds, you can increase the buffer size of the `read_` functions to something around 1 GB or more (`buffer_size = 1e9`).
 
-If you want to load only a specified number of messages (this applies to all `get_*` functions), you can always specify a start and end message number.
-
-For example, if you want to get only the first 10 orders, you can use the following code.
-
-```{r}
-orders_small  <- get_orders(file, 1, 10)
-orders_small
-```
-
-### Retrieve Trades
-```{r}
-trades <- get_trades(file)
-trades
-```
-
-### Retrieve Order Modifications
-```{r}
-mods <- get_modifications(file)
-mods
-```
-
-To speed up the `get_*` functions, we can use the message-count information from earlier. For example the following code yields the same results as above, but saves time.
+If the dataset does not fit entirely into RAM, you can do a partial read specifying `skip` and `n_max`, similar to this:
 
 ```{r}
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
-orders <- get_orders(file, msg_count)
-trades <- get_trades(file, msg_count)
-mods   <- get_modifications(file, msg_count)
-# # alternatively, provide the start and end number of messages:
-# orders <- get_orders(file, 1, count_orders(msg_count))
-# trades <- get_trades(file, 1, count_trades(msg_count))
-# mods   <- get_modifications(file, 1, count_modifications(msg_count))
+n_messages <- count_orders(count_messages(file, quiet = TRUE))
+n_messages
+
+# read 1000 messages at a time
+n_batch <- 1000
+n_parsed <- 0
+
+while (n_parsed < n_messages) {
+  cat(sprintf("Parsing Batch %04i - %04i\n", n_parsed, n_parsed + n_batch))
+  # read in a batch
+  df <- read_orders(file, quiet = TRUE, skip = n_parsed, n_max = n_batch)
+  # do someting with the data, e.g., save data
+  # ...
+  n_parsed <- n_parsed + n_batch
+}
 ```
 
+Last but not least, if you have to read from a single file multiple times, for example because you want to extract orders and trades, you can count the messages beforehand and provide it to each read's `n_max` argument, reducing the need to pass the file for counting the number of messages.
+```{r}
+n_msgs <- count_messages(file, quiet = TRUE)
+orders <- read_orders(file, quiet = TRUE, n_max = n_msgs)
+trades <- read_trades(file, quiet = TRUE, n_max = n_msgs)
+```
+
+If you are interested in writing `ITCH_50` files or gaining a better understanding of the internal data structures, have a look at the `debug` folder and its contents.
 
 ### Create a Plot with Trades and Orders of the largest ETFs
 
-As a last step, a quick visualisation of the data
+As a last step, a quick visualization of the example dataset
 
 ```{r ETF_plot}
 library(ggplot2)
 
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+
 # load the data
-orders <- get_orders(file, msg_count)
-trades <- get_trades(file, msg_count)
+orders <- read_orders(file, quiet = TRUE)
+trades <- read_trades(file, quiet = TRUE)
 
-# data munging
-tickers <- c("SPY", "IWO")
-dt_orders <- orders[stock %in% tickers]
-dt_trades <- trades[stock %in% tickers]
-
-# for each ticker, use only orders that are within 1% of the range of traded prices
-ranges <- dt_trades[, .(min_price = min(price), max_price = max(price)), by = stock]
-# filter the orders
-dt_orders <- dt_orders[ranges, on = "stock"][price >= 0.99 * min_price & price <= 1.01 * max_price]
 # replace the buy-factor with something more useful
-dt_orders[, buy := ifelse(buy, "Bid", "Ask")]
-dt_orders[, stock := factor(stock, levels = tickers)]
+orders[, buy := ifelse(buy, "Bid", "Ask")]
 
-# data visualization
 ggplot() +
-  # add the orders to the plot
-  geom_point(data = dt_orders, 
-             aes(x = as.POSIXct(datetime), y = price, color = buy), size = 0.5, alpha = 0.2) +
-  # add the trades as a black line to the plot
-  geom_step(data = dt_trades, 
-            aes(x = as.POSIXct(datetime), y = price)) +
-  # add a facet for each ETF
+  geom_point(data = orders, 
+             aes(x = as.POSIXct(datetime), y = price, color = buy), alpha = 0.2) +
+  geom_step(data = trades, aes(x = as.POSIXct(datetime), y = price), size = 0.2) +
   facet_grid(stock~., scales = "free_y") +
-  # some Aesthetics
   theme_light() +
-  labs(title = "Orders and Trades of the largest ETFs",
-       subtitle = "Date: 2019-12-30 | Exchange: BX", 
-       caption = "Source: NASDAQ ITCH",
-       x = "Time", y = "Price", 
-       color = "Side") +
+  labs(title = "Orders and Trades of Three Simulated Stocks",
+       subtitle = "Date: 2010-12-24 | Exchange: TEST", 
+       caption = "Source: RITCH package", x = "Time", y = "Price", color = "Side") +
   scale_y_continuous(labels = scales::dollar) +
   scale_color_brewer(palette = "Set1")
 ```
 
-
-## Some considerations
-
-All functions that take a file-name work for both `.gz`-files (i.e., `YYYYMMDD.XXX_ITCH_50.gz`) or or plain-files (`YYYYMMDD.XXX_ITCH_50`). The compressed files will be uncompressed into a temp-file and deleted after the function finishes, if you want to use multiple commands on one file, it might be faster to use `R.utils::gunzip(..., remove = FALSE)` in R or `gunzip -k YYYYMMDD.XXX_ITCH_50.gz` in the terminal and call the functions on the plain, uncompressed file.
-
-Parsing another example file (`20170130.BX_ITCH_50.gz`, 714MB gzipped and 1.6GB unzipped) has a peak RAM-consumption of around 7GB on my machine.
-
-If the file is too large for your RAM, you can also process everything in batches by providing a start and end message count. I.e., to only parse the first 1,000 orders, you can use `get_orders(file, 1, 1000)`.
-
-To speed the parsing up, you can also specify the number of messages. I.e., count all messages once using `count_messages()`, and then provide the number of trades/orders/order-modifications to `end_msg_count` in each subsequent function call. This saves the parser one trip over the file. 
-
-You can also just provide the message counts directly, e.g.:
-```{r}
-msg_count <- count_messages(file)
-orders <- get_orders(file, msg_count)
-```
-versus providing the actual start and end position of messages:
-```{r}
-msg_count <- count_messages(file)
-orders <- get_orders(file, 1, count_orders(msg_count))
-```
-
-## Additional Sources aka. Data
-
-While this package does not contain any real financial data using the ITCH format, NASDAQ provides some sample datasets on its FTP-server, which you can find here: [ftp://emi.nasdaq.com/ITCH](ftp://emi.nasdaq.com/ITCH)
-
-Since version `0.1.6`, you can also download a sample file by calling `download_sample_file()`
-
-```r
-file <- download_sample_file()
-#> Downloading 'smallest' sample file(s)
-#> File './20191230.BX_ITCH_50.gz' exists already, not downloading it again!
-#> Checking md5 sum of file './20191230.BX_ITCH_50.gz' ... matches '343ce64e5c0eb20c270ed65ad91bdbe5' - success !
-
-file
-#> [1] "20191230.BX_ITCH_50.gz"
-
-orders <- get_orders(file)
-#> [INFO] Unzipped file 20191230.BX_ITCH_50 already found, using that (overwrite with force_gunzip=TRUE)
-#> [Counting]   12,255,197 messages found
-#> [Loading]    .
-#> [Converting] to data.table
-#> [Done]       in 6.04 secs
-```
-
-If you want to get an overview of all sample files: `list_sample_files()` is your friend
-```{r}
-list_sample_files()
-```
-
-
-If you want to find out more about the protocol, have a look at the official protocol specification, which you can find here: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf or if you are lazy, call `open_itch_specification()` which opens the PDF in your default browser.
-
-If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality for additional message types, please feel free to create an issue or a pull request. 
-
 ## Open Issues
 
 To move the package towards CRAN, I want to include a smaller data file containing fake or simulated data, this needs to be converted to the ITCH format. This would allow the example code to run, but also to properly use unit tests in the package.
+
+If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality for additional message types, please feel free to create an issue or a pull request. 
+
+Citation and CRAN release are WIP.
