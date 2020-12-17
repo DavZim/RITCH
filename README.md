@@ -96,7 +96,7 @@ trades <- read_trades(file, n_max = 100)
 str(trades)
 #> Classes 'data.table' and 'data.frame':   100 obs. of  14 variables:
 #>  $ msg_type       : chr  "P" "P" "P" "P" ...
-#>  $ locate_code    : int  2 2 2 2 2 1 1 1 1 1 ...
+#>  $ locate_code    : int  2 2 2 2 2 3 3 3 3 3 ...
 #>  $ tracking_number: int  2 2 2 2 2 2 4 2 2 2 ...
 #>  $ timestamp      :integer64 34210128591201 34210355475120 34210767188977 34211127433476 34212046014088 34235711475708 34239928637481 34239928703094 ... 
 #>  $ order_ref      :integer64 0 0 0 0 0 0 0 0 ... 
@@ -253,6 +253,47 @@ while (n_parsed < n_messages) {
 #> Parsing Batch 2000 - 3000: with 1000 orders
 #> Parsing Batch 3000 - 4000: with 1000 orders
 #> Parsing Batch 4000 - 5000: with 1000 orders
+```
+
+You can also filter a dataset directly while reading messages for
+`msg_type`, `locate_code`, `timestamp` range, as well as `stock`. Note
+that filtering for a specific stock, is just a shorthand lookup for the
+stocks `locate_code`s, therefore a `stock_directory` needs to be
+supplied (either by providing the output from `read_stock_directory()`
+or `download_locate_code()`) or the function will try to extract the
+stock directory from the file.
+
+``` r
+# read in the stock directory as we filter for stock names later on
+sdir <- read_stock_directory(file, quiet = TRUE)
+
+od <- read_orders(
+  file, 
+  filter_msg_type = "A",          # take only no MPID add orders
+  min_timestamp = 43200000000000, # start at 12:00:00.000000
+  max_timestamp = 55800000000000, # end at 15:30:00.000000
+  filter_stock_locate = 1,        # take only stock with code 1
+  filter_stock = "CHAR",          # but also take stock CHAR
+  stock_directory = sdir          # provide the stock_directory to match stock names to locate_codes
+)
+#> [Filter]     'msg_type': 'A'
+#> [Filter]     'timestamp': 43200000000000 - 55800000000000 
+#> [Filter]     'stock_locate': '1', '3'
+#> [Counting]   5,000 messages found
+#> [Loading]    .
+#> [Converting] to data.table
+#> [Done]       in 0.04 secs
+
+od[, .(n = .N), by = msg_type]
+#>    msg_type    n
+#> 1:        A 1082
+range(od$timestamp)
+#> integer64
+#> [1] 43235810473334 55792143963723
+od[, .(n = .N), by = .(locate_code, stock)]
+#>    locate_code stock   n
+#> 1:           3  CHAR 574
+#> 2:           1   ALC 508
 ```
 
 If you are interested in writing `ITCH_50` files or gaining a better
