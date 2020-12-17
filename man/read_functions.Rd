@@ -96,8 +96,9 @@ Note: min and max timestamp must be supplied with the same length or left empty.
 
 \item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
 of maxium timestamp (inclusive).
-Note: min and max timestamp must be supplied with the same length or left empty.
-@param filter_stock a character vector, specifying a filter for stocks.
+Note: min and max timestamp must be supplied with the same length or left empty.}
+
+\item{filter_stock}{a character vector, specifying a filter for stocks.
 Note that this a shorthand for the \code{filter_stock_locate} argument, as it
 tries to find the stock_locate based on the \code{stock_directory} argument,
 if this is not found, it will try to extract the stock directory from the file,

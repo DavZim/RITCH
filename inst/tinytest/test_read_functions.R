@@ -20,7 +20,7 @@ file_raw <- file_raw[length(file_raw)]
 expect_true(file.exists(file))
 expect_true(file.info(file)[["size"]] == 465048)
 expect_true(file.exists(gzfile))
-expect_true(file.info(gzfile)[["size"]] == 159966)
+expect_true(file.info(gzfile)[["size"]] == 159965)
 
 #### Count messages
 ct <- count_messages(file, quiet = TRUE)

@@ -69,7 +69,7 @@ orders <- read_orders(file)
 #> [Counting]   5,000 messages found
 #> [Loading]    .
 #> [Converting] to data.table
-#> [Done]       in 0.09 secs
+#> [Done]       in 0.08 secs
 str(orders)
 #> Classes 'data.table' and 'data.frame':   5000 obs. of  13 variables:
 #>  $ msg_type       : chr  "A" "A" "F" "A" ...

@@ -175,12 +175,12 @@ od <- read_orders(
   max_timestamp = 55800000000000, # end at 15:30:00.000000
   filter_stock_locate = 1,        # take only stock with code 1
   filter_stock = "CHAR",          # but also take stock CHAR
-  stock_directory = sdir          # provide the stock_directory to match stock names to locate_codes
+  stock_directory = sdir          # provide the stock_directory to match stock names to stock_locates
 )
 
 od[, .(n = .N), by = msg_type]
 range(od$timestamp)
-od[, .(n = .N), by = .(locate_code, stock)]
+od[, .(n = .N), by = .(stock_locate, stock)]
 ```
 
 If you are interested in writing `ITCH_50` files or gaining a better understanding of the internal data structures, have a look at the `debug` folder and its contents.

@@ -20,7 +20,7 @@ Rcpp::sourceCpp("debug/debug_tools.cpp")
 # take 3 most traded stocks in orders, trades
 file <- "20191230.BX_ITCH_50"
 
-loc_code <- download_locate_code("BX", "2019-12-30", quiet = TRUE)
+loc_code <- read_stock_directory(file, add_meta = FALSE, quiet = TRUE)
 trades   <- read_trades(file, add_meta = FALSE, quiet = TRUE)
 orders   <- read_orders(file, add_meta = FALSE, quiet = TRUE)
 mods     <- read_modifications(file, add_meta = FALSE, quiet = TRUE)
@@ -34,19 +34,19 @@ orders[, .(n = .N), by = stock][order(-n)][1:3]
 trades[, .(n = .N), by = stock][order(-n)][1:3]
 merge(
   mods[, .(n = .N), by = stock_locate][order(-n)][1:3],
-  loc_code, by = "locate_code", all.x = TRUE
+  loc_code[, .(stock_locate, stock)], by = "stock_locate", all.x = TRUE
 )
 
 # take the following stocks as a base
 stock_select <- c("TSLA" = "ALC", "NIO" = "BOB", "BABA" = "CHAR")
 
 loc_codes <- loc_code[
-  ticker %chin% names(stock_select)
+  stock %chin% names(stock_select)
 ][, 
-  .(stock_old = ticker, 
+  .(stock_old = stock, 
     old_loc_code = stock_locate,
-    stock = stock_select[ticker])
-][order(stock), locate_code := 1:.N][]
+    stock = stock_select[stock])
+][order(stock)][, stock_locate := 1:.N][]
 
 # removes price outliers outside of a given sigma range...
 remove_price_outliers <- function(dt, sigma = 3) {

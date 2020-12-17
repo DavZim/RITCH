@@ -41,7 +41,7 @@
 #' @param max_timestamp an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
 #'  of maxium timestamp (inclusive).
 #'  Note: min and max timestamp must be supplied with the same length or left empty.
-#'  @param filter_stock a character vector, specifying a filter for stocks.
+#' @param filter_stock a character vector, specifying a filter for stocks.
 #'  Note that this a shorthand for the \code{filter_stock_locate} argument, as it
 #'  tries to find the stock_locate based on the \code{stock_directory} argument,
 #'  if this is not found, it will try to extract the stock directory from the file,
@@ -196,7 +196,7 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
         length(min_timestamp) == 0 | length(max_timestamp) == 0))
     stop("min_timestamp and max_timestamp has to have the same length or have to be not specified!")
   
-  if (!quiet && length(min_timestamp) > 0 | length(max_timestamp) > 0) {
+  if (!quiet && (length(min_timestamp) > 0 | length(max_timestamp) > 0)) {
     txt <- "[Filter]     timestamp: "
     if (length(max_timestamp) == 0) {
       txt <- paste0(txt, ">= ", min_timestamp)
