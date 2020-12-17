@@ -5,56 +5,56 @@ getMessageCountDF <- function(filename, bufferSize, quiet = FALSE) {
     .Call('_RITCH_getMessageCountDF', PACKAGE = 'RITCH', filename, bufferSize, quiet)
 }
 
-getOrders_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getOrders_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getOrders_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getOrders_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getTrades_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getTrades_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getTrades_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getTrades_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getModifications_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getModifications_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getModifications_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getModifications_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getSystemEvents_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getSystemEvents_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getSystemEvents_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getSystemEvents_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getStockDirectory_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getStockDirectory_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getStockDirectory_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getStockDirectory_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getTradingStatus_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getTradingStatus_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getTradingStatus_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getTradingStatus_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getRegSHO_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getRegSHO_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getRegSHO_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getRegSHO_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getParticipantStates_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getParticipantStates_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getParticipantStates_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getParticipantStates_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getMWCB_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getMWCB_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getMWCB_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getMWCB_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getIPO_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getIPO_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getIPO_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getIPO_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getLULD_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getLULD_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getLULD_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getLULD_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getNOII_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getNOII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getNOII_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getNOII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
-getRPII_impl <- function(filename, startMsgCount, endMsgCount, bufferSize, quiet) {
-    .Call('_RITCH_getRPII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, bufferSize, quiet)
+getRPII_impl <- function(filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet) {
+    .Call('_RITCH_getRPII_impl', PACKAGE = 'RITCH', filename, startMsgCount, endMsgCount, filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet)
 }
 
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {

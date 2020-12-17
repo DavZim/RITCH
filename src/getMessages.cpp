@@ -19,6 +19,10 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
                                     std::string filename, 
                                     int64_t startMsgCount,
                                     int64_t endMsgCount,
+                                    Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                     int64_t bufferSize, 
                                     bool quiet) {
 
@@ -50,9 +54,53 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
   
   if (nMessages == 0) return msg.getDF();
 
+  // convert the Filter to STL types
+
+  // msg_type
+  std::vector<char> msgFilter;
+  if (filterMsgType.size() > 0) {
+    msgFilter.resize(filterMsgType.size());
+    for (int i = 0; i < filterMsgType.size(); i++) 
+      msgFilter[i] = Rcpp::as<char>(filterMsgType[i]);
+  }
+
+  // Locate Code
+  std::vector<int> locFilter;
+  if (filterLocCode.size() > 0) {
+    locFilter.resize(filterLocCode.size());
+    for (int i = 0; i < filterLocCode.size(); i++) 
+      locFilter[i] = filterLocCode[i];
+  }
+
+  // Min and Max Timestamp
+  std::vector<int64_t> minTS, maxTS;
+  
+  const size_t lenMin = minTimestamp.size();
+  const size_t lenMax = maxTimestamp.size();
+  const size_t len = lenMin > lenMax ? lenMin : lenMax;
+
+  minTS.resize(len);
+  maxTS.resize(len);
+  const int64_t max_int64_t = std::numeric_limits<int64_t>::max();
+  const int64_t min_int64_t = std::numeric_limits<int64_t>::min();
+
+  if (lenMax == lenMin) {
+    // max and min TS have the same lengths...
+    std::memcpy(&(minTS[0]), &(minTimestamp[0]), len * sizeof(double));
+    std::memcpy(&(maxTS[0]), &(maxTimestamp[0]), len * sizeof(double));
+  } else if (lenMax > lenMin) {
+    // min TS has size 0, max TS is filled
+    for (size_t t = 0; t < len; t++) minTS[t] = min_int64_t;
+    std::memcpy(&(maxTS[0]), &(maxTimestamp[0]), len * sizeof(double));
+  } else {// (lenMin < lenMax)
+    // max TS has size 0, min TS is filled
+    std::memcpy(&(minTS[0]), &(minTimestamp[0]), len * sizeof(double));
+    for (size_t t = 0; t < len; t++) maxTS[t] = max_int64_t;
+  }
+  
   // load the file into the msg object
   if (!quiet) Rcpp::Rcout << "[Loading]    ";
-  loadToMessages(filename, msg, startMsgCount, endMsgCount, bufferSize, quiet);
+  loadToMessages(filename, msg, startMsgCount, endMsgCount, msgFilter, locFilter, minTS, maxTS, bufferSize, quiet);
 
   // converting the messages to a data.frame
   return msg.getDF();
@@ -81,10 +129,15 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
 Rcpp::DataFrame getOrders_impl(std::string filename,
                                int64_t startMsgCount,
                                int64_t endMsgCount,
+                               Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                int64_t bufferSize,
                                bool quiet) {
   Orders orders;
-  Rcpp::DataFrame df = getMessagesTemplate(orders, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(orders, filename, startMsgCount, endMsgCount,
+   filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -94,11 +147,16 @@ Rcpp::DataFrame getOrders_impl(std::string filename,
 Rcpp::DataFrame getTrades_impl(std::string filename,
                                int64_t startMsgCount,
                                int64_t endMsgCount,
+                               Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                int64_t bufferSize,
                                bool quiet) {
   
   Trades trades;
-  Rcpp::DataFrame df = getMessagesTemplate(trades, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(trades, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -108,11 +166,16 @@ Rcpp::DataFrame getTrades_impl(std::string filename,
 Rcpp::DataFrame getModifications_impl(std::string filename,
                                       int64_t startMsgCount,
                                       int64_t endMsgCount,
+                                      Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                       int64_t bufferSize,
                                       bool quiet) {
   
   Modifications mods;
-  Rcpp::DataFrame df = getMessagesTemplate(mods, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(mods, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -122,11 +185,16 @@ Rcpp::DataFrame getModifications_impl(std::string filename,
 Rcpp::DataFrame getSystemEvents_impl(std::string filename,
                                      int64_t startMsgCount,
                                      int64_t endMsgCount,
+                                     Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                      int64_t bufferSize,
                                      bool quiet) {
   
   SystemEvents sys;
-  Rcpp::DataFrame df = getMessagesTemplate(sys, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(sys, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -136,11 +204,16 @@ Rcpp::DataFrame getSystemEvents_impl(std::string filename,
 Rcpp::DataFrame getStockDirectory_impl(std::string filename,
                                        int64_t startMsgCount,
                                        int64_t endMsgCount,
+                                       Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                        int64_t bufferSize,
                                        bool quiet) {
   
   StockDirectory sys;
-  Rcpp::DataFrame df = getMessagesTemplate(sys, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(sys, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -150,11 +223,16 @@ Rcpp::DataFrame getStockDirectory_impl(std::string filename,
 Rcpp::DataFrame getTradingStatus_impl(std::string filename,
                                       int64_t startMsgCount,
                                       int64_t endMsgCount,
+                                      Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                       int64_t bufferSize,
                                       bool quiet) {
   
   TradingStatus trad;
-  Rcpp::DataFrame df = getMessagesTemplate(trad, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(trad, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -164,11 +242,16 @@ Rcpp::DataFrame getTradingStatus_impl(std::string filename,
 Rcpp::DataFrame getRegSHO_impl(std::string filename,
                                       int64_t startMsgCount,
                                       int64_t endMsgCount,
+                                      Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                       int64_t bufferSize,
                                       bool quiet) {
   
   RegSHO reg;
-  Rcpp::DataFrame df = getMessagesTemplate(reg, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(reg, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -178,11 +261,16 @@ Rcpp::DataFrame getRegSHO_impl(std::string filename,
 Rcpp::DataFrame getParticipantStates_impl(std::string filename,
                                           int64_t startMsgCount,
                                           int64_t endMsgCount,
+                                          Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                                           int64_t bufferSize,
                                           bool quiet) {
   
   ParticipantStates ps;
-  Rcpp::DataFrame df = getMessagesTemplate(ps, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(ps, filename, startMsgCount, endMsgCount,
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -192,11 +280,16 @@ Rcpp::DataFrame getParticipantStates_impl(std::string filename,
 Rcpp::DataFrame getMWCB_impl(std::string filename,
                              int64_t startMsgCount,
                              int64_t endMsgCount,
+                             Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                              int64_t bufferSize,
                              bool quiet) {
   
   MWCB cb;
-  Rcpp::DataFrame df = getMessagesTemplate(cb, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(cb, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -206,11 +299,16 @@ Rcpp::DataFrame getMWCB_impl(std::string filename,
 Rcpp::DataFrame getIPO_impl(std::string filename,
                              int64_t startMsgCount,
                              int64_t endMsgCount,
+                             Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                              int64_t bufferSize,
                              bool quiet) {
   
   IPO ipo;
-  Rcpp::DataFrame df = getMessagesTemplate(ipo, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(ipo, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -220,11 +318,16 @@ Rcpp::DataFrame getIPO_impl(std::string filename,
 Rcpp::DataFrame getLULD_impl(std::string filename,
                              int64_t startMsgCount,
                              int64_t endMsgCount,
+                             Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                              int64_t bufferSize,
                              bool quiet) {
   
   LULD luld;
-  Rcpp::DataFrame df = getMessagesTemplate(luld, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(luld, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -234,11 +337,16 @@ Rcpp::DataFrame getLULD_impl(std::string filename,
 Rcpp::DataFrame getNOII_impl(std::string filename,
                              int64_t startMsgCount,
                              int64_t endMsgCount,
+                             Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                              int64_t bufferSize,
                              bool quiet) {
   
   NOII noii;
-  Rcpp::DataFrame df = getMessagesTemplate(noii, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(noii, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
 
@@ -248,13 +356,15 @@ Rcpp::DataFrame getNOII_impl(std::string filename,
 Rcpp::DataFrame getRPII_impl(std::string filename,
                              int64_t startMsgCount,
                              int64_t endMsgCount,
+                             Rcpp::CharacterVector filterMsgType,
+                                    Rcpp::IntegerVector filterLocCode,
+                                    Rcpp::NumericVector minTimestamp,
+                                    Rcpp::NumericVector maxTimestamp,
                              int64_t bufferSize,
                              bool quiet) {
   
   RPII rpii;
-  Rcpp::DataFrame df = getMessagesTemplate(rpii, filename, startMsgCount, endMsgCount, bufferSize, quiet);
+  Rcpp::DataFrame df = getMessagesTemplate(rpii, filename, startMsgCount, endMsgCount, 
+    filterMsgType, filterLocCode, minTimestamp, maxTimestamp, bufferSize, quiet);
   return df;  
 }
-
-
-

@@ -17,60 +17,100 @@ Rcpp::DataFrame getMessagesTemplate(MessageType& msg,
                                     std::string filename, 
                                     int64_t startMsgCount = 0,
                                     int64_t endMsgCount = 0,
+                                    Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                    Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                    Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                    Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                     int64_t bufferSize = 1e8,
                                     bool quiet = false);
 
 Rcpp::DataFrame getOrders_impl(std::string filename, 
                                int64_t startMsgCount = 0,
                                int64_t endMsgCount = 0,
+                               Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                               Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                               Rcpp::NumericVector minTimestamp = {NA_REAL},
+                               Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                int64_t bufferSize = 1e8,
                                bool quiet = false);
 
 Rcpp::DataFrame getTrades_impl(std::string filename, 
                                int64_t startMsgCount = 0,
                                int64_t endMsgCount = 0,
+                               Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                               Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                               Rcpp::NumericVector minTimestamp = {NA_REAL},
+                               Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                int64_t bufferSize = 1e8,
                                bool quiet = false);
 
 Rcpp::DataFrame getModifications_impl(std::string filename, 
                                       int64_t startMsgCount = 0,
                                       int64_t endMsgCount = 0,
+                                      Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                      Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                      Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                      Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                       int64_t bufferSize = 1e8,
                                       bool quiet = false);
 
 Rcpp::DataFrame getSystemEvents_impl(std::string filename, 
                                      int64_t startMsgCount = 0,
                                      int64_t endMsgCount = 0,
+                                     Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                     Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                     Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                     Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                      int64_t bufferSize = 1e8,
                                      bool quiet = false);
 
 Rcpp::DataFrame getStockDirectory_impl(std::string filename, 
                                        int64_t startMsgCount = 0,
                                        int64_t endMsgCount = 0,
+                                       Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                       Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                       Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                       Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                        int64_t bufferSize = 1e8,
                                        bool quiet = false);
 
 Rcpp::DataFrame getTradingStatus_impl(std::string filename, 
                                       int64_t startMsgCount = 0,
                                       int64_t endMsgCount = 0,
+                                      Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                      Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                      Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                      Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                       int64_t bufferSize = 1e8,
                                       bool quiet = false);
 
 Rcpp::DataFrame getRegSHO_impl(std::string filename, 
                                int64_t startMsgCount = 0,
                                int64_t endMsgCount = 0,
+                               Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                               Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                               Rcpp::NumericVector minTimestamp = {NA_REAL},
+                               Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                int64_t bufferSize = 1e8,
                                bool quiet = false);
 
 Rcpp::DataFrame getParticipantStates_impl(std::string filename, 
                                           int64_t startMsgCount = 0,
                                           int64_t endMsgCount = 0,
+                                          Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                                          Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                                          Rcpp::NumericVector minTimestamp = {NA_REAL},
+                                          Rcpp::NumericVector maxTimestamp = {NA_REAL},
                                           int64_t bufferSize = 1e8,
                                           bool quiet = false);
 
 Rcpp::DataFrame getMWCB_impl(std::string filename, 
                              int64_t startMsgCount = 0,
                              int64_t endMsgCount = 0,
+                             Rcpp::CharacterVector filterMsgType = {NA_STRING},
+                             Rcpp::IntegerVector filterLocCode = {NA_INTEGER},
+                             Rcpp::NumericVector minTimestamp = {NA_REAL},
+                             Rcpp::NumericVector maxTimestamp = {NA_REAL},
                              int64_t bufferSize = 1e8,
                              bool quiet = false);
 

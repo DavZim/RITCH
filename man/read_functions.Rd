@@ -26,6 +26,12 @@ read_ITCH(
   type,
   skip = 0,
   n_max = -1,
+  filter_msg_type = NA_character_,
+  filter_stock_locate = NA_integer_,
+  min_timestamp = bit64::as.integer64(NA),
+  max_timestamp = bit64::as.integer64(NA),
+  filter_stock = NA_character_,
+  stock_directory = NA,
   buffer_size = -1,
   quiet = FALSE,
   add_meta = TRUE,
@@ -76,6 +82,31 @@ note it only applies to messages of this type.}
 \item{n_max}{Maximum number of messages to parse, default is to read all values.
 Can also be a data.frame of msg_types and counts, as returned by 
 \code{\link{count_messages}}}
+
+\item{filter_msg_type}{a character vector, specifying a filter for message types.
+Note that this can be used to only return 'A' orders for instance.}
+
+\item{filter_stock_locate}{an integer vector, specifying a filter for locate codes.
+The locate codes can be looked up by calling \code{\link{read_stock_directory}}.
+Note that some message types (e.g., system events) do not use a locate code.}
+
+\item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+of minimum timestamp (inclusive). 
+Note: min and max timestamp must be supplied with the same length or left empty.}
+
+\item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+of maxium timestamp (inclusive).
+Note: min and max timestamp must be supplied with the same length or left empty.
+@param filter_stock a character vector, specifying a filter for stocks.
+Note that this a shorthand for the \code{filter_stock_locate} argument, as it
+tries to find the stock_locate based on the \code{stock_directory} argument,
+if this is not found, it will try to extract the stock directory from the file,
+else an error is thrown.}
+
+\item{stock_directory}{A data.frame containing the stock-locate_code relationship.
+As outputted by \code{\link{read_stock_directory}}. 
+Only used if \code{filter_stock} is set. To download the stock directory from
+NASDAQs FTP server, use \code{\link{download_locate_code}}.}
 
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 if you have a large amount of RAM, 1e9 (1GB) might be faster}

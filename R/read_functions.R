@@ -25,13 +25,33 @@
 #' 
 #' @param file the path to the input file, either a gz-file or a plain ITCH file
 #' @param type the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.
-#' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
-#' if you have a large amount of RAM, 1e9 (1GB) might be faster 
 #' @param skip Number of messages to skip before starting parsing messages, 
 #' note it only applies to messages of this type.
 #' @param n_max Maximum number of messages to parse, default is to read all values.
 #'  Can also be a data.frame of msg_types and counts, as returned by 
 #'  \code{\link{count_messages}}
+#' @param filter_msg_type a character vector, specifying a filter for message types.
+#'  Note that this can be used to only return 'A' orders for instance.
+#' @param filter_stock_locate an integer vector, specifying a filter for locate codes.
+#'  The locate codes can be looked up by calling \code{\link{read_stock_directory}}.
+#'  Note that some message types (e.g., system events) do not use a locate code.
+#' @param min_timestamp an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+#'  of minimum timestamp (inclusive). 
+#'  Note: min and max timestamp must be supplied with the same length or left empty.
+#' @param max_timestamp an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+#'  of maxium timestamp (inclusive).
+#'  Note: min and max timestamp must be supplied with the same length or left empty.
+#'  @param filter_stock a character vector, specifying a filter for stocks.
+#'  Note that this a shorthand for the \code{filter_stock_locate} argument, as it
+#'  tries to find the stock_locate based on the \code{stock_directory} argument,
+#'  if this is not found, it will try to extract the stock directory from the file,
+#'  else an error is thrown.
+#' @param stock_directory A data.frame containing the stock-locate_code relationship.
+#' As outputted by \code{\link{read_stock_directory}}. 
+#' Only used if \code{filter_stock} is set. To download the stock directory from
+#' NASDAQs FTP server, use \code{\link{download_locate_code}}.
+#' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB), 
+#' if you have a large amount of RAM, 1e9 (1GB) might be faster 
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
 #' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
 #' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
@@ -90,8 +110,16 @@ NULL
 #' @rdname read_functions
 #' @export
 read_ITCH <- function(file, type, skip = 0, n_max = -1, 
+                      filter_msg_type = NA_character_, filter_stock_locate = NA_integer_,
+                      min_timestamp = bit64::as.integer64(NA),
+                      max_timestamp = bit64::as.integer64(NA),
+                      filter_stock = NA_character_, stock_directory = NA,
                       buffer_size = -1, quiet = FALSE, add_meta = TRUE,
                       force_gunzip = FALSE, force_cleanup = FALSE) {
+  
+  t0 <- Sys.time()
+  if (!file.exists(file)) stop("File not found!")
+  
   type <- tolower(type)
   msg_types <- list(
     "trades" = c("P", "Q", "B"),
@@ -127,8 +155,89 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
   
   stopifnot(type %in% names(msg_types))
   
-  t0 <- Sys.time()
-  if (!file.exists(file)) stop("File not found!")
+  # treat n_max
+  n_max_is_dataframe <- is.data.frame(n_max)
+  if (n_max_is_dataframe) {
+    if (!all(c("msg_type", "count") %in% names(n_max))) 
+      stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
+    skip <- 0
+    n_max <- as.integer(n_max[msg_type %in% msg_types[[type]], sum(count)])
+  }
+  # -1 because we want it 1 indexed in R (cpp is 0-indexed), +1 as we want to skip 
+  start <- max(skip - 1 + 1, 0)
+  end <- max(skip + n_max - 1, -1)
+  if (is.numeric(n_max) && n_max != -1 && !quiet && !n_max_is_dataframe) 
+    cat("NOTE: as n_max overrides counting the messages, the numbers for messages may be off.\n")
+  
+  # Treat filters
+  # Message types
+  # allow msg_types: 'AF' (multiple values are split), c('A', 'F'), c(NA, 'A') (NAs are ommited)
+  filter_msg_type <- unique(filter_msg_type)
+  if (any(nchar(filter_msg_type) > 1, na.rm = TRUE)) 
+    filter_msg_type <- as.character(unlist(sapply(filter_msg_type, strsplit, split = "")))
+  filter_msg_type <- filter_msg_type[!is.na(filter_msg_type)]
+  if (!quiet && length(filter_msg_type) > 0) 
+    cat(paste0("[Filter]     msg_type: '", 
+               paste(filter_msg_type, collapse = "', '"),
+               "'\n"))
+  
+  # locate code
+  filter_stock_locate <- filter_stock_locate[!is.na(filter_stock_locate)]
+  filter_stock_locate <- as.integer(filter_stock_locate)
+
+  # Timestamp
+  min_timestamp <- min_timestamp[!is.na(min_timestamp)]
+  max_timestamp <- max_timestamp[!is.na(max_timestamp)]
+  
+  min_timestamp <- bit64::as.integer64(min_timestamp)
+  max_timestamp <- bit64::as.integer64(max_timestamp)
+  
+  if (!(length(min_timestamp) == length(max_timestamp) ||
+        length(min_timestamp) == 0 | length(max_timestamp) == 0))
+    stop("min_timestamp and max_timestamp has to have the same length or have to be not specified!")
+  
+  if (!quiet && length(min_timestamp) > 0 | length(max_timestamp) > 0) {
+    txt <- "[Filter]     timestamp: "
+    if (length(max_timestamp) == 0) {
+      txt <- paste0(txt, ">= ", min_timestamp)
+    } else if (length(min_timestamp) == 0) {
+      txt <- paste0(txt, "<= ", max_timestamp)
+    } else if (length(min_timestamp) == length(max_timestamp)) {
+      txt <- paste0(txt, paste(min_timestamp, max_timestamp,
+                               sep = " - ", collapse = ", "))
+    }
+    cat(txt, "\n")
+  }
+  
+  # Stock
+  if (!(length(filter_stock) == 1 && is.na(filter_stock))) {
+    if (length(stock_directory) == 1 && is.na(stock_directory)) {
+      warning("filter_stock is given, but no stock_directory is specified. Trying to extract stock directory from file\n")
+      stock_directory <- RITCH::read_stock_directory(file, quiet = TRUE)
+    }
+    
+    if (!all(filter_stock %chin% stock_directory$stock)) {
+      stop(paste0("Not all stocks found in stock_directory, missing: '",
+                  paste(filter_stock[!filter_stock %chin% stock_directory$stock], 
+                        collapse = "', '"),
+                  "'"))
+    }
+    # extend locate code by the stocks:
+    filter_stock_locate <- c(filter_stock_locate,
+                             stock_directory[stock %chin%filter_stock, locate_code])
+  }
+  
+  if (!quiet && length(filter_stock_locate) > 0) 
+    cat(paste0("[Filter]     stock_locate: '", 
+               paste(filter_stock_locate, collapse = "', '"),
+               "'\n"))
+  
+  if (any(length(filter_stock_locate) > 0,
+          length(filter_msg_type) > 0,
+          length(min_timestamp) > 0,
+          length(max_timestamp) > 0) && !quiet) 
+    cat("NOTE: as filter arguments were given, the number of messages may be off\n")
+  
   
   # Set the default value of the buffer size
   if (buffer_size < 0)
@@ -140,25 +249,15 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
   
   filedate <- get_date_from_filename(file)
-  n_max_is_dataframe <- is.data.frame(n_max)
-  if (n_max_is_dataframe) {
-    if (!all(c("msg_type", "count") %in% names(n_max))) 
-      stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
-    skip <- 0
-    n_max <- as.integer(n_max[msg_type %in% msg_types[[type]], sum(count)])
-  }
   
   orig_file <- file
   file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
   
-  # -1 because we want it 1 indexed (cpp is 0-indexed), +1 as we want to skip 
-  # and max(0, xxx) b.c. the variable is unsigned!
-  start <- max(skip - 1 + 1, 0)
-  end <- max(skip + n_max - 1, -1)
-  if (is.numeric(n_max) && n_max != -1 && !quiet && !n_max_is_dataframe) 
-    cat("NOTE: as n_max overrides counting the messages, the numbers for messages may be off.\n")
-  
-  df <- imp_calls[[type]](file, start, end, buffer_size, quiet)
+  # actually call the C++ function
+  df <- imp_calls[[type]](file, start, end, 
+                          filter_msg_type, filter_stock_locate,
+                          min_timestamp, max_timestamp,
+                          buffer_size, quiet)
   
   # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file 
   if (grepl("\\.gz$", orig_file) && force_cleanup) unlink(gsub("\\.gz", "", file))

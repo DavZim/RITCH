@@ -29,6 +29,10 @@ void loadToMessages(std::string filename,
                     MessageType& msg,
                     int64_t startMsgCount = 0,
                     int64_t endMsgCount = std::numeric_limits<int64_t>::max(),
+                    std::vector<char> msgFilter = {},
+                    std::vector<int> locFilter = {},
+                    std::vector<int64_t> minTS = {},
+                    std::vector<int64_t> maxTS = {},
                     int64_t bufferSize = 1e8,
                     bool quiet = false);
 

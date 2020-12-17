@@ -72,6 +72,25 @@ int getMessagePosition(unsigned char msgType) {
   }
 }
 
+// helper functions that check if a buffer value is in a vector of filters (equivalent of Rs %in%)
+inline bool passes_filter(unsigned char* buf, std::vector<char> filter) {
+  if (filter.size() == 0) return true;
+  for (char cc : filter) if (cc == *buf) return true;
+  return false;
+}
+inline bool passes_filter(unsigned char* buf, std::vector<int> filter) {
+  if (filter.size() == 0) return true;
+  const int val = get2bytes(&buf[0]);
+  for (int cc : filter) if (cc == val) return true;
+  return false;
+}
+// check larger/smaller inclusive for 8 byte numbers (timestamp)
+inline bool passes_filter_in(unsigned char* buf, std::vector<int64_t> lower, std::vector<int64_t> upper) {
+  if (lower.size() == 0) return true;
+  const int64_t val = get6bytes(&buf[0]);
+  for (int i = 0; i < lower.size(); i++) if (val >= lower[i] && val <= upper[i]) return true;
+  return false;
+}
 /**
  * @brief      Loads the contents of a plain-text file into a MessageType
  *
@@ -89,6 +108,10 @@ void loadToMessages(std::string filename,
                     MessageType& msg,
                     int64_t startMsgCount,
                     int64_t endMsgCount,
+                    std::vector<char> msgFilter,
+                    std::vector<int> locFilter,
+                    std::vector<int64_t> minTS,
+                    std::vector<int64_t> maxTS,
                     int64_t bufferSize,
                     bool quiet) {
 
@@ -128,9 +151,17 @@ void loadToMessages(std::string filename,
       thisMsgLength = getMessageLength(bufferPtr[inBufferIdx]);
       // if there is a partial message, go to the next buffer (gz-file pointer will be reset to match this!)
       if (inBufferIdx > thisBufferSize - thisMsgLength) break;
+
+      // Check Filter Messages
+      bool parse_message = true;
+      // only check the filter if previous tests are all OK
+      if (parse_message) parse_message = passes_filter(&bufferPtr[inBufferIdx], msgFilter);
+      if (parse_message) parse_message = passes_filter(&bufferPtr[inBufferIdx + 1], locFilter);
+      if (parse_message) parse_message = passes_filter_in(&bufferPtr[inBufferIdx + 5], minTS, maxTS);
+
       
-      // try to load the message
-      if (!msg.loadMessage(&bufferPtr[inBufferIdx])) {
+      // try to load the message only if the filters passed
+      if (parse_message && !msg.loadMessage(&bufferPtr[inBufferIdx])) {
         // loadMessage returns false if the endMsgCount has been reached, no need to continue
         free(bufferPtr);
         fclose(infile);
