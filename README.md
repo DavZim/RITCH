@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
+[![R-CMD-check](https://github.com/DavZim/RITCH/workflows/R-CMD-check/badge.svg)](https://github.com/DavZim/RITCH/actions)
 <!-- badges: end -->
 
 The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol,

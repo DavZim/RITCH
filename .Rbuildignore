@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.travis\.yml$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^[^/]+_ITCH_50$
@@ -9,3 +8,4 @@
 ^NQTVITCHspecification.*\.pdf$
 ^debug/*$
 ^simulate_dataset\.R$
+^\.github$

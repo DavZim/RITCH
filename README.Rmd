@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 # RITCH - an R interface to the ITCH Protocol
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/DavZim/RITCH.svg?branch=master)](https://travis-ci.org/DavZim/RITCH)
+[![R-CMD-check](https://github.com/DavZim/RITCH/workflows/R-CMD-check/badge.svg)](https://github.com/DavZim/RITCH/actions)
 <!-- badges: end -->
 
 The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol, which is used to distribute financial messages to participants.
@@ -191,8 +191,32 @@ ggplot() +
 
 ## Open Issues
 
-To move the package towards CRAN, I want to include a smaller data file containing fake or simulated data, this needs to be converted to the ITCH format. This would allow the example code to run, but also to properly use unit tests in the package.
-
-If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality for additional message types, please feel free to create an issue or a pull request. 
+If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality, please feel free to create an issue or a pull request. 
 
 Citation and CRAN release are WIP.
+
+
+
+
+
+
+
+
+
+
+Notes on writing ITCH file. 
+
+Heavily optimised (not fully but very good). testfile raw itch 465 KB, gz itch 160KB, files as zipped csvs 249KB, files as tar.gz 247 KB. qs at 184 KB.
+
+With very fast read and write speeds
+
+
+While writing, only the standard columns are used! WARN if others found.
+
+date and exchange information can be saved in title of file
+
+If you write your data to an ITCH file and want to filter for stocks later on, you need to provide the stock directory either in the file or later in the read!
+
+typical workflow: huge file, extract certain messages to other file (extract stock directory as well)...
+
+
