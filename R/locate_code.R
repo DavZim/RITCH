@@ -1,5 +1,8 @@
 #' Downloads the locate code for a given date and exchange
-#'
+#' 
+#' The data is downloaded from NASDAQs FTP server, which can be found here 
+#' \url{ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
+#' 
 #' @param exchange The exchange, either NASDAQ (equivalent to NDQ), BX, or PSX
 #' @param date The date, should be of class Date. If not the value is converted using \code{as.Date}.
 #' @param quiet If the download function should be quiet, default is FALSE.

@@ -17,7 +17,8 @@ download_locate_code(exchange, date, quiet = FALSE)
 a data.table of the tickers, the respective locate codes, and the exchange/date information
 }
 \description{
-Downloads the locate code for a given date and exchange
+The data is downloaded from NASDAQs FTP server, which can be found here 
+\url{ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
 }
 \examples{
 \dontrun{
