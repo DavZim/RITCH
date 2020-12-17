@@ -46,7 +46,7 @@
 #'  tries to find the stock_locate based on the \code{stock_directory} argument,
 #'  if this is not found, it will try to extract the stock directory from the file,
 #'  else an error is thrown.
-#' @param stock_directory A data.frame containing the stock-locate_code relationship.
+#' @param stock_directory A data.frame containing the stock-locate code relationship.
 #' As outputted by \code{\link{read_stock_directory}}. 
 #' Only used if \code{filter_stock} is set. To download the stock directory from
 #' NASDAQs FTP server, use \code{\link{download_stock_directory}}.
@@ -213,7 +213,7 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
   if (!(length(filter_stock) == 1 && is.na(filter_stock))) {
     if (length(stock_directory) == 1 && is.na(stock_directory)) {
       warning("filter_stock is given, but no stock_directory is specified. Trying to extract stock directory from file\n")
-      stock_directory <- RITCH::read_stock_directory(file, quiet = TRUE)
+      stock_directory <- read_stock_directory(file, quiet = TRUE)
     }
     
     if (!all(filter_stock %chin% stock_directory$stock)) {
@@ -224,7 +224,7 @@ read_ITCH <- function(file, type, skip = 0, n_max = -1,
     }
     # extend locate code by the stocks:
     filter_stock_locate <- c(filter_stock_locate,
-                             stock_directory[stock %chin%filter_stock, locate_code])
+                             stock_directory[stock %chin%filter_stock, stock_locate])
   }
   
   if (!quiet && length(filter_stock_locate) > 0) 

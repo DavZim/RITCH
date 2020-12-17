@@ -37,7 +37,7 @@ download_stock_directory <- function(exchange, date, quiet = FALSE) {
     url <- paste0(base_url, exchange, "_stocklocate_", format(date, "%Y%m%d"), ".txt")
     
     d <- data.table::fread(url, showProgress = !quiet)
-    data.table::setnames(d, c("ticker", "locate_code"))
+    data.table::setnames(d, c("ticker", "stock_locate"))
     d[, ':=' (exchange = toupper(exchange), date = date)]
   }
   

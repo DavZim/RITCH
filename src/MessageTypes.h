@@ -67,7 +67,7 @@ public:
   Orders() : MessageType(
     {'A', 'F'}, 
     {ITCH::POS::A, ITCH::POS::F},
-    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"}
+    {"msg_type", "stock_locate", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "mpid"}
   ) {}
   // Functions
   bool loadMessage(unsigned char* buf);
@@ -77,7 +77,7 @@ public:
   // Members
   // The references to the data vectors
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   order_ref;
@@ -96,7 +96,7 @@ public:
   Trades() : MessageType(
     {'P', 'Q', 'B'}, 
     {ITCH::POS::P, ITCH::POS::Q, ITCH::POS::B},
-    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "match_number", "cross_type"}
+    {"msg_type", "stock_locate", "tracking_number", "timestamp", "order_ref", "buy", "shares", "stock", "price", "match_number", "cross_type"}
 ) {}
   // Functions
   bool loadMessage(unsigned char* buf);
@@ -106,7 +106,7 @@ public:
   // Members
   // The references to the data vectors
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   order_ref;
@@ -127,7 +127,7 @@ public:
   Modifications() : MessageType(
     {'E', 'C', 'X', 'D', 'U'}, 
     {ITCH::POS::E, ITCH::POS::C, ITCH::POS::X, ITCH::POS::D, ITCH::POS::U},
-    {"msg_type", "locate_code", "tracking_number", "timestamp", "order_ref", "shares", "match_number", "printable", "price", "new_order_ref"}
+    {"msg_type", "stock_locate", "tracking_number", "timestamp", "order_ref", "shares", "match_number", "printable", "price", "new_order_ref"}
   ) {}
 
   // Functions
@@ -137,7 +137,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   order_ref;
@@ -163,7 +163,7 @@ public:
   SystemEvents() : MessageType(
     {'S'}, 
     {ITCH::POS::S},
-    {"msg_type", "locate_code", "tracking_number", "timestamp", "event_code"}
+    {"msg_type", "stock_locate", "tracking_number", "timestamp", "event_code"}
   ) {}
   
   // Functions
@@ -173,7 +173,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector event_code;
@@ -188,7 +188,7 @@ public:
   StockDirectory() : MessageType(
   {'R'}, 
   {ITCH::POS::R},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", 
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock", 
    "market_category", "financial_status", "lot_size", "round_lots_only",
    "issue_classification", "issue_subtype", "authentic", "short_sell_closeout",
    "ipo_flag", "luld_price_tier", "etp_flag", "etp_leverage", "inverse"}
@@ -201,7 +201,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;
@@ -229,7 +229,7 @@ public:
   TradingStatus() : MessageType(
   {'H', 'h'}, 
   {ITCH::POS::H, ITCH::POS::h},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock",
    // type H
    "trading_state", "reserved", "reason",
    // type h"
@@ -244,7 +244,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;
@@ -263,7 +263,7 @@ public:
   RegSHO() : MessageType(
   {'Y'}, 
   {ITCH::POS::Y},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", "regsho_action"
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock", "regsho_action"
   }
   ) {}
   
@@ -274,7 +274,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;
@@ -289,7 +289,7 @@ public:
   ParticipantStates() : MessageType(
   {'L'}, 
   {ITCH::POS::L},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "mpid", "stock",
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "mpid", "stock",
    "primary_mm", "mm_mode", "participant_state"
   }
   ) {}
@@ -301,7 +301,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector mpid;
@@ -318,7 +318,7 @@ public:
   MWCB() : MessageType(
   {'V', 'W'}, 
   {ITCH::POS::V, ITCH::POS::W},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", 
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", 
    // message type 'V'
    "level1", "level2", "level3",
    // message type 'W'
@@ -333,7 +333,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   level1;
@@ -350,7 +350,7 @@ public:
   IPO() : MessageType(
   {'K'}, 
   {ITCH::POS::K},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock",
    "release_time", "release_qualifier", "ipo_price"
   }
   ) {}
@@ -362,7 +362,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;
@@ -379,7 +379,7 @@ public:
   LULD() : MessageType(
   {'J'}, 
   {ITCH::POS::J},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock",
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock",
    "reference_price", "upper_price", "lower_price", "extension"
   }
   ) {}
@@ -391,7 +391,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;
@@ -410,7 +410,7 @@ public:
   NOII() : MessageType(
   {'I'}, 
   {ITCH::POS::I},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "paired_shares",
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "paired_shares",
    "imbalance_shares", "imbalance_direction", "stock", "far_price", 
    "near_price", "reference_price", "cross_type", "variation_indicator"
   }
@@ -423,7 +423,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::NumericVector   paired_shares;
@@ -445,7 +445,7 @@ public:
   RPII() : MessageType(
   {'N'}, 
   {ITCH::POS::N},
-  {"msg_type", "locate_code", "tracking_number", "timestamp", "stock", "interest_flag"
+  {"msg_type", "stock_locate", "tracking_number", "timestamp", "stock", "interest_flag"
   }
   ) {}
   
@@ -456,7 +456,7 @@ public:
   
   // Members
   Rcpp::CharacterVector msg_type;
-  Rcpp::IntegerVector   locate_code;
+  Rcpp::IntegerVector   stock_locate;
   Rcpp::IntegerVector   tracking_number;
   Rcpp::NumericVector   timestamp;
   Rcpp::CharacterVector stock;

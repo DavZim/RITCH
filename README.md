@@ -73,7 +73,7 @@ orders <- read_orders(file)
 str(orders)
 #> Classes 'data.table' and 'data.frame':   5000 obs. of  13 variables:
 #>  $ msg_type       : chr  "A" "A" "F" "A" ...
-#>  $ locate_code    : int  2 2 2 2 2 2 2 2 2 2 ...
+#>  $ stock_locate   : int  2 2 2 2 2 2 2 2 2 2 ...
 #>  $ tracking_number: int  0 0 0 0 0 0 0 0 0 0 ...
 #>  $ timestamp      :integer64 31139052372053 31141354532167 32813425752711 32826656500150 32827351405783 32893988026867 33067242028997 33300886636321 ... 
 #>  $ order_ref      :integer64 0 100 84836 87020 87040 93032 105532 121012 ... 
@@ -96,7 +96,7 @@ trades <- read_trades(file, n_max = 100)
 str(trades)
 #> Classes 'data.table' and 'data.frame':   100 obs. of  14 variables:
 #>  $ msg_type       : chr  "P" "P" "P" "P" ...
-#>  $ locate_code    : int  2 2 2 2 2 3 3 3 3 3 ...
+#>  $ stock_locate   : int  2 2 2 2 2 3 3 3 3 3 ...
 #>  $ tracking_number: int  2 2 2 2 2 2 4 2 2 2 ...
 #>  $ timestamp      :integer64 34210128591201 34210355475120 34210767188977 34211127433476 34212046014088 34235711475708 34239928637481 34239928703094 ... 
 #>  $ order_ref      :integer64 0 0 0 0 0 0 0 0 ... 
@@ -256,11 +256,11 @@ while (n_parsed < n_messages) {
 ```
 
 You can also filter a dataset directly while reading messages for
-`msg_type`, `locate_code`, `timestamp` range, as well as `stock`. Note
+`msg_type`, `stock_locate`, `timestamp` range, as well as `stock`. Note
 that filtering for a specific stock, is just a shorthand lookup for the
-stocks `locate_code`s, therefore a `stock_directory` needs to be
+stocks `stock_locate`s, therefore a `stock_directory` needs to be
 supplied (either by providing the output from `read_stock_directory()`
-or `download_locate_code()`) or the function will try to extract the
+or `download_stock_locate()`) or the function will try to extract the
 stock directory from the file.
 
 ``` r
@@ -274,11 +274,12 @@ od <- read_orders(
   max_timestamp = 55800000000000, # end at 15:30:00.000000
   filter_stock_locate = 1,        # take only stock with code 1
   filter_stock = "CHAR",          # but also take stock CHAR
-  stock_directory = sdir          # provide the stock_directory to match stock names to locate_codes
+  stock_directory = sdir          # provide the stock_directory to match stock names to stock_locates
 )
-#> [Filter]     'msg_type': 'A'
-#> [Filter]     'timestamp': 43200000000000 - 55800000000000 
-#> [Filter]     'stock_locate': '1', '3'
+#> [Filter]     msg_type: 'A'
+#> [Filter]     timestamp: 43200000000000 - 55800000000000 
+#> [Filter]     stock_locate: '1', '3'
+#> NOTE: as filter arguments were given, the number of messages may be off
 #> [Counting]   5,000 messages found
 #> [Loading]    .
 #> [Converting] to data.table
@@ -290,10 +291,10 @@ od[, .(n = .N), by = msg_type]
 range(od$timestamp)
 #> integer64
 #> [1] 43235810473334 55792143963723
-od[, .(n = .N), by = .(locate_code, stock)]
-#>    locate_code stock   n
-#> 1:           3  CHAR 574
-#> 2:           1   ALC 508
+od[, .(n = .N), by = .(stock_locate, stock)]
+#>    stock_locate stock   n
+#> 1:            3  CHAR 574
+#> 2:            1   ALC 508
 ```
 
 If you are interested in writing `ITCH_50` files or gaining a better

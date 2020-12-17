@@ -103,7 +103,7 @@ tries to find the stock_locate based on the \code{stock_directory} argument,
 if this is not found, it will try to extract the stock directory from the file,
 else an error is thrown.}
 
-\item{stock_directory}{A data.frame containing the stock-locate_code relationship.
+\item{stock_directory}{A data.frame containing the stock-locate code relationship.
 As outputted by \code{\link{read_stock_directory}}. 
 Only used if \code{filter_stock} is set. To download the stock directory from
 NASDAQs FTP server, use \code{\link{download_stock_directory}}.}

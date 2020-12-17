@@ -53,7 +53,7 @@ od <- read_orders(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer",
+  stock_locate = "integer",
   tracking_number = "integer",
   timestamp = "integer64",
   order_ref = "integer64",
@@ -94,7 +94,7 @@ tr <- read_trades(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer",
+  stock_locate = "integer",
   tracking_number = "integer",
   timestamp = "integer64",
   order_ref = "integer64",
@@ -124,7 +124,7 @@ md <- read_modifications(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer",
+  stock_locate = "integer",
   tracking_number = "integer",
   timestamp = "integer64",
   order_ref = "integer64",
@@ -156,7 +156,7 @@ sys <- read_system_events(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer",
+  stock_locate = "integer",
   tracking_number = "integer",
   timestamp = "integer64",
   event_code = "character",
@@ -179,7 +179,7 @@ sdir <- read_stock_directory(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer",
+  stock_locate = "integer",
   tracking_number = "integer",
   timestamp = "integer64",
   stock = "character",
@@ -206,7 +206,7 @@ expect_equal(nrow(sdir), 3)
 expect_equal(names(sdir), names(classes_exp))
 expect_equal(lapply(sdir, class), classes_exp)
 expect_equal(table(sdir$msg_type), c("R" = 3))
-expect_equal(sdir$locate_code, 1:3)
+expect_equal(sdir$stock_locate, 1:3)
 expect_equal(unique(sdir$date), as.POSIXct("2010-12-24", "GMT"))
 expect_equal(unique(sdir$exchange), "TEST")
 
@@ -215,7 +215,7 @@ tstat <- read_trading_status(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  locate_code = "integer", 
+  stock_locate = "integer", 
   tracking_number = "integer", 
   timestamp = "integer64",
   stock = "character",
@@ -234,7 +234,7 @@ expect_equal(nrow(tstat), 3)
 expect_equal(names(tstat), names(classes_exp))
 expect_equal(lapply(tstat, class), classes_exp)
 expect_equal(table(tstat$msg_type), c("H" = 3))
-expect_equal(tstat$locate_code, 1:3)
+expect_equal(tstat$stock_locate, 1:3)
 expect_equal(unique(tstat$trading_state), "T")
 expect_equal(unique(tstat$operation_halted), NA)
 expect_equal(unique(tstat$date), as.POSIXct("2010-12-24", "GMT"))
@@ -246,7 +246,7 @@ expect_equal(unique(tstat$exchange), "TEST")
 rs <- read_reg_sho(file, quiet = TRUE)
 
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", stock = "character", regsho_action = "character", 
   date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
   exchange = "character"
@@ -261,7 +261,7 @@ expect_equal(lapply(rs, class), classes_exp)
 ## Market Participant States
 mps <- read_market_participant_states(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", mpid = "character", stock = "character", 
   primary_mm = "logical", mm_mode = "character", participant_state = "character", 
   date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
@@ -277,7 +277,7 @@ expect_equal(lapply(mps, class), classes_exp)
 ## MWCB
 mwcb <- read_mwcb(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", level1 = "numeric", level2 = "numeric", 
   level3 = "numeric", breached_level = "integer", date = c("POSIXct", "POSIXt"),
   datetime = structure("nanotime", package = "nanotime"), exchange = "character"
@@ -291,7 +291,7 @@ expect_equal(lapply(mwcb, class), classes_exp)
 ## IPO
 ipo <- read_ipo(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", stock = "character", release_time = "integer", 
   release_qualifier = "character", ipo_price = "numeric", date = c("POSIXct", "POSIXt"), 
   datetime = structure("nanotime", package = "nanotime"), exchange = "character"
@@ -305,7 +305,7 @@ expect_equal(lapply(ipo, class), classes_exp)
 ## NOII
 noii <- read_noii(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", paired_shares = "integer64", imbalance_shares = "integer64", 
   imbalance_direction = "character", stock = "character", far_price = "numeric", 
   near_price = "numeric", reference_price = "numeric", cross_type = "character", 
@@ -321,7 +321,7 @@ expect_equal(lapply(noii, class), classes_exp)
 # RPII
 rpii <- read_rpii(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", locate_code = "integer", tracking_number = "integer", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
   timestamp = "integer64", stock = "character", interest_flag = "character", 
   date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
   exchange = "character"
@@ -357,13 +357,13 @@ expect_equal(orders,
              check.attributes = FALSE)
 
 # test locate code
-expect_equal(orders[locate_code == 1],
+expect_equal(orders[stock_locate == 1],
              read_orders(file, quiet = TRUE, filter_stock_locate = 1))
-expect_equal(orders[locate_code == 2],
+expect_equal(orders[stock_locate == 2],
              read_orders(file, quiet = TRUE, filter_stock_locate = 2))
-expect_equal(orders[locate_code %in% 1:3],
+expect_equal(orders[stock_locate %in% 1:3],
              read_orders(file, quiet = TRUE, filter_stock_locate = 1:3))
-expect_equal(orders[locate_code %in% c(1, 3)],
+expect_equal(orders[stock_locate %in% c(1, 3)],
              read_orders(file, quiet = TRUE, filter_stock_locate = c(1, NA, 3)))
 
 # test timestamp

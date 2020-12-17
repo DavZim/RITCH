@@ -2,8 +2,6 @@
 #' This script takes an existing dataset and samples and obfuscates the data
 #' to create a smaller testing/example dataset.
 #' 
-#' 
-#' 
 #' Messages that are sampled are: 
 #' - System Event Messages
 #' - Stock Directory
@@ -35,7 +33,7 @@ names_mods   <- names(mods)
 orders[, .(n = .N), by = stock][order(-n)][1:3]
 trades[, .(n = .N), by = stock][order(-n)][1:3]
 merge(
-  mods[, .(n = .N), by = locate_code][order(-n)][1:3],
+  mods[, .(n = .N), by = stock_locate][order(-n)][1:3],
   loc_code, by = "locate_code", all.x = TRUE
 )
 
@@ -46,7 +44,7 @@ loc_codes <- loc_code[
   ticker %chin% names(stock_select)
 ][, 
   .(stock_old = ticker, 
-    old_loc_code = locate_code,
+    old_loc_code = stock_locate,
     stock = stock_select[ticker])
 ][order(stock), locate_code := 1:.N][]
 
@@ -107,10 +105,12 @@ sdir[, ':='(
   ipo_flag = FALSE,
   luld_price_tier = 2,
   etp_leverage = 0,
-  locate_code = NULL
+  stock_locate = NULL
 )]
-sdir <- sdir[loc_codes[, .(stock, locate_code)], on = "stock"]
+sdir <- sdir[loc_codes[, .(stock, stock_locate)], on = "stock"]
 setorder(sdir, stock)
+# rearrange timestamp to fit alphabetic stock names
+sdir[, timestamp := sort(timestamp)]
 setcolorder(sdir, names_dir)
 
 ######################
@@ -121,20 +121,20 @@ trad_stat <- read_trading_status(file, add_meta = FALSE, quiet = TRUE)
 names_stat <- names(trad_stat)
 
 # shuffle the timestamps and rename the stocks
-trstat <- trad_stat[locate_code %in% loc_codes$old_loc_code][
+trstat <- trad_stat[stock_locate %in% loc_codes$old_loc_code][
   , ':='(
     timestamp = timestamp + rnorm(.N, 0, 1e8),
     stock = stock_select[stock]
   )
 ][]
 
-# add the new locate_codes
-trstat <- merge(trstat[, -c("locate_code")], 
-                loc_codes[, .(stock, locate_code)],
+# add the new stock_locates
+trstat <- merge(trstat[, -c("stock_locate")], 
+                loc_codes[, .(stock, stock_locate)],
                 by = "stock", all.x = TRUE)
 
 # order the timestamps by locate code...
-trstat[, timestamp := timestamp[order(-locate_code)]]
+trstat[, timestamp := timestamp[order(-stock_locate)]]
 
 setcolorder(trstat, names_stat)
 
@@ -143,9 +143,9 @@ setcolorder(trstat, names_stat)
 set.seed(654918413)
 N_ORDERS <- 5000
 
-# rename the stock and locate_codes
+# rename the stock and stock_locates
 or <- orders[stock %chin% names(stock_select)][, stock := stock_select[stock]]
-or <- merge(or[, -c("locate_code")], loc_codes[, .(stock, locate_code)])
+or <- merge(or[, -c("stock_locate")], loc_codes[, .(stock, stock_locate)])
 
 or <- remove_price_outliers(or, 2)
 
@@ -169,7 +169,7 @@ set.seed(7451984)
 N_TRADES <- 1000
 
 tr <- trades[stock %chin% names(stock_select)][, stock := stock_select[stock]]
-tr <- merge(tr[, -c("locate_code")], loc_codes[, .(stock, locate_code)])
+tr <- merge(tr[, -c("stock_locate")], loc_codes[, .(stock, stock_locate)])
 
 tr <- remove_price_outliers(tr, 2)
 
@@ -187,9 +187,9 @@ setcolorder(tr, names_trades)
 set.seed(78632176)
 N_MODS <- 2000
 
-md <- mods[locate_code %in% loc_codes$old_loc_code][, old_loc_code := locate_code]
-md <- merge(md[, -c("locate_code")],
-            loc_codes[, .(stock, locate_code, old_loc_code)],
+md <- mods[stock_locate %in% loc_codes$old_loc_code][, old_loc_code := stock_locate]
+md <- merge(md[, -c("stock_locate")],
+            loc_codes[, .(stock, stock_locate, old_loc_code)],
             by = "old_loc_code")[, -c("old_loc_code")]
 
 # subset only for stocks that are also in the orders

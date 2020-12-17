@@ -72,7 +72,7 @@ test_hex_to_dt <- function(hex = NA, dt = NA, hex_to_dt_func) {
 
 # create an order
 dt_f <- data.table(
-  msg_type = "F", locate_code = 8236L, tracking_number = 0L,
+  msg_type = "F", stock_locate = 8236L, tracking_number = 0L,
   timestamp = as.int64(25200002107428), order_ref = as.int64(4), buy = TRUE,
   shares = 11900L, stock = "USO", price = 12.96, mpid = "VIRT"
 )
@@ -153,7 +153,7 @@ hex_p <- paste(
 )
 dt_p <- data.table(
   msg_type = "P",
-  locate_code = 8124,
+  stock_locate = 8124,
   tracking_number = 2,
   timestamp = as.int64(26366446396437),
   order_ref = as.int64(0),
@@ -209,7 +209,7 @@ hex_mod_all <- paste(hex_e, hex_c, hex_x, hex_d, hex_u)
 
 # Modification E
 dt_e <- data.table(
-  msg_type = "E", locate_code = 8124, tracking_number = 2, 
+  msg_type = "E", stock_locate = 8124, tracking_number = 2, 
   timestamp = as.int64(25200013663284), order_ref = as.int64(56), shares = 100, 
   match_number = as.int64(17795), printable = NA, price = NA_real_, 
   new_order_ref = as.int64(NA)
@@ -218,7 +218,7 @@ test_hex_to_dt(hex_e, dt_e, dbg_hex_to_modifications)
 
 # Modification C
 dt_c <- data.table(
-  msg_type = "C", locate_code = 8028, tracking_number = 2, 
+  msg_type = "C", stock_locate = 8028, tracking_number = 2, 
   timestamp = as.int64(34200139258315), order_ref = as.int64(969072), 
   shares = 100, match_number = as.int64(18524), 
   printable = FALSE, price = 53.0, new_order_ref = as.int64(NA)
@@ -227,7 +227,7 @@ test_hex_to_dt(hex_c, dt_c, dbg_hex_to_modifications)
 
 # Modification X
 dt_x <- data.table(
-  msg_type = "X", locate_code = 5114, tracking_number = 0, 
+  msg_type = "X", stock_locate = 5114, tracking_number = 0, 
   timestamp = as.int64(34200145463453), order_ref = as.int64(288739), 
   shares = 100, match_number = as.int64(NA), 
   printable = NA, price = NA_real_, new_order_ref = as.int64(NA)
@@ -236,7 +236,7 @@ test_hex_to_dt(hex_x, dt_x, dbg_hex_to_modifications)
 
 # Modification D
 dt_d <- data.table(
-  msg_type = "D", locate_code = 8755, tracking_number = 0, 
+  msg_type = "D", stock_locate = 8755, tracking_number = 0, 
   timestamp = as.int64(34200145864224), order_ref = as.int64(957328), 
   shares = NA_integer_, match_number = as.int64(NA), 
   printable = NA, price = NA_real_, new_order_ref = as.int64(NA)
@@ -245,7 +245,7 @@ test_hex_to_dt(hex_d, dt_d, dbg_hex_to_modifications)
 
 # Modification U
 dt_u <- data.table(
-  msg_type = "U", locate_code = 8124, tracking_number = 0, 
+  msg_type = "U", stock_locate = 8124, tracking_number = 0, 
   timestamp = as.int64(34200151720294), order_ref = as.int64(959728), 
   shares = 100, match_number = as.int64(NA), 
   printable = NA, price = 77.63, new_order_ref = as.int64(969648)
@@ -271,7 +271,7 @@ test_hex_to_dt(dt = dt_mods_all, hex_to_dt_func = dbg_hex_to_modifications)
 #' 05   1  event code       4f                         O
 
 hex_s <- "00 00 53 00 00 00 00 0a 2d f4 92 1d 67 4f"
-dt_s <- data.table(msg_type = "S", locate_code = 0, tracking_number = 0,
+dt_s <- data.table(msg_type = "S", stock_locate = 0, tracking_number = 0,
                    timestampt = as.int64(11192493022567), event_code = "O")
 test_hex_to_dt(hex_s, dt_s, dbg_hex_to_system_events)
 
@@ -306,7 +306,7 @@ hex_r <- paste(
   "00 64 4e 43 5a 20 50 4e 20 31 4e 00 00 00 00 4e"
 )
 dt_r <- data.table(
-  msg_type = "R", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "R", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902032964), stock = "A", market_category = "N",
   financial_status = " ", lot_size = 100L, round_lots_only = FALSE, 
   issue_classification = "C", issue_subtype = "Z", authentic = TRUE, 
@@ -334,7 +334,7 @@ test_hex_to_dt(hex_r, dt_r, dbg_hex_to_stock_directory)
 
 hex_h <- "00 00 48 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 54 20 20 20 20 20"
 dt_h <- data.table(
-  msg_type = "H", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "H", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), stock = "A", trading_state = "T", 
   reserved = " ", reason = "", market_code = NA_character_, operation_halted = NA
 )
@@ -358,7 +358,7 @@ test_hex_to_dt(hex_h, dt_h, dbg_hex_to_trading_status)
 
 hex_y <- "00 00 59 00 01 00 00 0a 66 a0 e5 4a a2 41 20 20 20 20 20 20 20 30"
 dt_y <- data.table(
-  msg_type = "Y", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "Y", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902323362), stock = "A", regsho_action = "0"
 )
 test_hex_to_dt(hex_y, dt_y, dbg_hex_to_reg_sho)
@@ -383,7 +383,7 @@ test_hex_to_dt(hex_y, dt_y, dbg_hex_to_reg_sho)
 
 hex_l <- "00 00 4c 00 01 00 00 0a 67 e1 75 f8 65 43 44 52 47 41 20 20 20 20 20 20 20 59 4e 41"
 dt_l <- data.table(
-  msg_type = "L", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "L", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), mpid = "CDRG", stock = "A",
   primary_mm = TRUE, mm_mode = "N", participant_state = "A"
 )
@@ -411,7 +411,7 @@ hex_v <- paste(
   "a1 6a b8 40 00 00 00 3c 59 95 62 40"
 )
 dt_v <- data.table(
-  msg_type = "V", locate_code = 0L, tracking_number = 0L, 
+  msg_type = "V", stock_locate = 0L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), level1 = 3013.21, level2 = 2818.81,
   level3 = 2592.01, breached_level = NA_integer_
 )
@@ -435,7 +435,7 @@ test_hex_to_dt(hex_v, dt_v, dbg_hex_to_mwcb)
 
 hex_k <- "00 00 4b 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 00 ca 1c ee 41 00 01 fa 40"
 dt_k <- data.table(
-  msg_type = "K", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "K", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), stock = "A", release_time = 13245678L, 
   release_qualifier = "A", ipo_price = 12.96
 )
@@ -461,7 +461,7 @@ test_hex_to_dt(hex_k, dt_k, dbg_hex_to_ipo)
 hex_j <- paste("00 00 4a 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20",
                "00 0b 9a b4 00 0b f2 1e 00 0b 1e 5a 00 00 00 10")
 dt_j <- data.table(
-  msg_type = "J", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "J", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), stock = "A", reference_price = 76.05, 
   upper_price = 78.2878, lower_price = 72.8666, extension = 16L
 )
@@ -495,7 +495,7 @@ hex_i <- paste(
   "43 35"
 )
 dt_i <- data.table(
-  msg_type = "I", locate_code = 1L, tracking_number = 0L, 
+  msg_type = "I", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), paired_shares = as.int64(990721),
   imbalance_shares = as.int64(3830096), imbalance_direction = "B", stock = "A",
   far_price = 78.2878, near_price = 72.8666, reference_price = 76.05, 
@@ -520,7 +520,7 @@ test_hex_to_dt(hex_i, dt_i, dbg_hex_to_noii)
 
 hex_n <- "00 00 4e 02 9c 00 00 1a 31 a5 21 99 bc 41 58 53 4d 20 20 20 20 42"
 dt_n <- data.table(
-  msg_type = "N", locate_code = 668L, tracking_number = 0L, 
+  msg_type = "N", stock_locate = 668L, tracking_number = 0L, 
   timestamp = as.int64(28800526162364), stock = "AXSM", interest_flag = "B"
 )
 

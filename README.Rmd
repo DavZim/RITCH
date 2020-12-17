@@ -162,7 +162,7 @@ while (n_parsed < n_messages) {
 }
 ```
 
-You can also filter a dataset directly while reading messages for `msg_type`, `locate_code`, `timestamp` range, as well as `stock`. Note that filtering for a specific stock, is just a shorthand lookup for the stocks `locate_code`s, therefore a `stock_directory` needs to be supplied (either by providing the output from `read_stock_directory()` or `download_locate_code()`) or the function will try to extract the stock directory from the file.
+You can also filter a dataset directly while reading messages for `msg_type`, `stock_locate`, `timestamp` range, as well as `stock`. Note that filtering for a specific stock, is just a shorthand lookup for the stocks `stock_locate`s, therefore a `stock_directory` needs to be supplied (either by providing the output from `read_stock_directory()` or `download_stock_locate()`) or the function will try to extract the stock directory from the file.
 
 ```{r}
 # read in the stock directory as we filter for stock names later on

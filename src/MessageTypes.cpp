@@ -115,7 +115,7 @@ bool Orders::loadMessage(unsigned char* buf) {
   // begin parsing the messages
   // else, we can continue to parse the message to the content vectors
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   int64_t ts = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &ts, sizeof(double));
@@ -173,7 +173,7 @@ void Orders::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
-  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  stock_locate    = data["stock_locate"]    = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
@@ -224,7 +224,7 @@ bool Trades::loadMessage(unsigned char* buf) {
   int64_t tmp;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -322,7 +322,7 @@ void Trades::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
-  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  stock_locate    = data["stock_locate"]    = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
@@ -374,7 +374,7 @@ bool Modifications::loadMessage(unsigned char* buf) {
   int64_t tmp;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -471,7 +471,7 @@ void Modifications::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
-  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  stock_locate    = data["stock_locate"]    = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   order_ref       = data["order_ref"]       = Rcpp::NumericVector(size);
@@ -523,7 +523,7 @@ bool SystemEvents::loadMessage(unsigned char* buf) {
   int64_t tmp;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -556,7 +556,7 @@ void SystemEvents::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
-  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  stock_locate    = data["stock_locate"]    = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   event_code      = data["event_code"]      = Rcpp::CharacterVector(size);
@@ -604,7 +604,7 @@ bool StockDirectory::loadMessage(unsigned char* buf) {
   std::string stock_string, issue_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -655,7 +655,7 @@ void StockDirectory::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type              = data["msg_type"]              = Rcpp::CharacterVector(size);
-  locate_code           = data["locate_code"]           = Rcpp::IntegerVector(size);
+  stock_locate          = data["stock_locate"]          = Rcpp::IntegerVector(size);
   tracking_number       = data["tracking_number"]       = Rcpp::IntegerVector(size);
   timestamp             = data["timestamp"]             = Rcpp::NumericVector(size);
   stock                 = data["stock"]                 = Rcpp::CharacterVector(size);
@@ -716,7 +716,7 @@ bool TradingStatus::loadMessage(unsigned char* buf) {
   std::string stock_string, reas;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -780,7 +780,7 @@ void TradingStatus::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type         = data["msg_type"]         = Rcpp::CharacterVector(size);
-  locate_code      = data["locate_code"]      = Rcpp::IntegerVector(size);
+  stock_locate     = data["stock_locate"]     = Rcpp::IntegerVector(size);
   tracking_number  = data["tracking_number"]  = Rcpp::IntegerVector(size);
   timestamp        = data["timestamp"]        = Rcpp::NumericVector(size);
   stock            = data["stock"]            = Rcpp::CharacterVector(size);
@@ -833,7 +833,7 @@ bool RegSHO::loadMessage(unsigned char* buf) {
   std::string stock_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -871,7 +871,7 @@ void RegSHO::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type         = data["msg_type"]         = Rcpp::CharacterVector(size);
-  locate_code      = data["locate_code"]      = Rcpp::IntegerVector(size);
+  stock_locate     = data["stock_locate"]     = Rcpp::IntegerVector(size);
   tracking_number  = data["tracking_number"]  = Rcpp::IntegerVector(size);
   timestamp        = data["timestamp"]        = Rcpp::NumericVector(size);
   stock            = data["stock"]            = Rcpp::CharacterVector(size);
@@ -919,7 +919,7 @@ bool ParticipantStates::loadMessage(unsigned char* buf) {
   std::string stock_string, mp;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -963,7 +963,7 @@ void ParticipantStates::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
-  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  stock_locate      = data["stock_locate"]      = Rcpp::IntegerVector(size);
   tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
   timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
   mpid              = data["mpid"]              = Rcpp::CharacterVector(size);
@@ -1012,7 +1012,7 @@ bool MWCB::loadMessage(unsigned char* buf) {
   int64_t tmp;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -1066,7 +1066,7 @@ void MWCB::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
-  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  stock_locate      = data["stock_locate"]      = Rcpp::IntegerVector(size);
   tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
   timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
   level1            = data["level1"]            = Rcpp::NumericVector(size);
@@ -1117,7 +1117,7 @@ bool IPO::loadMessage(unsigned char* buf) {
   std::string stock_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -1158,7 +1158,7 @@ void IPO::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
-  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  stock_locate      = data["stock_locate"]      = Rcpp::IntegerVector(size);
   tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
   timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
   stock             = data["stock"]             = Rcpp::CharacterVector(size);
@@ -1208,7 +1208,7 @@ bool LULD::loadMessage(unsigned char* buf) {
   std::string stock_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -1249,7 +1249,7 @@ void LULD::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type          = data["msg_type"]          = Rcpp::CharacterVector(size);
-  locate_code       = data["locate_code"]       = Rcpp::IntegerVector(size);
+  stock_locate      = data["stock_locate"]      = Rcpp::IntegerVector(size);
   tracking_number   = data["tracking_number"]   = Rcpp::IntegerVector(size);
   timestamp         = data["timestamp"]         = Rcpp::NumericVector(size);
   stock             = data["stock"]             = Rcpp::CharacterVector(size);
@@ -1301,7 +1301,7 @@ bool NOII::loadMessage(unsigned char* buf) {
   std::string stock_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -1354,7 +1354,7 @@ void NOII::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type            = data["msg_type"]            = Rcpp::CharacterVector(size);
-  locate_code         = data["locate_code"]         = Rcpp::IntegerVector(size);
+  stock_locate        = data["stock_locate"]        = Rcpp::IntegerVector(size);
   tracking_number     = data["tracking_number"]     = Rcpp::IntegerVector(size);
   timestamp           = data["timestamp"]           = Rcpp::NumericVector(size);
   paired_shares       = data["paired_shares"]       = Rcpp::NumericVector(size);
@@ -1409,7 +1409,7 @@ bool RPII::loadMessage(unsigned char* buf) {
   std::string stock_string;
   
   msg_type[current_idx]        = std::string(1, buf[0]);
-  locate_code[current_idx]     = get2bytes(&buf[1]);
+  stock_locate[current_idx]    = get2bytes(&buf[1]);
   tracking_number[current_idx] = get2bytes(&buf[3]);
   tmp = get6bytes(&buf[5]);
   std::memcpy(&(timestamp[current_idx]), &tmp, sizeof(double));
@@ -1447,7 +1447,7 @@ void RPII::reserve(int64_t size) {
   data = Rcpp::List(colnames.size());
   data.names() = colnames;
   msg_type        = data["msg_type"]        = Rcpp::CharacterVector(size);
-  locate_code     = data["locate_code"]     = Rcpp::IntegerVector(size);
+  stock_locate    = data["stock_locate"]    = Rcpp::IntegerVector(size);
   tracking_number = data["tracking_number"] = Rcpp::IntegerVector(size);
   timestamp       = data["timestamp"]       = Rcpp::NumericVector(size);
   stock           = data["stock"]           = Rcpp::CharacterVector(size);
