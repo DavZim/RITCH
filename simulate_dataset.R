@@ -42,10 +42,13 @@ merge(
 # take the following stocks as a base
 stock_select <- c("TSLA" = "ALC", "NIO" = "BOB", "BABA" = "CHAR")
 
-loc_codes <- loc_code[ticker %chin% names(stock_select)][, .(stock_old = ticker, 
-                                                             old_loc_code = locate_code,
-                                                             stock = stock_select[ticker],
-                                                             locate_code = 1:.N)]
+loc_codes <- loc_code[
+  ticker %chin% names(stock_select)
+][, 
+  .(stock_old = ticker, 
+    old_loc_code = locate_code,
+    stock = stock_select[ticker])
+][order(stock), locate_code := 1:.N][]
 
 # removes price outliers outside of a given sigma range...
 remove_price_outliers <- function(dt, sigma = 3) {
@@ -84,7 +87,7 @@ obfuscate_prices <- function(dt) {
 # Prepare System Event Messages
 set.seed(65411235)
 
-sys_ev <- read_system_events(file, add_meta = FALSE)
+sys_ev <- read_system_events(file, add_meta = FALSE, quiet = TRUE)
 sys_ev[, timestamp := timestamp + rnorm(.N, 0, 1e10)]
 
 
@@ -92,7 +95,7 @@ sys_ev[, timestamp := timestamp + rnorm(.N, 0, 1e10)]
 # Prepare Stock Directory Messages
 set.seed(76411948)
 
-stock_dir <- read_stock_directory(file, add_meta = FALSE)
+stock_dir <- read_stock_directory(file, add_meta = FALSE, quiet = TRUE)
 names_dir <- names(stock_dir)
 sdir <- stock_dir[stock %chin% names(stock_select)][, stock := stock_select[stock]][]
 
@@ -107,13 +110,14 @@ sdir[, ':='(
   locate_code = NULL
 )]
 sdir <- sdir[loc_codes[, .(stock, locate_code)], on = "stock"]
+setorder(sdir, stock)
 setcolorder(sdir, names_dir)
 
 ######################
 # Prepare Trading Status Messages
 set.seed(198179841)
 
-trad_stat <- read_trading_status(file, add_meta = FALSE)
+trad_stat <- read_trading_status(file, add_meta = FALSE, quiet = TRUE)
 names_stat <- names(trad_stat)
 
 # shuffle the timestamps and rename the stocks
@@ -226,4 +230,4 @@ funcs <- list(read_system_events, read_stock_directory, read_trading_status,
               read_orders, read_trades, read_modifications)
 
 ll_read <- lapply(funcs, function(f) f(outfile, quiet = TRUE, add_meta = FALSE))
-all.equal(ll, ll_read)
+all.equal(ll, ll_read, check.attributes = FALSE)
