@@ -197,8 +197,8 @@ action, 5000 trade, 5000 order, and 2000 order modification messages. As
 seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
-MASDAQ provides sample ITCH files on their official FTP server
-atftp://emi.nasdaq.com/ITCH/ (or in R use `open_itch_ftp()`).
+MASDAQ provides sample ITCH files on their official FTP server at
+<ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`).
 
 To interact with the sample files, use `list_sample_files()` and
 `download_sample_files()`. Note that the sample files are up to 5GB
@@ -210,6 +210,20 @@ There are some tweaks available to deal with memory and speed issues.
 For faster reading speeds, you can increase the buffer size of the
 `read_` functions to something around 1 GB or more
 (`buffer_size = 1e9`).
+
+If you have to read from a single file multiple times, for example
+because you want to extract orders and trades, you can count the
+messages beforehand and provide it to each read’s `n_max` argument,
+reducing the need to pass the file for counting the number of messages.
+
+``` r
+# count messages once
+n_msgs <- count_messages(file, quiet = TRUE)
+
+# use counted messages multiple times, saving file passes
+orders <- read_orders(file, quiet = TRUE, n_max = n_msgs)
+trades <- read_trades(file, quiet = TRUE, n_max = n_msgs)
+```
 
 If the dataset does not fit entirely into RAM, you can do a partial read
 specifying `skip` and `n_max`, similar to this:
@@ -226,30 +240,19 @@ n_batch <- 1000
 n_parsed <- 0
 
 while (n_parsed < n_messages) {
-  cat(sprintf("Parsing Batch %04i - %04i\n", n_parsed, n_parsed + n_batch))
+  cat(sprintf("Parsing Batch %04i - %04i", n_parsed, n_parsed + n_batch))
   # read in a batch
   df <- read_orders(file, quiet = TRUE, skip = n_parsed, n_max = n_batch)
+  cat(sprintf(": with %04i orders\n", nrow(df)))
   # do someting with the data, e.g., save data
   # ...
   n_parsed <- n_parsed + n_batch
 }
-#> Parsing Batch 0000 - 1000
-#> Parsing Batch 1000 - 2000
-#> Parsing Batch 2000 - 3000
-#> Parsing Batch 3000 - 4000
-#> Parsing Batch 4000 - 5000
-```
-
-Last but not least, if you have to read from a single file multiple
-times, for example because you want to extract orders and trades, you
-can count the messages beforehand and provide it to each read’s `n_max`
-argument, reducing the need to pass the file for counting the number of
-messages.
-
-``` r
-n_msgs <- count_messages(file, quiet = TRUE)
-orders <- read_orders(file, quiet = TRUE, n_max = n_msgs)
-trades <- read_trades(file, quiet = TRUE, n_max = n_msgs)
+#> Parsing Batch 0000 - 1000: with 1000 orders
+#> Parsing Batch 1000 - 2000: with 1000 orders
+#> Parsing Batch 2000 - 3000: with 1000 orders
+#> Parsing Batch 3000 - 4000: with 1000 orders
+#> Parsing Batch 4000 - 5000: with 1000 orders
 ```
 
 If you are interested in writing `ITCH_50` files or gaining a better
