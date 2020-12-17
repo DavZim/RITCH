@@ -1,4 +1,4 @@
-#' Downloads the locate code for a given date and exchange
+#' Downloads the stock directory (stock locate codes) for a given date and exchange
 #' 
 #' The data is downloaded from NASDAQs FTP server, which can be found here 
 #' \url{ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
@@ -7,15 +7,15 @@
 #' @param date The date, should be of class Date. If not the value is converted using \code{as.Date}.
 #' @param quiet If the download function should be quiet, default is FALSE.
 #'
-#' @return a data.table of the tickers, the respective locate codes, and the exchange/date information
+#' @return a data.table of the tickers, the respective stock locate codes, and the exchange/date information
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' download_locate_code("BX", "2019-07-02")
-#' download_locate_code(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
+#'   download_stock_directory("BX", "2019-07-02")
+#'   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
 #' }
-download_locate_code <- function(exchange, date, quiet = FALSE) {
+download_stock_directory <- function(exchange, date, quiet = FALSE) {
   
   exchange <- ifelse(tolower(exchange) == "nasdaq", "ndq", tolower(exchange))
   if (!all(exchange %in% c("ndq", "bx", "psx")))
@@ -29,7 +29,7 @@ download_locate_code <- function(exchange, date, quiet = FALSE) {
   if (length(exchange) > 1 || length(date) > 1) {
     vals <- expand.grid(ex = exchange, d = date, stringsAsFactors = FALSE)
     
-    res <- lapply(1:nrow(vals), function(i) download_locate_code(vals$ex[i], 
+    res <- lapply(1:nrow(vals), function(i) download_stock_directory(vals$ex[i], 
                                                                  vals$d[i]))
     d <- data.table::rbindlist(res)
     

@@ -106,7 +106,7 @@ else an error is thrown.}
 \item{stock_directory}{A data.frame containing the stock-locate_code relationship.
 As outputted by \code{\link{read_stock_directory}}. 
 Only used if \code{filter_stock} is set. To download the stock directory from
-NASDAQs FTP server, use \code{\link{download_locate_code}}.}
+NASDAQs FTP server, use \code{\link{download_stock_directory}}.}
 
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), 
 if you have a large amount of RAM, 1e9 (1GB) might be faster}
