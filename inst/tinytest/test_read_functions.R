@@ -332,3 +332,97 @@ expect_equal(nrow(rpii), 0)
 expect_equal(names(rpii), names(classes_exp))
 expect_equal(lapply(rpii, class), classes_exp)
 
+
+##########################################################################
+# Test Read with Filters
+
+# Use Orders
+orders <- read_orders(file, quiet = TRUE)
+
+# test msg_type
+expect_equal(orders[msg_type == "A"],
+             read_orders(file, quiet = TRUE, filter_msg_type = "A"))
+expect_equal(orders[msg_type == "F"],
+             read_orders(file, quiet = TRUE, filter_msg_type = "F"))
+expect_equal(orders[msg_type %in% c("A", "F")],
+             read_orders(file, quiet = TRUE, filter_msg_type = c("A", "F")))
+# Missing values are ommitted if possible
+expect_equal(orders[msg_type == "A"],
+             read_orders(file, quiet = TRUE, filter_msg_type = c("A", NA, NA)))
+expect_equal(orders[msg_type == "A"],
+             read_orders(file, quiet = TRUE, filter_msg_type = c(NA, NA, "A")))
+# msg_types can also be a single character for ease of use
+expect_equal(orders,
+             read_orders(file, quiet = TRUE, filter_msg_type = "AF"),
+             check.attributes = FALSE)
+
+# test locate code
+expect_equal(orders[locate_code == 1],
+             read_orders(file, quiet = TRUE, filter_stock_locate = 1))
+expect_equal(orders[locate_code == 2],
+             read_orders(file, quiet = TRUE, filter_stock_locate = 2))
+expect_equal(orders[locate_code %in% 1:3],
+             read_orders(file, quiet = TRUE, filter_stock_locate = 1:3))
+expect_equal(orders[locate_code %in% c(1, 3)],
+             read_orders(file, quiet = TRUE, filter_stock_locate = c(1, NA, 3)))
+
+# test timestamp
+start_ts <- as.int64(40505246803501)  # Q1
+end_ts <- as.int64(45475518278493)    # Mean
+
+start_ts2 <- as.int64(49358420393946) # Q3
+end_ts2 <- as.int64(57595326231183)   # Max
+
+expect_equal(
+  orders[timestamp >= start_ts & timestamp <= end_ts],
+  read_orders(file, quiet = TRUE, 
+              min_timestamp = start_ts, max_timestamp = end_ts)
+)
+# can only specify one min/max timestamp
+expect_equal(
+  orders[timestamp >= start_ts],
+  read_orders(file, quiet = TRUE, 
+              min_timestamp = start_ts)
+)
+# multiple timestamps
+expect_equal(
+  orders[timestamp >= start_ts & timestamp <= end_ts |
+           timestamp >= start_ts2 & timestamp <= end_ts2],
+  read_orders(file, quiet = TRUE, 
+              min_timestamp = c(start_ts, start_ts2),
+              max_timestamp = c(end_ts, end_ts2))
+)
+
+# test stock
+sdir <- read_stock_directory(file, quiet = TRUE)
+# warning as no stock_directory is specified
+expect_warning(read_orders(file, quiet = TRUE, filter_stock = "ALC"))
+expect_equal(orders[stock == "ALC"],
+             read_orders(file, quiet = TRUE, filter_stock = "ALC", 
+                         stock_directory = sdir))
+expect_equal(orders[stock == "BOB"],
+             read_orders(file, quiet = TRUE, filter_stock = "BOB",
+                         stock_directory = sdir))
+expect_equal(
+  orders[stock %in% c("ALC", "BOB", "CHAR")],
+  read_orders(file, quiet = TRUE, filter_stock = c("ALC", "BOB", "CHAR"),
+              stock_directory = sdir)
+)
+expect_error(
+  read_orders(file, quiet = TRUE, filter_stock = c("ALC", "NOSTOCK"),
+              stock_directory = sdir)
+)
+
+# combine multiple filters act as an AND combination!
+expect_equal(
+  orders[stock == "ALC" &
+           timestamp >= start_ts &
+           timestamp <= end_ts &
+           msg_type == "A"],
+  read_orders(file, quiet = TRUE,
+              filter_msg_type = "A",
+              min_timestamp = start_ts,
+              max_timestamp = end_ts,
+              filter_stock = "ALC", 
+              stock_directory = sdir)
+)
