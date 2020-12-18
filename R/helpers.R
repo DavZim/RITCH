@@ -64,7 +64,7 @@ get_exchange_from_filename <- function(file) {
 #' @param file the filename
 #' @param date the date as a date-class or as a string that is understood by 
 #'   \code{\link[base]{as.Date}}.
-#' @param exchange 
+#' @param exchange the name of the exchange
 #'
 #' @return the filename with exchanged or added date and exchange information
 #' @export

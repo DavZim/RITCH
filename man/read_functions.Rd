@@ -88,7 +88,8 @@ Note that this can be used to only return 'A' orders for instance.}
 
 \item{filter_stock_locate}{an integer vector, specifying a filter for locate codes.
 The locate codes can be looked up by calling \code{\link{read_stock_directory}}.
-Note that some message types (e.g., system events) do not use a locate code.}
+Note that some message types (e.g., system events, MWCB, and IPO) do not use
+a locate code.}
 
 \item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
 of minimum timestamp (inclusive). 

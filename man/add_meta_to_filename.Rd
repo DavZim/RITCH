@@ -12,7 +12,7 @@ add_meta_to_filename(file, date, exchange)
 \item{date}{the date as a date-class or as a string that is understood by 
 \code{\link[base]{as.Date}}.}
 
-\item{exchange}{}
+\item{exchange}{the name of the exchange}
 }
 \value{
 the filename with exchanged or added date and exchange information
