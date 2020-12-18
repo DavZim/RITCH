@@ -1,7 +1,7 @@
 Package: RITCH
 Type: Package
 Title: R Parser for the ITCH-Protocol
-Version: 0.1.9
+Version: 0.1.10
 Date: 2020-04-20
 Author: David Zimmermann
 Maintainer: David Zimmermann <david_j_zimmermann@hotmail.com>
