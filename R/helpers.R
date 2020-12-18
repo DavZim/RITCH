@@ -56,6 +56,69 @@ get_exchange_from_filename <- function(file) {
   return(res)
 }
 
+#' Adds meta information (date and exchange) to an itch filename
+#' 
+#' Note that if date and exchange information are already present,
+#' they are overwritten
+#'
+#' @param file the filename
+#' @param date the date as a date-class or as a string that is understood by 
+#'   \code{\link[base]{as.Date}}.
+#' @param exchange 
+#'
+#' @return the filename with exchanged or added date and exchange information
+#' @export
+#'
+#' @examples 
+#' add_meta_to_filename("03302017.NASDAQ_ITCH50", "2010-12-24", "TEST")
+#' add_meta_to_filename("20170130.BX_ITCH_50.gz", "2010-12-24", "TEST")
+#' add_meta_to_filename("S030220-v50-bx.txt.gz", "2010-12-24", "TEST")
+#' add_meta_to_filename("unknown_file.ITCH_50", "2010-12-24", "TEST")
+add_meta_to_filename <- function(file, date, exchange) {
+  if (is.na(date) || is.na(exchange)) return(file)
+  
+  if (!"POSIXct" %in% class(date)) date <- as.Date(date)
+  
+  # First try to extract if the filename is in the standard formats.
+  # if not use the "20101224.TEST_ITCH_50" format
+  if (grepl("NASDAQ_ITCH", file)) { #03302017.NASDAQ_ITCH50
+    
+    file <- gsub("\\d{8}", format(date, "%m%d%Y"), file)
+    file <- gsub("NASDAQ", exchange, file)
+    
+  } else if (grepl("S\\d{6}-", file)) { # S030220-v50-bx.txt.gz
+    
+    file <- gsub("\\d{6}", format(date, "%m%d%y"), file)
+    file <- gsub("(?<=v50-)[^\\.]*(?=\\.)", exchange, file, perl = TRUE)
+    
+  } else if (grepl("(?<!NASDAQ)_ITCH", file, perl = TRUE)) { # 20170130.BX_ITCH_50.gz
+    
+    file <- gsub("\\d{8}", format(date, "%Y%m%d"), file)
+    file <- gsub("(?<=\\d{8}\\.)[^_]+", exchange, file, perl = TRUE)
+    
+  } else {
+    
+    # Unkown format... use 20101224.TEST_ITCH_50
+    has_gz <- grepl("\\.gz$", file)
+    if (has_gz) file <- gsub("\\.gz$", "", file)
+    file <- gsub("\\.?_?ITCH_?50", "", file)
+    
+    file <- paste0(
+      file,
+      "_",
+      format(date, "%Y%m%d"),
+      ".",
+      exchange,
+      "_ITCH_50"
+    )
+    
+    if (has_gz) file <- paste0(file, ".gz")
+  }
+  
+  return(file)
+}
+
+
 
 #' Opens the ITCH Specification PDF
 #'
