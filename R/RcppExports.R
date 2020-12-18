@@ -61,3 +61,7 @@ gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
 }
 
+write_itch_impl <- function(ll, filename, append, gz, max_buffer_size, quiet) {
+    .Call('_RITCH_write_itch_impl', PACKAGE = 'RITCH', ll, filename, append, gz, max_buffer_size, quiet)
+}
+

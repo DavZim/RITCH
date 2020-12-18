@@ -15,8 +15,6 @@
 library(RITCH)
 library(data.table)
 
-Rcpp::sourceCpp("debug/debug_tools.cpp")
-
 # take 3 most traded stocks in orders, trades
 file <- "20191230.BX_ITCH_50"
 
@@ -218,8 +216,9 @@ ll <- list(
 # write the dataset to file
 if (!dir.exists("inst/extdata")) dir.create("inst/extdata")
 outfile <- "inst/extdata/ex20101224.TEST_ITCH_50"
-dbg_write_itch(ll, outfile)
-dbg_write_itch(ll, outfile, gz = TRUE)
+
+write_itch(ll, outfile, add_meta = FALSE, quiet = TRUE)
+write_itch(ll, outfile, compress = TRUE, add_meta = FALSE, quiet = TRUE)
 
 cat(sprintf("Wrote sample dataset to '%s' with size '%.2f'KB\n", 
             outfile, file.info(outfile)[["size"]] / 1024))

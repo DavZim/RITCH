@@ -277,6 +277,22 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// write_itch_impl
+int64_t write_itch_impl(Rcpp::List ll, std::string filename, bool append, bool gz, size_t max_buffer_size, bool quiet);
+RcppExport SEXP _RITCH_write_itch_impl(SEXP llSEXP, SEXP filenameSEXP, SEXP appendSEXP, SEXP gzSEXP, SEXP max_buffer_sizeSEXP, SEXP quietSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type ll(llSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< bool >::type append(appendSEXP);
+    Rcpp::traits::input_parameter< bool >::type gz(gzSEXP);
+    Rcpp::traits::input_parameter< size_t >::type max_buffer_size(max_buffer_sizeSEXP);
+    Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(write_itch_impl(ll, filename, append, gz, max_buffer_size, quiet));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_getMessageCountDF", (DL_FUNC) &_RITCH_getMessageCountDF, 3},
@@ -294,6 +310,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_getNOII_impl", (DL_FUNC) &_RITCH_getNOII_impl, 9},
     {"_RITCH_getRPII_impl", (DL_FUNC) &_RITCH_getRPII_impl, 9},
     {"_RITCH_gunzipFile_impl", (DL_FUNC) &_RITCH_gunzipFile_impl, 3},
+    {"_RITCH_write_itch_impl", (DL_FUNC) &_RITCH_write_itch_impl, 6},
     {NULL, NULL, 0}
 };
 
