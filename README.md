@@ -11,15 +11,15 @@
 The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol,
 which is used to distribute financial messages to participants. Messages
 include orders, trades, market status, and much more financial
-information. A full list of messages is shown later.
+information. A full list of messages is shown later. The main purpose of
+this package is to parse the binary ITCH files to a
+[`data.table`](https://CRAN.R-project.org/package=data.table) in `R`.
 
-The main purpose of this package is to parse the binary files to a
-`data.table` in `R`.
-
-The package leverages `Rcpp`/`C++` for efficient message parsing. As an
-example, parsing 100 million orders from the `01302020.NASDAQ_ITCH50.gz`
-NASDAQ sample file (13 GB uncompressed) takes around 30 seconds or 0.3
-secs per 1 million orders.
+The package leverages [`Rcpp`](https://CRAN.R-project.org/package=Rcpp)
+and `C++` for efficient message parsing. As an example, parsing 100
+million orders from the `01302020.NASDAQ_ITCH50.gz` NASDAQ sample file
+(13 GB uncompressed) takes around 30 seconds or 0.3 secs per 1 million
+orders.
 
 Note that the package provides a small simulated sample dataset in the
 `ITCH_50` format for testing and example purposes. Helper functions are
@@ -46,15 +46,19 @@ The main functions of `RITCH` are read-related and are easily identified
 by their `read_` prefix.
 
 Due to the inherent structural differences between message classes, each
-class has its own read function.
+class has its own read function. A list of message types and the
+respective classes are provided later in this Readme.
 
 Example message classes used in this example are *orders* and *trades*.
-First we define the file to load and count the messages in the file,
-then we read in the orders and the first 100 trades
+First we define the file to load and count the messages, then we read in
+the orders and the first 100 trades
 
 ``` r
 library(RITCH)
+# use built in example dataset
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+
+# count the number of messages in the file
 msg_count <- count_messages(file)
 #> [Counting]   12,012 messages found
 #> [Converting] to data.table
@@ -65,6 +69,7 @@ str(msg_count)
 #>  $ count   :integer64 6 3 3 0 0 0 0 0 ... 
 #>  - attr(*, ".internal.selfref")=<externalptr>
 
+# read the orders into a data.table
 orders <- read_orders(file)
 #> [Counting]   5,000 messages found
 #> [Loading]    .
@@ -87,6 +92,7 @@ str(orders)
 #>  $ exchange       : chr  "TEST" "TEST" "TEST" "TEST" ...
 #>  - attr(*, ".internal.selfref")=<externalptr>
 
+# read the first 100 trades
 trades <- read_trades(file, n_max = 100)
 #> NOTE: as n_max overrides counting the messages, the numbers for messages may be off.
 #> [Counting]   100 messages found
@@ -116,6 +122,114 @@ Note that the file can be a plain `ITCH_50` file or a gzipped
 `ITCH_50.gz` file, which will be decompressed to the current directory.
 
 If you want to know more about the functions of the package, read on.
+
+## Writing ITCH Files
+
+`RITCH` also provides functionality for writing ITCH files. Although it
+could be stored in other file formats (for example a database or a
+[`qs`](https://CRAN.R-project.org/package=qs) file), ITCH files are
+quite optimized regarding size as well as write/read speeds. Thus the
+`write_itch()` function allows you to write a single or multiple types
+of message to an `ITCH_50` file. Note however, that only the standard
+columns are supported. Additional columns will not be written to file!
+
+Additional information can be saved in the filename. By default the
+date, exchange, and fileformat information is added to the filename
+unless you specify `add_meta = FALSE`, in which case the given name is
+used.
+
+As a last note: if you write your data to an ITCH file and want to
+filter for stocks later on, make sure to save the stock directory of
+that day/exchange, either externally or in the ITCH file directly (see
+example below).
+
+### Simple Write Example
+
+A simple write example would be to read all modifications from an ITCH
+file and save it to a separate file to save space, reduce read times
+later on, etc.
+
+``` r
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+md <- read_modifications(file, quiet = TRUE)
+dim(md)
+#> [1] 2000   13
+
+outfile <- write_itch(md, "modifications", compress = TRUE)
+#> [Counting]   2,000 messages (44,748 bytes) found
+#> [Converting] to binary .
+#> [Writing]    to file
+#> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
+#> [Done]       in 0.01 secs
+
+# compare file sizes
+files <- c(full_file = file, subset_file = outfile)
+sapply(files, function(x) file.info(x)[["size"]])
+#>   full_file subset_file 
+#>      465048       23950
+```
+
+### Comprehensive Write Example
+
+A typical work flow would look like this:
+
+-   read in some message classes from file and filter for certain stocks
+-   save the results for later analysis, also compress to save disk
+    space
+
+``` r
+## Read in the different message classes
+file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+
+# create a list of functions which are used to read the data, in this case:
+# system_events, stock_directory, and orders
+read_functions <- list(
+  system_event = read_system_events, 
+  stock_directory = read_stock_directory, 
+  orders = read_orders)
+
+# read in the different message types
+data <- lapply(
+  read_functions, 
+  function(f) f(file, filter_stock_locate = c(1, 3), quiet = TRUE)
+)
+str(data, max.level = 1)
+#> List of 3
+#>  $ system_event   :Classes 'data.table' and 'data.frame':    6 obs. of  8 variables:
+#>   ..- attr(*, ".internal.selfref")=<externalptr> 
+#>  $ stock_directory:Classes 'data.table' and 'data.frame':    2 obs. of  21 variables:
+#>   ..- attr(*, ".internal.selfref")=<externalptr> 
+#>  $ orders         :Classes 'data.table' and 'data.frame':    2518 obs. of  13 variables:
+#>   ..- attr(*, ".internal.selfref")=<externalptr>
+
+
+## Write the different message classes
+outfile <- write_itch(data, "alc_char_subset", compress = TRUE)
+#> [Counting]   2,526 messages (95,850 bytes) found
+#> [Converting] to binary .
+#> [Writing]    to file
+#> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
+#> [Done]       in 0.01 secs
+outfile
+#> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
+
+# compare file sizes
+files <- c(full_file = file, subset_file = outfile)
+sapply(files, function(x) file.info(x)[["size"]])
+#>   full_file subset_file 
+#>      465048       37951
+
+
+## Lastly, compare the two datasets to see if they are identical
+data2 <- lapply(read_functions, function(f) f(outfile, quiet = TRUE))
+all.equal(data, data2)
+#> [1] TRUE
+```
+
+For comparison, the same format in the
+[`qs`](https://CRAN.R-project.org/package=qs) format results in `44956`
+bytes.
+<!---qs::qsave(data, "data.qs", preset = "archive");file.info("data.qs")[["size"]]-->
 
 ## ITCH Messages
 
@@ -164,31 +278,30 @@ To access the dataset use:
 
 ``` r
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-count_messages(file, quiet = TRUE)
-#>     msg_type count
-#>  1:        S     6
-#>  2:        R     3
-#>  3:        H     3
-#>  4:        Y     0
-#>  5:        L     0
-#>  6:        V     0
-#>  7:        W     0
-#>  8:        K     0
-#>  9:        J     0
-#> 10:        h     0
-#> 11:        A  4997
-#> 12:        F     3
-#> 13:        E   198
-#> 14:        C     0
-#> 15:        X    45
-#> 16:        D  1745
-#> 17:        U    12
-#> 18:        P  5000
-#> 19:        Q     0
-#> 20:        B     0
-#> 21:        I     0
-#> 22:        N     0
-#>     msg_type count
+count_messages(file, add_meta_data = TRUE, quiet = TRUE)
+#>     msg_type count                                  msg_name                 msg_class  doc_nr
+#>  1:        S     6                      System Event Message             System Events     4.1
+#>  2:        R     3                           Stock Directory           Stock Directory   4.2.1
+#>  3:        H     3                      Stock Trading Action            Trading Status   4.2.2
+#>  4:        Y     0                       Reg SHO Restriction                   Reg SHO   4.2.3
+#>  5:        L     0               Market Participant Position Market Participant States   4.2.4
+#>  6:        V     0                MWCB Decline Level Message                      MWCB 4.2.5.1
+#>  7:        W     0                       MWCB Status Message                      MWCB 4.2.5.2
+#>  8:        K     0                 IPO Quoting Period Update                       IPO   4.2.6
+#>  9:        J     0                       LULD Auction Collar                      LULD   4.2.7
+#> 10:        A  4997                         Add Order Message                    Orders   4.3.1
+#> 11:        F     3      Add Order - MPID Attribution Message                    Orders   4.3.2
+#> 12:        E   198                    Order Executed Message                    Orders   4.4.1
+#> 13:        C     0 Order Executed Message With Price Message             Modifications   4.4.2
+#> 14:        X    45                      Order Cancel Message             Modifications   4.4.3
+#> 15:        D  1745                      Order Delete Message             Modifications   4.4.4
+#> 16:        U    12                     Order Replace Message             Modifications   4.4.5
+#> 17:        P  5000                 Trade Message (Non-Cross)                    Trades   4.5.1
+#> 18:        Q     0                       Cross Trade Message                    Trades   4.5.2
+#> 19:        B     0                      Broken Trade Message                    Trades   4.5.3
+#> 20:        I     0                              NOII Message                      NOII     4.6
+#> 21:        N     0                   Retail Interest Message                      RPII     4.7
+#>     msg_type count                                  msg_name                 msg_class  doc_nr
 ```
 
 Note that the example dataset does not contain messages from all classes
@@ -198,18 +311,19 @@ seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
 MASDAQ provides sample ITCH files on their official FTP server at
-<ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`).
+<ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`) which can
+be used to test code on larger datasets. Note that the sample files are
+up to 5GB compressed, which inflate to about 13GB. To interact with the
+sample files, use `list_sample_files()` and `download_sample_files()`.
 
-To interact with the sample files, use `list_sample_files()` and
-`download_sample_files()`. Note that the sample files are up to 5GB
-compressed, which inflate to 13GB.
-
-## Notes
+## Notes on Memory and Speed
 
 There are some tweaks available to deal with memory and speed issues.
 For faster reading speeds, you can increase the buffer size of the
 `read_` functions to something around 1 GB or more
 (`buffer_size = 1e9`).
+
+### Provide Message Counts
 
 If you have to read from a single file multiple times, for example
 because you want to extract orders and trades, you can count the
@@ -224,6 +338,8 @@ n_msgs <- count_messages(file, quiet = TRUE)
 orders <- read_orders(file, quiet = TRUE, n_max = n_msgs)
 trades <- read_trades(file, quiet = TRUE, n_max = n_msgs)
 ```
+
+### Batch Read
 
 If the dataset does not fit entirely into RAM, you can do a partial read
 specifying `skip` and `n_max`, similar to this:
@@ -254,6 +370,8 @@ while (n_parsed < n_messages) {
 #> Parsing Batch 3000 - 4000: with 1000 orders
 #> Parsing Batch 4000 - 5000: with 1000 orders
 ```
+
+### Filter Data
 
 You can also filter a dataset directly while reading messages for
 `msg_type`, `stock_locate`, `timestamp` range, as well as `stock`. Note
@@ -297,8 +415,8 @@ od[, .(n = .N), by = .(stock_locate, stock)]
 #> 2:            1   ALC 508
 ```
 
-If you are interested in writing `ITCH_50` files or gaining a better
-understanding of the internal data structures, have a look at the
+If you are interested in gaining a better understanding of the internal
+data structures, converting data to and from binary, have a look at the
 `debug` folder and its contents.
 
 ### Create a Plot with Trades and Orders of the largest ETFs
@@ -334,14 +452,8 @@ ggplot() +
 
 ## Open Issues
 
-To move the package towards CRAN, I want to include a smaller data file
-containing fake or simulated data, this needs to be converted to the
-ITCH format. This would allow the example code to run, but also to
-properly use unit tests in the package.
-
 If you find this package useful or have any other kind of feedback, I’d
-be happy if you let me know. Otherwise, if you need more functionality
-for additional message types, please feel free to create an issue or a
-pull request.
+be happy if you let me know. Otherwise, if you need more functionality,
+please feel free to create an issue or a pull request.
 
 Citation and CRAN release are WIP.
