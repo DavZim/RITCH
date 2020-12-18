@@ -34,7 +34,8 @@
 #'  Note that this can be used to only return 'A' orders for instance.
 #' @param filter_stock_locate an integer vector, specifying a filter for locate codes.
 #'  The locate codes can be looked up by calling \code{\link{read_stock_directory}}.
-#'  Note that some message types (e.g., system events) do not use a locate code.
+#'  Note that some message types (e.g., system events, MWCB, and IPO) do not use
+#'  a locate code.
 #' @param min_timestamp an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
 #'  of minimum timestamp (inclusive). 
 #'  Note: min and max timestamp must be supplied with the same length or left empty.
@@ -354,6 +355,8 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
   dots$type <- "system_events"
+  dots$filter_stock_locate <- NA_integer_
+  dots$filter_stock <- NA_character_
   res <- do.call(read_ITCH, dots)
   
   if (add_descriptions) {
@@ -578,6 +581,8 @@ read_mwcb <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
   dots$type <- "mwcb"
+  dots$filter_stock_locate <- NA_integer_
+  dots$filter_stock <- NA_character_
   do.call(read_ITCH, dots)
 }
 
@@ -596,6 +601,8 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
   dots$type <- "ipo"
+  dots$filter_stock_locate <- NA_integer_
+  dots$filter_stock <- NA_character_
   res <- do.call(read_ITCH, dots)
   
   if (add_descriptions) {
