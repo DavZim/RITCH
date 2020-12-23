@@ -5,6 +5,29 @@
 
 using namespace Rcpp;
 
+// count_messages_impl
+Rcpp::NumericVector count_messages_impl(std::string filename, int64_t max_buffer_size, bool quiet);
+RcppExport SEXP _RITCH_count_messages_impl(SEXP filenameSEXP, SEXP max_buffer_sizeSEXP, SEXP quietSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type max_buffer_size(max_buffer_sizeSEXP);
+    Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_messages_impl(filename, max_buffer_size, quiet));
+    return rcpp_result_gen;
+END_RCPP
+}
+// show_diff
+void show_diff(Rcpp::CharacterVector x);
+RcppExport SEXP _RITCH_show_diff(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type x(xSEXP);
+    show_diff(x);
+    return R_NilValue;
+END_RCPP
+}
 // getMessageCountDF
 Rcpp::DataFrame getMessageCountDF(std::string filename, int64_t bufferSize, bool quiet);
 RcppExport SEXP _RITCH_getMessageCountDF(SEXP filenameSEXP, SEXP bufferSizeSEXP, SEXP quietSEXP) {
@@ -295,6 +318,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RITCH_count_messages_impl", (DL_FUNC) &_RITCH_count_messages_impl, 3},
+    {"_RITCH_show_diff", (DL_FUNC) &_RITCH_show_diff, 1},
     {"_RITCH_getMessageCountDF", (DL_FUNC) &_RITCH_getMessageCountDF, 3},
     {"_RITCH_getOrders_impl", (DL_FUNC) &_RITCH_getOrders_impl, 9},
     {"_RITCH_getTrades_impl", (DL_FUNC) &_RITCH_getTrades_impl, 9},

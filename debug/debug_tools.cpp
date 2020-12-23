@@ -202,10 +202,6 @@ void dbg_itch_file(std::string filename = "20191230.BX_ITCH_50",
       return;
   }
     unsigned char num = bufferPtr[idx + 2];
-    const bool iis_itch_message = std::find(ITCH::TYPES.begin(),
-                                            ITCH::TYPES.end(), 
-                                            num) != ITCH::TYPES.end();
-
     const int l = getMessageLength(num) + 2;
     // Rprintf("At offset '0x%04x' msg '%c' msg len %i (0x%04x)\n", idx, num, l, l);
     
@@ -534,7 +530,7 @@ uint64_t parse_orders_at(unsigned char * buf, Rcpp::DataFrame df,
                         uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::NumericVector   order_ref       = df["order_ref"];
@@ -572,7 +568,7 @@ uint64_t parse_trades_at(unsigned char * buf, Rcpp::DataFrame df,
                          uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::NumericVector   order_ref       = df["order_ref"];
@@ -636,7 +632,7 @@ uint64_t parse_modifications_at(unsigned char * buf, Rcpp::DataFrame df,
                                 uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::NumericVector   order_ref       = df["order_ref"];
@@ -697,7 +693,7 @@ uint64_t parse_system_events_at(unsigned char * buf, Rcpp::DataFrame df,
                                 uint64_t msg_num) {
 
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::CharacterVector event_code      = df["event_code"];
@@ -722,7 +718,7 @@ uint64_t parse_stock_directory_at(unsigned char * buf, Rcpp::DataFrame df,
                                   uint64_t msg_num) {
     
   Rcpp::CharacterVector msg_type             = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate          = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate         = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number      = df["tracking_number"];
   Rcpp::NumericVector   timestamp            = df["timestamp"];
   Rcpp::CharacterVector stock                = df["stock"];
@@ -774,7 +770,7 @@ uint64_t parse_trading_status_at(unsigned char * buf, Rcpp::DataFrame df,
                                  uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type         = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate      = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number  = df["tracking_number"];
   Rcpp::NumericVector   timestamp        = df["timestamp"];
   Rcpp::CharacterVector stock            = df["stock"];
@@ -820,7 +816,7 @@ uint64_t parse_reg_sho_at(unsigned char * buf, Rcpp::DataFrame df,
                           uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::CharacterVector stock           = df["stock"];
@@ -847,7 +843,7 @@ uint64_t parse_market_participants_states_at(unsigned char * buf, Rcpp::DataFram
                                              uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type          = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate       = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate      = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number   = df["tracking_number"];
   Rcpp::NumericVector   timestamp         = df["timestamp"];
   Rcpp::CharacterVector mpid              = df["mpid"];
@@ -880,7 +876,7 @@ uint64_t parse_mwcb_at(unsigned char * buf, Rcpp::DataFrame df,
                       uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::NumericVector   level1          = df["level1"];
@@ -921,7 +917,7 @@ uint64_t parse_ipo_at(unsigned char * buf, Rcpp::DataFrame df,
                       uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type          = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate       = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate      = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number   = df["tracking_number"];
   Rcpp::NumericVector   timestamp         = df["timestamp"];
   Rcpp::CharacterVector stock             = df["stock"];
@@ -952,7 +948,7 @@ uint64_t parse_luld_at(unsigned char * buf, Rcpp::DataFrame df,
                        uint64_t msg_num) {
     
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::CharacterVector stock           = df["stock"];
@@ -986,7 +982,7 @@ uint64_t parse_noii_at(unsigned char * buf, Rcpp::DataFrame df,
                        uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type            = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate         = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate        = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number     = df["tracking_number"];
   Rcpp::NumericVector   timestamp           = df["timestamp"];
   Rcpp::NumericVector   paired_shares       = df["paired_shares"];
@@ -1030,7 +1026,7 @@ uint64_t parse_rpii_at(unsigned char * buf, Rcpp::DataFrame df,
                        uint64_t msg_num) {
     
   Rcpp::CharacterVector msg_type        = df["msg_type"];
-  Rcpp::IntegerVector   stock_locate     = df["stock_locate"];
+  Rcpp::IntegerVector   stock_locate    = df["stock_locate"];
   Rcpp::IntegerVector   tracking_number = df["tracking_number"];
   Rcpp::NumericVector   timestamp       = df["timestamp"];
   Rcpp::CharacterVector stock           = df["stock"];
