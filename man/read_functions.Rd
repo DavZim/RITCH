@@ -2,10 +2,7 @@
 % Please edit documentation in R/read_functions.R
 \name{read_functions}
 \alias{read_functions}
-\alias{read_ITCH}
-\alias{read_orders}
-\alias{read_trades}
-\alias{read_modifications}
+\alias{read_itch}
 \alias{read_system_events}
 \alias{read_stock_directory}
 \alias{read_trading_status}
@@ -14,6 +11,9 @@
 \alias{read_mwcb}
 \alias{read_ipo}
 \alias{read_luld}
+\alias{read_orders}
+\alias{read_modifications}
+\alias{read_trades}
 \alias{read_noii}
 \alias{read_rpii}
 \alias{get_orders}
@@ -21,9 +21,9 @@
 \alias{get_modifications}
 \title{Reads certain messages of an ITCH-file into a data.table}
 \usage{
-read_ITCH(
+read_itch(
   file,
-  type,
+  msg_class,
   skip = 0,
   n_max = -1,
   filter_msg_type = NA_character_,
@@ -39,17 +39,11 @@ read_ITCH(
   force_cleanup = FALSE
 )
 
-read_orders(file, ...)
-
-read_trades(file, ...)
-
-read_modifications(file, ...)
-
 read_system_events(file, ..., add_descriptions = FALSE)
 
 read_stock_directory(file, ..., add_descriptions = FALSE)
 
-read_trading_status(file, ..., add_descriptions = FALSE)
+read_trading_status(file, ...)
 
 read_reg_sho(file, ..., add_descriptions = FALSE)
 
@@ -60,6 +54,12 @@ read_mwcb(file, ...)
 read_ipo(file, ..., add_descriptions = FALSE)
 
 read_luld(file, ...)
+
+read_orders(file, ...)
+
+read_modifications(file, ...)
+
+read_trades(file, ...)
 
 read_noii(file, ..., add_descriptions = FALSE)
 
@@ -74,13 +74,13 @@ get_modifications(file, ...)
 \arguments{
 \item{file}{the path to the input file, either a gz-file or a plain ITCH file}
 
-\item{type}{the type to load, can be "orders", "trades", "modifications", ... Only applies to the read_ITCH() function.}
+\item{msg_class}{the class to load, can be "orders", "trades", "modifications", ... Only applies to the read_itch() function.}
 
-\item{skip}{Number of messages to skip before starting parsing messages, 
+\item{skip}{Number of messages to skip before starting parsing messages,
 note it only applies to messages of this type.}
 
 \item{n_max}{Maximum number of messages to parse, default is to read all values.
-Can also be a data.frame of msg_types and counts, as returned by 
+Can also be a data.frame of msg_types and counts, as returned by
 \code{\link{count_messages}}}
 
 \item{filter_msg_type}{a character vector, specifying a filter for message types.
@@ -92,7 +92,7 @@ Note that some message types (e.g., system events, MWCB, and IPO) do not use
 a locate code.}
 
 \item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
-of minimum timestamp (inclusive). 
+of minimum timestamp (inclusive).
 Note: min and max timestamp must be supplied with the same length or left empty.}
 
 \item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
@@ -106,11 +106,11 @@ if this is not found, it will try to extract the stock directory from the file,
 else an error is thrown.}
 
 \item{stock_directory}{A data.frame containing the stock-locate code relationship.
-As outputted by \code{\link{read_stock_directory}}. 
+As outputted by \code{\link{read_stock_directory}}.
 Only used if \code{filter_stock} is set. To download the stock directory from
 NASDAQs FTP server, use \code{\link{download_stock_directory}}.}
 
-\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), 
+\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB),
 if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{quiet}{if TRUE, the status messages are suppressed, defaults to FALSE}
@@ -122,7 +122,7 @@ if set to TRUE, the existing file is overwritten. Default value is FALSE}
 
 \item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 
-\item{...}{Additional arguments passed to \code{read_ITCH}}
+\item{...}{Additional arguments passed to \code{read_itch}}
 
 \item{add_descriptions}{add longer descriptions to shortened variables.
 The added information is taken from the official ITCH documentation
@@ -135,19 +135,19 @@ a data.table containing the messages
 For faster file-reads (at the tradeoff of increased memory usages), you can
 increase the \code{buffer_size} to 1GB (1e9) or more.
 
-If you read multiple different message types from the same file, you can 
+If you read multiple different message types from the same file, you can
 provide the message counts as outputted from \code{\link{count_messages}} to
-the \code{n_max} argument, this allows skipping one pass over the 
-file per read instruction. 
+the \code{n_max} argument, this allows skipping one pass over the
+file per read instruction.
 
 If the file is too large to be loaded into the workspace at once, you can
 specify different \code{skip} and \code{n_max} to load only
 a specific range of messages.
 
-Note that all read functions allow both plain ITCH files as well as gzipped 
+Note that all read functions allow both plain ITCH files as well as gzipped
 files. If a gzipped file is found, it will look for a plain ITCH file with
-the same name and use that instead. If this file is not found, it will be 
-created. Use \code{force_cleanup = TRUE} to force the deletion of the 
+the same name and use that instead. If this file is not found, it will be
+created. Use \code{force_cleanup = TRUE} to force the deletion of the
 unzipped file after use.
 }
 \details{
@@ -155,72 +155,8 @@ The details of the different messages types can be found in the official
 ITCH specification (see also \code{\link{open_itch_specification}})
 
 \itemize{
- \item{\code{read_ITCH}: Generic function called by the other read 
+ \item{\code{read_itch}: Generic function called by the other read
    functions.}
-}
-
-\itemize{
- \item{\code{read_orders}: Reads order messages. Message type \code{A} and 
-   \code{F}}
-}
-
-\itemize{
- \item{\code{read_trades}: Reads trade messages. Message type \code{P}, 
-   \code{Q} and \code{B}}
-}
-
-\itemize{
- \item{\code{read_modifications}: Reads order modification messages. Message 
-   type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}}
-}
-
-\itemize{
- \item{\code{read_system_events}: Reads system event messages. Message type 
-   \code{S}}
-}
-
-\itemize{
- \item{\code{read_stock_directory}: Reads stock trading messages. Message 
-   type \code{R}}
-}
-
-\itemize{
- \item{\code{read_trading_status}: Reads trading status messages. Message 
-   type \code{H} and \code{h}}
-}
-
-\itemize{
- \item{\code{read_reg_sho}: Reads messages regarding reg SHO. Message type 
-   \code{Y}}
-}
-
-\itemize{
- \item{\code{read_market_participant_states}: Reads messages regarding the 
-   status of market participants. Message type \code{L}}
-}
-
-\itemize{
- \item{\code{read_mwcb}: Reads messages regarding Market-Wide-Circuit-Breakers
-   (MWCB). Message type \code{V} and \code{W}}
-}
-
-\itemize{
- \item{\code{read_ipo}: Reads messages regarding IPOs. Message type \code{K}}
-}
-
-\itemize{
- \item{\code{read_luld}: Reads messages regarding LULDs (limit up-limit down)
-   auction collars. Message type \code{J}}
-}
-
-\itemize{
- \item{\code{read_noii}: Reads Net Order Imbalance Indicatio (NOII) messages. 
-   Message type \code{I}}
-}
-
-\itemize{
- \item{\code{read_rpii}: Reads Retail Price Improvement Indicator (RPII) 
-   messages. Message type \code{N}}
 }
 
 For backwards compatability reasons, the following functions are provided as
@@ -238,7 +174,9 @@ tr <- read_trades(file)
 md <- read_modifications(file)
 
 ## Alternatively 
-od <- read_ITCH(file, "orders")
+od <- read_itch(file, "orders")
+
+ll <- read_itch(file, c("orders", "trades", "modifications"))
 
 str(od)
 str(tr)
@@ -261,54 +199,6 @@ gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH
 od <- read_orders(gz_file)
 # force a decompress and delete the decompressed file afterwards
 od <- read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
-
-
-## read_orders()
-read_orders(file)
-
-## read_trades()
-read_trades(file)
-
-## read_modifications()
-read_modifications(file)
-
-## read_system_events()
-read_system_events(file)
-read_system_events(file, add_descriptions = TRUE)
-
-## read_stock_directory()
-read_stock_directory(file)
-read_stock_directory(file, add_descriptions = TRUE)
-
-## read_trading_status()
-read_trading_status(file)
-read_trading_status(file, add_descriptions = TRUE)
-
-## read_reg_sho()
-read_reg_sho(file)
-read_reg_sho(file, add_descriptions = TRUE)
-
-## read_market_participant_states()
-read_market_participant_states(file)
-read_market_participant_states(file, add_descriptions = TRUE)
-
-## read_mwcb()
-read_mwcb(file)
-
-## read_ipo()
-read_ipo(file)
-read_ipo(file, add_descriptions = TRUE)
-
-## read_luld()
-read_luld(file)
-
-## read_noii()
-read_noii(file)
-read_noii(file, add_descriptions = TRUE)
-
-## read_rpii()
-read_rpii(file)
-read_rpii(file, add_descriptions = TRUE)
 }
 \references{
 \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}

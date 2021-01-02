@@ -2,6 +2,7 @@
 % Please edit documentation in R/count_functions.R
 \name{count_functions}
 \alias{count_functions}
+\alias{count_messages}
 \alias{count_orders}
 \alias{count_trades}
 \alias{count_modifications}
@@ -15,8 +16,17 @@
 \alias{count_luld}
 \alias{count_noii}
 \alias{count_rpii}
-\title{Counts the number of messages in a group from a data.table of message counts}
+\title{Counts the messages of an ITCH-file}
 \usage{
+count_messages(
+  file,
+  add_meta_data = FALSE,
+  buffer_size = -1,
+  quiet = FALSE,
+  force_gunzip = FALSE,
+  force_cleanup = FALSE
+)
+
 count_orders(x)
 
 count_trades(x)
@@ -44,17 +54,30 @@ count_noii(x)
 count_rpii(x)
 }
 \arguments{
-\item{x}{a file or a data.frame containing the message types and the counts}
+\item{file}{the path to the input file, either a gz-file or a plain-text file}
+
+\item{add_meta_data}{if the meta-data of the messages should be added, defaults to FALSE}
+
+\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), if you have a large amount of RAM, 1e9 (1GB) might be faster}
+
+\item{quiet}{if TRUE, the status messages are supressed, defaults to FALSE}
+
+\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
+
+\item{x}{a file or a data.table containing the message types and the counts,
+as outputted by \code{count_messages}}
 }
 \value{
-a numeric value of number of orders in x
+a data.table containing the message-type and their counts for \code{count_messages}
+ or an integer value for the other functions.
 }
 \description{
-Counts the number of messages in a group from a data.table of message counts
+Counts the messages of an ITCH-file
 }
 \details{
-The count functions apply to all message groups.
-
 \itemize{
  \item{\code{count_orders}: Counts order messages. Message type \code{A} and 
    \code{F}}
@@ -121,31 +144,33 @@ The count functions apply to all message groups.
 }
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-msg_count <- count_messages(file, quiet = TRUE)
+count_messages(file)
+count_messages(file, add_meta_data = TRUE)
 
+gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+count_messages(gz_file)
+
+# count only a specific class
+msg_count <- count_messages(file)
+
+# either count based on a given data.table outputted by count_messages
 count_orders(msg_count)
 
+# or count messages in a file
+count_orders(file)
+
+### Specific class count functions are:
+count_orders(msg_count)
 count_trades(msg_count)
-
 count_modifications(msg_count)
-
 count_system_events(msg_count)
-
 count_stock_directory(msg_count)
-
 count_trading_status(msg_count)
-
 count_reg_sho(msg_count)
-
 count_market_participant_states(msg_count)
-
 count_mwcb(msg_count)
-
 count_ipo(msg_count)
-
 count_luld(msg_count)
-
 count_noii(msg_count)
-
 count_rpii(msg_count)
 }

@@ -119,7 +119,6 @@ add_meta_to_filename <- function(file, date, exchange) {
 }
 
 
-
 #' Opens the ITCH Specification PDF
 #'
 #' The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.

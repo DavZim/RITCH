@@ -1,8 +1,8 @@
-#include "write_itch_impl.h"
+#include "write_functions.h"
 
 // sets inside a char buffer b, 2 bytes from the value val, returns number of bytes changed
 // i.e., convert val = 8236 to 0x202c
-uint64_t set2bytes(unsigned char* b, int32_t val) {
+uint64_t set2bytes(char* b, int32_t val) {
   b[1] = val         & 0xff;
   b[0] = (val >> 8)  & 0xff;
   // Rprintf("Converting: %15i -> 0x %02x %02x\n",
@@ -12,7 +12,7 @@ uint64_t set2bytes(unsigned char* b, int32_t val) {
 
 // sets inside a char buffer b, 4 bytes from the value val, returns number of bytes changed
 // i.e., convert val = 11900 to 0x00002e7c
-uint64_t set4bytes(unsigned char* b, int32_t val) {
+uint64_t set4bytes(char* b, int32_t val) {
   b[3] = val         & 0xffff;
   b[2] = (val >> 8)  & 0xffff;
   b[1] = (val >> 16) & 0xffff;
@@ -23,7 +23,7 @@ uint64_t set4bytes(unsigned char* b, int32_t val) {
 }
 // sets inside a char buffer b, 6 bytes from the value val, returns number of bytes changed
 // i.e., 25200002107428 to 0x16eb552c8824
-uint64_t set6bytes(unsigned char* b, int64_t val) {
+uint64_t set6bytes(char* b, int64_t val) {
   b[5] = val         & 0xffffff;
   b[4] = (val >> 8)  & 0xffffff;
   b[3] = (val >> 16) & 0xffffff;
@@ -36,7 +36,7 @@ uint64_t set6bytes(unsigned char* b, int64_t val) {
 }
 // sets inside a char buffer b, 8 bytes from the value val, returns number of bytes changed
 // i.e., 4 to 0x0000000000000004
-uint64_t set8bytes(unsigned char* b, int64_t val) {
+uint64_t set8bytes(char* b, int64_t val) {
   b[7] = val         & 0xffffffff;
   b[6] = (val >> 8)  & 0xffffffff;
   b[5] = (val >> 16) & 0xffffffff;
@@ -51,8 +51,8 @@ uint64_t set8bytes(unsigned char* b, int64_t val) {
 }
 // sets inside a char buffer b, n bytes from the string x, returns number of bytes changed
 // i.e., "UFO" with 8 to 0x55534f2020202020 (filled with whitespaces)
-uint64_t setCharBytes(unsigned char* b, std::string x, uint64_t n) {
-  unsigned char st[n + 1];
+uint64_t setCharBytes(char* b, std::string x, uint64_t n) {
+  char *st = new char[n + 1];
   if (x.size() > n) Rprintf("ERROR: setChar Bytes for string '%s' larger than capacity %i\n", x.c_str(), n);
   for (uint64_t j = 0; j < n; j++) st[j] = ' '; // fill with n spaces
   for (uint64_t j = 0; j < x.size(); j++) st[j] = x[j]; // copy the string x
@@ -72,7 +72,7 @@ uint64_t setCharBytes(unsigned char* b, std::string x, uint64_t n) {
  */
 
 // orders 
-uint64_t parse_orders_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_orders_at(char * buf, Rcpp::DataFrame df, 
                          uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -111,7 +111,7 @@ uint64_t parse_orders_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // trades
-uint64_t parse_trades_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_trades_at(char * buf, Rcpp::DataFrame df, 
                          uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -176,7 +176,7 @@ uint64_t parse_trades_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // modifications
-uint64_t parse_modifications_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_modifications_at(char * buf, Rcpp::DataFrame df, 
                                 uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -237,7 +237,7 @@ uint64_t parse_modifications_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // system_events
-uint64_t parse_system_events_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_system_events_at(char * buf, Rcpp::DataFrame df, 
                                 uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -262,7 +262,7 @@ uint64_t parse_system_events_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // stock_directory
-uint64_t parse_stock_directory_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_stock_directory_at(char * buf, Rcpp::DataFrame df, 
                                   uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type             = df["msg_type"];
@@ -314,7 +314,7 @@ uint64_t parse_stock_directory_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // trading_status
-uint64_t parse_trading_status_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_trading_status_at(char * buf, Rcpp::DataFrame df, 
                                  uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type         = df["msg_type"];
@@ -360,7 +360,7 @@ uint64_t parse_trading_status_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // reg_sho
-uint64_t parse_reg_sho_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_reg_sho_at(char * buf, Rcpp::DataFrame df, 
                           uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -387,7 +387,7 @@ uint64_t parse_reg_sho_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // market_participants_states
-uint64_t parse_market_participants_states_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_market_participants_states_at(char * buf, Rcpp::DataFrame df, 
                                              uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type          = df["msg_type"];
@@ -420,7 +420,7 @@ uint64_t parse_market_participants_states_at(unsigned char * buf, Rcpp::DataFram
 }
 
 // mwcb
-uint64_t parse_mwcb_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_mwcb_at(char * buf, Rcpp::DataFrame df, 
                        uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -461,7 +461,7 @@ uint64_t parse_mwcb_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // ipo
-uint64_t parse_ipo_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_ipo_at(char * buf, Rcpp::DataFrame df, 
                       uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type          = df["msg_type"];
@@ -492,7 +492,7 @@ uint64_t parse_ipo_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // luld
-uint64_t parse_luld_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_luld_at(char * buf, Rcpp::DataFrame df, 
                        uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -526,7 +526,7 @@ uint64_t parse_luld_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // noii
-uint64_t parse_noii_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_noii_at(char * buf, Rcpp::DataFrame df, 
                        uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type            = df["msg_type"];
@@ -570,7 +570,7 @@ uint64_t parse_noii_at(unsigned char * buf, Rcpp::DataFrame df,
 }
 
 // rpii
-uint64_t parse_rpii_at(unsigned char * buf, Rcpp::DataFrame df, 
+uint64_t parse_rpii_at(char * buf, Rcpp::DataFrame df, 
                        uint64_t msg_num) {
   
   Rcpp::CharacterVector msg_type        = df["msg_type"];
@@ -598,7 +598,7 @@ uint64_t parse_rpii_at(unsigned char * buf, Rcpp::DataFrame df,
 
 // loads from df at position msg_ct one message into the buffer
 // returns the number of bytes written to the buffer
-int64_t load_message_to_buffer(unsigned char * buf, int64_t &msg_ct,
+int64_t load_message_to_buffer(char * buf, int64_t &msg_ct,
                                Rcpp::DataFrame df) {
   int64_t i = 0;
   Rcpp::CharacterVector vec = df["msg_type"];
@@ -672,7 +672,7 @@ int get_min_val_pos(std::vector<int64_t> &x) {
   return std::distance(x.begin(), min_el);  
 }
 
-void write_buffer_to_file(unsigned char* buf, int64_t size, 
+void write_buffer_to_file(char* buf, int64_t size, 
                           std::string filename, bool append, bool gz) {
   char mode[] = "wb";// append ? "ab" : "wb";
   if (append) mode[0] = 'a';
@@ -744,18 +744,18 @@ int64_t write_itch_impl(Rcpp::List ll, std::string filename,
     
     for (int l = 0; l < mt.size(); l++) {
       const char msg = Rcpp::as<char>(mt[l]);
-      msg_size += getMessageLength(msg) + 2;
+      msg_size += get_message_size(msg);
       total_msgs++;
     }
   }
   if (!quiet) Rprintf("%s messages (%s bytes) found\n",
-      formatThousands(total_msgs).c_str(),
-      formatThousands(msg_size).c_str());
+      format_thousands(total_msgs).c_str(),
+      format_thousands(msg_size).c_str());
   
   // min of max_buffer_size and msg_size, but only 32 bit for buffer - is large enough
   const size_t buff_size = max_buffer_size > msg_size ? msg_size : max_buffer_size;
-  unsigned char * buf;
-  buf = (unsigned char*) calloc(buff_size, sizeof(char));
+  char * buf;
+  buf = (char*) calloc(buff_size, sizeof(char));
   int64_t msg_ct = 0;
   
   // implement multi buffer....
@@ -774,7 +774,7 @@ int64_t write_itch_impl(Rcpp::List ll, std::string filename,
     
     const char msg_type = Rcpp::as<char>(mt[lp_idx]);
     
-    const int64_t msg_length = getMessageLength(msg_type) + 2;
+    const int64_t msg_length = get_message_size(msg_type);
     if (i + msg_length > buff_size) {
       if (!quiet) Rprintf(".");
       // write_buffer
@@ -783,7 +783,7 @@ int64_t write_itch_impl(Rcpp::List ll, std::string filename,
       first_write = false;
       
       // empty buffer
-      buf = (unsigned char*) calloc(buff_size, sizeof(char));
+      buf = (char*) calloc(buff_size, sizeof(char));
       total_bytes += i;
       // reset value in buffer to 0
       i = 0;

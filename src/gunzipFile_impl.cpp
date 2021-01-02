@@ -9,17 +9,20 @@
  * @param buffer_size the size of the buffer, default is 1e9 bytes.
  */
 // [[Rcpp::export]]
-void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize = 1e9) {
-  gzFile gzfile = gzopen(infile.c_str(), "rb");
+void gunzipFile_impl(std::string infile,
+                     std::string outfile, 
+                     int64_t bufferSize = 1e9) {
   
+  gzFile gzfile = gzopen(infile.c_str(), "rb");
+
   unsigned char* bufferPtr;
-  int64_t bufferCharSize = sizeof(char) * bufferSize > UINT_MAX ? 
-    UINT_MAX : 
+  int64_t bufferCharSize = sizeof(char) * bufferSize > UINT_MAX ?
+    UINT_MAX :
     sizeof(char) * bufferSize;
   bufferPtr = (unsigned char*) malloc(bufferCharSize);
-  
+
   int64_t thisBufferSize;
-  
+
   FILE* rawfile = fopen(outfile.c_str(), "wb");
   // iterate over the file until the all information is gathered
 
@@ -28,7 +31,7 @@ void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize
     thisBufferSize = gzread(gzfile, bufferPtr, bufferCharSize);
     // write the buffer
     fwrite(bufferPtr, thisBufferSize, 1, rawfile);
-    
+
     // check if the read buffer is smaller than the asked size
     if (thisBufferSize < bufferCharSize || thisBufferSize == 0) {
       break;
