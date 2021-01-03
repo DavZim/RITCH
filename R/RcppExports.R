@@ -7,6 +7,13 @@ count_messages_impl <- function(filename, max_buffer_size, quiet) {
 
 gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
     invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
+
+gunzip_file_impl <- function(infile, outfile, buffer_size = 1e9L) {
+    invisible(.Call('_RITCH_gunzip_file_impl', PACKAGE = 'RITCH', infile, outfile, buffer_size))
+}
+
+gzip_file_impl <- function(infile, outfile, buffer_size = 1e9L) {
+    invisible(.Call('_RITCH_gzip_file_impl', PACKAGE = 'RITCH', infile, outfile, buffer_size))
 }
 
 read_itch_impl <- function(classes, filename, start, end, filter_msg_type, filter_stock_locate, min_timestamp, max_timestamp, max_buffer_size, quiet) {

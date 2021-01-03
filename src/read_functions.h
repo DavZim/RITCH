@@ -21,10 +21,11 @@ inline int64_t get6bytes(char* buf);
 inline int64_t get8bytes(char* buf);
 std::string getNBytes(char* buf, const int n = 8, const char empty = ' ');
 inline Rcpp::NumericVector to_int64(Rcpp::NumericVector v);
-inline bool passes_filter(char* buf, std::vector<char> &filter);
-inline bool passes_filter(char* buf, std::vector<int> &filter);
-inline bool passes_filter_in(char* buf, std::vector<int64_t> &lower, 
-                             std::vector<int64_t> &upper);
+
+bool passes_filter(char* buf, std::vector<char> &filter);
+bool passes_filter(char* buf, std::vector<int> &filter);
+bool passes_filter_in(char* buf, std::vector<int64_t> &lower, 
+                      std::vector<int64_t> &upper);
 
 /*
  * Message Parser class, each class holds one "class" (stock_directory, 

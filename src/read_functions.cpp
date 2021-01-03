@@ -214,13 +214,13 @@ inline Rcpp::NumericVector to_int64(Rcpp::NumericVector v) {
 
 // helper functions that check if a buffer value is in a vector of filters 
 // equivalent of R buf_val %in% filter
-inline bool passes_filter(char* buf, std::vector<char> &filter) {
+bool passes_filter(char* buf, std::vector<char> &filter) {
   if (filter.size() == 0) return true;
   for (char cc : filter) if (cc == *buf) return true;
   return false;
 }
 // same helper function as before but for int vector
-inline bool passes_filter(char* buf, std::vector<int> &filter) {
+bool passes_filter(char* buf, std::vector<int> &filter) {
   if (filter.size() == 0) return true;
   const int val = get2bytes(&buf[0]);
   for (int cc : filter) if (cc == val) return true;
@@ -228,13 +228,13 @@ inline bool passes_filter(char* buf, std::vector<int> &filter) {
 }
 // check larger/smaller inclusive for 8 byte numbers (timestamp)
 // equivalent to R (buf_val >= lower & buf_val <= upper)
-inline bool passes_filter_in(char* buf,
+bool passes_filter_in(char* buf,
                              std::vector<int64_t> &lower, 
                              std::vector<int64_t> &upper) {
   // lower and upper have the same size!
   if (lower.size() == 0) return true;
   const int64_t val = get6bytes(&buf[0]);
-  for (int i = 0; i < lower.size(); i++) 
+  for (size_t i = 0; i < lower.size(); i++) 
     if (val >= lower[i] && val <= upper[i]) 
       return true;
   return false;
