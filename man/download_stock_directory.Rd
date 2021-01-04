@@ -4,17 +4,23 @@
 \alias{download_stock_directory}
 \title{Downloads the stock directory (stock locate codes) for a given date and exchange}
 \usage{
-download_stock_directory(exchange, date, quiet = FALSE)
+download_stock_directory(exchange, date, cache = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{exchange}{The exchange, either NASDAQ (equivalent to NDQ), BX, or PSX}
 
-\item{date}{The date, should be of class Date. If not the value is converted using \code{as.Date}.}
+\item{date}{The date, should be of class Date. If not the value is converted 
+using \code{as.Date}.}
+
+\item{cache}{If the stock directory should be cached, can be set to TRUE
+to save the stock directories in the working directory or a character for a 
+target directory.}
 
 \item{quiet}{If the download function should be quiet, default is FALSE.}
 }
 \value{
-a data.table of the tickers, the respective stock locate codes, and the exchange/date information
+a data.table of the tickers, the respective stock locate codes, and 
+the exchange/date information
 }
 \description{
 The data is downloaded from NASDAQs FTP server, which can be found here 
@@ -24,5 +30,10 @@ The data is downloaded from NASDAQs FTP server, which can be found here
 \dontrun{
   download_stock_directory("BX", "2019-07-02")
   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
+  download_stock_directory("BX", "2019-07-02", cache)
+  
+  download_stock_directory("BX", "2019-07-02", cache = "stock_directory")
+  dir.exists("stock_directory")
+  list.files("stock_directory")
 }
 }
