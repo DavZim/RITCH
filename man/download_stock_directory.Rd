@@ -30,7 +30,7 @@ The data is downloaded from NASDAQs FTP server, which can be found here
 \dontrun{
   download_stock_directory("BX", "2019-07-02")
   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
-  download_stock_directory("BX", "2019-07-02", cache)
+  download_stock_directory("BX", "2019-07-02", cache = TRUE)
   
   download_stock_directory("BX", "2019-07-02", cache = "stock_directory")
   dir.exists("stock_directory")

@@ -6,6 +6,7 @@
 \usage{
 download_sample_file(
   choice = c("smallest", "largest", "earliest", "latest", "random", "all"),
+  file = NA,
   exchanges = NA,
   dir = ".",
   force_download = FALSE,
@@ -16,6 +17,8 @@ download_sample_file(
 \arguments{
 \item{choice}{which file should be chosen? One of: smallest (default), largest, 
 earliest (date-wise), latest, random, or all.}
+
+\item{file}{the name of a specific file, overrules the choice and exchanges arguments}
 
 \item{exchanges}{A vector of exchanges, can be NASDAQ, BX, or PSX. 
 The default value is to consider all exchanges.}
@@ -45,5 +48,8 @@ download_sample_file()
 file <- download_sample_file()
 file
 
+# download a specific sample file
+file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
+file
 }
 }

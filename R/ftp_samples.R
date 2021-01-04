@@ -34,6 +34,8 @@ list_sample_files <- function() {
   return(df[, .(file, exchange, date, file_size, last_modified)])
   
 }
+
+
 #' Downloads a sample ITCH File from NASDAQs FTP Server
 #' 
 #' The FTP Server can be found at \url{ftp://emi.nasdaq.com/ITCH/}
@@ -43,6 +45,7 @@ list_sample_files <- function() {
 #'
 #' @param choice which file should be chosen? One of: smallest (default), largest, 
 #' earliest (date-wise), latest, random, or all.
+#' @param file the name of a specific file, overrules the choice and exchanges arguments
 #' @param exchanges A vector of exchanges, can be NASDAQ, BX, or PSX. 
 #' The default value is to consider all exchanges.
 #' @param dir The directory where the files will be saved to, default is current working directory.
@@ -60,8 +63,12 @@ list_sample_files <- function() {
 #' file <- download_sample_file()
 #' file
 #' 
+#' # download a specific sample file
+#' file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
+#' file
 #' }
 download_sample_file <- function(choice = c("smallest", "largest", "earliest", "latest",  "random", "all"),
+                                 file = NA,
                                  exchanges = NA,
                                  dir = ".",
                                  force_download = FALSE,
@@ -77,8 +84,10 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
   
   if (!quiet) cat(paste0("Downloading '", choice, "' sample file(s)\n"))
   
-  if (choice %in% c("smallest", "largest")) df <- df[order(file_size, decreasing = TRUE)]
-  if (choice %in% c("earliest", "latest")) df <- df[order(date, decreasing = TRUE)]
+  if (choice %in% c("smallest", "largest")) 
+    df <- df[order(file_size, decreasing = TRUE)]
+  if (choice %in% c("earliest", "latest"))
+    df <- df[order(date, decreasing = TRUE)]
   
   idx <- switch(choice,
                 smallest = nrow(df),
@@ -88,6 +97,7 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
                 latest = 1,
                 all = 1:nrow(df))
   
+  if (!is.na(file)) idx <- df$file == file
   df_take <- df[idx, ]
   
   files <- apply(df_take, 1, function(el) {
