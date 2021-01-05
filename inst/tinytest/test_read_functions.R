@@ -87,7 +87,13 @@ expect_equal(od, od2)
 
 # test skip and n_max
 od3 <- read_orders(file, quiet = TRUE, skip = 3, n_max = 10)
-expect_equal(od3[1:10], od[4:13])
+expect_equal(od3, od[4:13])
+
+od4 <- read_orders(file, quiet = TRUE, skip = 3)
+expect_equal(od4, od[4:nrow(od)])
+
+od5 <- read_orders(file, quiet = TRUE, n_max = 4)
+expect_equal(od5, od[1:4])
 
 #### Trades
 tr <- read_trades(file, quiet = TRUE)
@@ -373,6 +379,15 @@ end_ts <- as.int64(45475518278493)    # Mean
 start_ts2 <- as.int64(49358420393946) # Q3
 end_ts2 <- as.int64(57595326231183)   # Max
 
+
+# different lengths are only allowed if one is NA and the other has only one entry
+expect_error(
+  read_orders(file, quiet = TRUE, min_timestamp = 1:2)
+)
+expect_error(
+  read_orders(file, quiet = TRUE, min_timestamp = 1:2, max_timestamp = 1:3)
+)
+
 expect_equal(
   orders[timestamp >= start_ts & timestamp <= end_ts],
   read_orders(file, quiet = TRUE, 
@@ -425,4 +440,37 @@ expect_equal(
               max_timestamp = end_ts,
               filter_stock = "ALC", 
               stock_directory = sdir)
+)
+
+# combine multiple filters act as an AND combination!
+# skip and n_max act as a filter within the filtered results
+
+# skip = 10
+expect_equal(
+  orders[stock == "ALC" &
+           timestamp >= start_ts &
+           timestamp <= end_ts &
+           msg_type == "A"][-c(1:10)],
+  read_orders(file, quiet = TRUE,
+              filter_msg_type = "A",
+              min_timestamp = start_ts,
+              max_timestamp = end_ts,
+              filter_stock = "ALC",
+              stock_directory = sdir,
+              skip = 10)
+)
+
+# n_max
+expect_equal(
+  orders[stock == "ALC" &
+           timestamp >= start_ts &
+           timestamp <= end_ts &
+           msg_type == "A"][1:3],
+  read_orders(file, quiet = TRUE,
+              filter_msg_type = "A",
+              min_timestamp = start_ts,
+              max_timestamp = end_ts,
+              filter_stock = "ALC",
+              stock_directory = sdir,
+              n_max = 3)
 )

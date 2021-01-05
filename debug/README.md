@@ -32,7 +32,7 @@ dbg_get_message_length(c("A", "F"))
 ```
 
     ##  A  F 
-    ## 36 40
+    ## 38 42
 
 -   `dbg_itch_file(filename)` allows you to interactively list messages
     in a file You are asked for input inside the function, which can be:
@@ -186,8 +186,8 @@ hex_string <- paste(
 dbg_hex_to_orders(hex_string)
 ```
 
-    ##    msg_type locate_code tracking_number      timestamp order_ref  buy shares
-    ## 1:        F        8236               0 25200002107428         4 TRUE  11900
+    ##    msg_type stock_locate tracking_number      timestamp order_ref  buy shares
+    ## 1:        F         8236               0 25200002107428         4 TRUE  11900
     ##    stock price mpid
     ## 1:   USO 12.96 VIRT
 
@@ -197,7 +197,7 @@ dbg_hex_to_orders(hex_string)
 ``` r
 od <- data.table::data.table(
   msg_type = "F",
-  locate_code = 8236L,
+  stock_locate = 8236L,
   tracking_number = 0L,
   timestamp = bit64::as.integer64(25200002107428),
   order_ref = bit64::as.integer64(4),
