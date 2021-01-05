@@ -23,22 +23,25 @@ test_hex_to_dt <- function(hex = NA, dt = NA, hex_to_dt_func) {
   
   hex <- trimws(hex)
   
-  if (!is.data.frame(dt) && !is.na(dt)) {
+  if (is.data.frame(dt) && !is.na(dt)) {
     # Check Message Counts
     n_msgs <- as.int64(nrow(dt))
     msg_count <- dbg_hex_count_messages(hex)
-    expect_equal(msg_count[msg_type %in% dt$msg_type, sum(count)], n_msgs)
-    expect_equal(msg_count[!msg_type %in% dt$msg_type, sum(count)], as.int64(0))
+    expect_equal(msg_count[msg_type %in% dt$msg_type, sum(count)],
+                 n_msgs)
+    expect_equal(msg_count[!msg_type %in% dt$msg_type, sum(count)],
+                 as.int64(0))
     
     # Check Message Lengths
     xx <- strsplit(gsub(" ", "", hex), split = "")[[1]]
     nibbles <- paste0(xx[c(T, F)], xx[c(F, T)])
-    expect_equal(length(nibbles), sum(as.numeric(dbg_get_message_length(dt$msg_type)) + 2))
+    expect_equal(length(nibbles), 
+                 sum(as.numeric(dbg_get_message_length(dt$msg_type))))
   }
   
   # Converting hex to DT messages
   dt_conv <- hex_to_dt_func(hex)
-  if (!is.data.frame(dt) && !is.na(dt)) expect_equal(dt, dt_conv)
+  if (is.data.frame(dt) && !is.na(dt)) expect_equal(dt, dt_conv)
   
   # Converting DT messages to hex
   hex_conv <- dbg_messages_to_hex(dt_conv)
@@ -272,7 +275,7 @@ test_hex_to_dt(dt = dt_mods_all, hex_to_dt_func = dbg_hex_to_modifications)
 
 hex_s <- "00 00 53 00 00 00 00 0a 2d f4 92 1d 67 4f"
 dt_s <- data.table(msg_type = "S", stock_locate = 0, tracking_number = 0,
-                   timestampt = as.int64(11192493022567), event_code = "O")
+                   timestamp = as.int64(11192493022567), event_code = "O")
 test_hex_to_dt(hex_s, dt_s, dbg_hex_to_system_events)
 
 ################################################################################
@@ -445,7 +448,7 @@ test_hex_to_dt(hex_k, dt_k, dbg_hex_to_ipo)
 ########### LULD
 ################################################################################
 #' Messages 'J'
-#' 4a 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 00 0b 9a b4 00 0b f2 1e 00 0b 1e 5a 00 00 00 10
+#' 4a 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 00 0b 9a b4 00 0b 1e 5a 00 0b f2 1e  00 00 00 10
 #' 01 >> 02 >> 03 >> >> >> >> >> 04 >> >> >> >> >> >> >> 05 >> >> >> 06 >> >> >> 07 >> >> >> 08 >> >> >> 09
 #' id size name             hex value
 #' 01   1  message type     4a                         J
@@ -454,16 +457,16 @@ test_hex_to_dt(hex_k, dt_k, dbg_hex_to_ipo)
 #' 04   6  timestamp        0a 66 a0 e4 ff bd          11435902304189
 #' 05   8  Stock            41 20 20 20 20 20 20 20    A
 #' 06   4  reference_price  00 0b 9a b4                76.05
-#' 07   4  upper_price      00 0b f2 1e                78.2878
-#' 08   4  lower_price      00 0b 1e 5a                72.8666
+#' 07   4  upper_price      00 0b 1e 5a                72.8666
+#' 08   4  lower_price      00 0b f2 1e                78.2878
 #' 09   4  extension        00 00 00 10                16
 
 hex_j <- paste("00 00 4a 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20",
-               "00 0b 9a b4 00 0b f2 1e 00 0b 1e 5a 00 00 00 10")
+               "00 0b 9a b4 00 0b 1e 5a 00 0b f2 1e 00 00 00 10")
 dt_j <- data.table(
   msg_type = "J", stock_locate = 1L, tracking_number = 0L, 
   timestamp = as.int64(11435902304189), stock = "A", reference_price = 76.05, 
-  upper_price = 78.2878, lower_price = 72.8666, extension = 16L
+  upper_price = 72.8666, lower_price = 78.2878, extension = 16L
 )
 
 test_hex_to_dt(hex_j, dt_j, dbg_hex_to_luld)
@@ -525,56 +528,3 @@ dt_n <- data.table(
 )
 
 test_hex_to_dt(hex_n, dt_n, dbg_hex_to_rpii)
-
-################################################################################
-################################################################################
-# Testing File Write
-################################################################################
-################################################################################
-
-# This code is used to construct the list
-# file <- "20191230.BX_ITCH_50"
-# sy <- read_system_events(file, start_msg_count = 1, end_msg_count = 3)
-# tr <- read_trades(file, start_msg_count = 1, end_msg_count = 3)
-# od <- read_orders(file, start_msg_count = 1, end_msg_count = 3)
-# ll <- list(sy, tr, od[3:1])
-# ll
-# ll_hex <- lapply(ll, dbg_messages_to_hex)
-# dput(ll_hex)
-
-# Have a list of 9 messages, 3 of sytem_events, trades, and orders each.
-# Note that orders are reversed time-wise
-ll_hex <- list(
-  system_events = paste(
-    "00 00 53 00 00 00 00 0a 2d f4 92 1d 67 4f 00 00 53 00 00 00 00 16 eb 55 0d",
-    "e8 e2 53 00 00 53 00 00 00 00 1f 1a ce dc 13 b1 51"
-    ), 
-  trades = paste(
-    "00 00 50 1f bc 00 02 17 fa ea ab e4 15 00 00 00 00 00 00 00 00 42 00 00",
-    "00 64 55 47 41 5a 20 20 20 20 00 0b 9a b4 00 00 00 00 00 00 45 8b 00 00",
-    "50 07 c3 00 02 1a 5e f6 4d eb 6d 00 00 00 00 00 00 00 00 42 00 00 00 64",
-    "44 47 41 5a 20 20 20 20 00 1a cc f0 00 00 00 00 00 00 45 96 00 00 50 07",
-    "c3 00 02 1a 5e f6 56 ce c6 00 00 00 00 00 00 00 00 42 00 00 00 64 44 47",
-    "41 5a 20 20 20 20 00 1a cb c4 00 00 00 00 00 00 45 97"
-  ),
-  orders = paste(
-    "00 00 41 1f a5 00 00 16 eb 55 2c e8 93 00 00 00 00 00 00 00 08 42 00 00 05", 
-    "dc 55 43 4f 20 20 20 20 20 00 03 35 7c 00 00 41 08 ac 00 00 16 eb 55 2c 94",
-    "65 00 00 00 00 00 00 7c f5 42 00 00 3a 98 44 57 54 20 20 20 20 20 00 00 84", 
-    "08 00 00 41 20 2c 00 00 16 eb 55 2c 88 24 00 00 00 00 00 00 00 04 42 00 00", 
-    "2e 7c 55 53 4f 20 20 20 20 20 00 01 fa 40"
-  )
-)
-
-# convert to messages
-funcs <- list(dbg_hex_to_system_events, dbg_hex_to_trades, dbg_hex_to_orders)
-ll <- mapply(function(f, l) f(l), f = funcs, l = ll_hex)
-ll
-
-file <- tempfile()
-dbg_write_itch_impl(ll, file)
-
-read_funcs <- list(read_system_events, read_trades, read_orders)
-ll_conv <- lapply(read_funcs, function(f) f(file)[, -c("date", "datetime", "exchange")])
-
-expect_equal(ll, ll_conv)

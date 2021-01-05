@@ -58,7 +58,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
   if (grepl("\\.gz$", orig_file) && force_cleanup) unlink(gsub("\\.gz", "", file))
   
   if (add_meta_data) {
-    dd <- RITCH::get_meta_data()
+    dd <- RITCH::get_msg_classes()
     df <- df[dd, on = "msg_type"]
   }
   
@@ -68,31 +68,35 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
   return(df)
 }
 
-#' Returns the meta data for the messages
+#' Returns the message class data for the message types
 #' 
 #' All information is handled according to the official ITCH 5.0
 #' documentation as found here: 
 #' \url{http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf}
 #' 
-#' \code{msg_type} the type of the message 
-#' \code{msg_name} the official name of the message
-#' \code{msg_group} the group the message belongs to
-#' \code{doc_nr} the number of the message in the documentation
-#'
+#' \itemize{
+#'   \item{\code{msg_type} the type of the message}
+#'   \item{\code{msg_class} the group the message belongs to}
+#'   \item{\code{msg_name} the official name of the message}
+#'   \item{\code{doc_nr} the number of the message in the documentation}
+#' }
+#' 
+#' @seealso \code{\link{open_itch_specification}}
+#' 
 #' @return a data.table with the information of the message-types
 #' @export
 #'
 #' @examples
-#' get_meta_data()
-get_meta_data <- function() {
+#' get_msg_classes()
+get_msg_classes <- function() {
   data.table::data.table(
     msg_type = c("S", "R", "H", "Y", "L", "V", "W", "K", "J", "h", "A", "F", "E", 
                  "C", "X", "D", "U", "P", "Q", "B", "I", "N"),
     msg_class = c("system_events", "stock_directory", "trading_status",
                   "reg_sho", "market_participant_states", "mwcb", 
                   "mwcb", "ipo", "luld", "trading_status", "orders", "orders",
-                  "orders", "modifications", "modifications", "modifications",
-                  "modifications", "trades", "trades", "trades", "trades",
+                  "modifications", "modifications", "modifications",
+                  "modifications", "modifications", "trades", "trades", "trades",
                   "noii", "rpii"),
     msg_name = c("System Event Message", "Stock Directory", 
                  "Stock Trading Action", "Reg SHO Restriction", 

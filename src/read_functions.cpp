@@ -11,12 +11,17 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
                           int64_t max_buffer_size,
                           bool quiet) {
   
-  std::vector<int64_t> count = count_messages_internal(filename, max_buffer_size);
-  
+  std::vector<int64_t> count(N_TYPES, end - start + 1);
   int64_t total_msgs = 0;
-  for (int64_t v : count) total_msgs += v;
-  if (!quiet) Rprintf("[Counting]   num messages %s\n",
-                      format_thousands(total_msgs).c_str());
+  
+  // if there is an end, don't count all messages but take end - start + 1
+  if (end < 0) {
+    count = count_messages_internal(filename, max_buffer_size);
+    for (int64_t v : count) total_msgs += v;
+    
+    if (!quiet) Rprintf("[Counting]   num messages %s\n",
+        format_thousands(total_msgs).c_str());
+  }
   
   std::vector<int64_t> sizes(classes.size());
   
@@ -38,13 +43,20 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   
   for (auto f : filter_msg_type) filter_msgs.push_back(Rcpp::as<char>(f));
   for (int s : filter_stock_locate) filter_sloc.push_back(s);
-
+  
   const size_t ts_size = min_timestamp.size();
   std::vector<int64_t> min_ts(ts_size);
-  std::vector<int64_t> max_ts(ts_size);
-  
   std::memcpy(&(min_ts[0]), &(min_timestamp[0]), ts_size * sizeof(int64_t));
+  
+  std::vector<int64_t> max_ts(ts_size);
   std::memcpy(&(max_ts[0]), &(max_timestamp[0]), ts_size * sizeof(int64_t));
+  if (max_ts.size() == 1 && max_ts[0] == -1) 
+    max_ts[0] = std::numeric_limits<int64_t>::max();
+  
+  // get the max_ts_value!
+  int64_t max_ts_val = -1;
+  for (auto t : max_ts) if (t > max_ts_val) max_ts_val = t;
+  if (max_ts_val == -1) max_ts_val = std::numeric_limits<int64_t>::max();
   
   // Rprintf("Loading Message Parsers\n");
   for (std::string cls : MSG_CLASSES) {
@@ -52,7 +64,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     MessageParser* msgp_ptr = new MessageParser(cls, start, end);
     
     // check if this class needs to be activated?!
-      for (const std::string c : classes) if (c == cls) msgp_ptr->activate();
+    for (const std::string c : classes) if (c == cls) msgp_ptr->activate();
     
     int64_t num_msg_this_type = 0;
     std::vector<char> this_msg_types = msgp_ptr->msg_types;
@@ -61,7 +73,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     
     if (msgp_ptr->active) {
       if (!quiet) Rprintf("[Counting]   num '%s' messages %s\n",
-                          cls.c_str(), format_thousands(num_msg_this_type).c_str());
+          cls.c_str(), format_thousands(num_msg_this_type).c_str());
       
       // Rprintf("Active and resized to '%i'\n", num_msg_this_type);
       msgp_ptr->init_vectors(num_msg_this_type);
@@ -75,7 +87,11 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   // redirect to the correct msg types only
   FILE* infile;
   infile = fopen(filename.c_str(), "rb");
-  if (infile == NULL) Rcpp::stop("File Error!\n");
+  if (infile == NULL) {
+    char buffer [50];
+    sprintf (buffer, "File Error number %i!", errno);
+    Rcpp::stop(buffer);
+  }
   
   // get size of the file
   fseek(infile, 0L, SEEK_END);
@@ -89,8 +105,9 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   // Rprintf("Allocating buffer to size %" PRId64 "\n", buf_size);
   
   int64_t bytes_read = 0, this_buffer_size = 0;
+  bool max_ts_reached = false;
   
-  while (bytes_read < filesize) {
+  while (bytes_read < filesize && !max_ts_reached) {
     Rcpp::checkUserInterrupt();
     
     // read in buffer buffers
@@ -102,6 +119,13 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
       // Rprintf("offset %" PRId64 ":%" PRId64 " (size size %" PRId64 ") '%c'\n",
       //         bytes_read + i, bytes_read + i + get_message_size(buf[i + 2]),
       //         get_message_size(buf[i + 2]), buf[i + 2]);
+      
+      // check early stop in max_timestamp
+      const int64_t cur_ts = get6bytes(&buf[i + 2 + 5]);
+      if (cur_ts > max_ts_val) {
+        max_ts_reached = true;
+        break;
+      }
       
       const char mt = buf[i + 2];
       // Check Filter Messages
@@ -124,9 +148,9 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
       // Rprintf("  i %" PRId64 "\n", i);
       
       // Rprintf("i + msg_size <= this_buffer_size %" PRId64 " <= %" PRId64 "\n",
-                 // i + msg_size, this_buffer_size);
+      // i + msg_size, this_buffer_size);
       // Rprintf("bytes_read + i <= filesize %" PRId64 " <= %" PRId64 "\n",
-                 // bytes_read + i, filesize);
+      // bytes_read + i, filesize);
       
     } while (i + msg_size <= this_buffer_size && bytes_read + i <= filesize);
     
@@ -151,94 +175,6 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   return res;
 }
 
-// #############################################################################
-// small internal helper function to convert bytes etc
-// #############################################################################
-
-/**
- * @brief      Converts 2 bytes from a buffer in big endian to an int32_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted integer
- */
-inline int32_t get2bytes(char* buf) {
-  return __builtin_bswap16(*reinterpret_cast<uint16_t*>(&buf[0]));
-}
-
-/**
- * @brief      Converts 4 bytes from a buffer in big endian to an int32_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted integer
- */
-inline int32_t get4bytes(char* buf) {
-  return __builtin_bswap32(*reinterpret_cast<uint32_t*>(&buf[0]));
-}
-
-/**
- * @brief      Converts 6 bytes from a buffer in big endian to an int64_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted int64_t
- */
-inline int64_t get6bytes(char* buf) {
-  return (__builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0])) & 0xFFFFFFFFFFFF0000) >> 16;
-}
-
-/**
- * @brief      Converts 8 bytes from a buffer in big endian to an int64_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted int64_t
- */
-inline int64_t get8bytes(char* buf) {
-  return __builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0]));
-}
-
-// return N bytes of a buffer as a string
-std::string getNBytes(char* buf, const int n, const char empty) {
-  std::string res;
-  for (int i = 0; i < n; ++i) if (buf[i] != empty) res += buf[i];
-  return res;
-}
-
-// converts a Numeric Vector to int64
-inline Rcpp::NumericVector to_int64(Rcpp::NumericVector v) {
-  v.attr("class") = "integer64";
-  return v;
-}
-
-// helper functions that check if a buffer value is in a vector of filters 
-// equivalent of R buf_val %in% filter
-bool passes_filter(char* buf, std::vector<char> &filter) {
-  if (filter.size() == 0) return true;
-  for (char cc : filter) if (cc == *buf) return true;
-  return false;
-}
-// same helper function as before but for int vector
-bool passes_filter(char* buf, std::vector<int> &filter) {
-  if (filter.size() == 0) return true;
-  const int val = get2bytes(&buf[0]);
-  for (int cc : filter) if (cc == val) return true;
-  return false;
-}
-// check larger/smaller inclusive for 8 byte numbers (timestamp)
-// equivalent to R (buf_val >= lower & buf_val <= upper)
-bool passes_filter_in(char* buf,
-                             std::vector<int64_t> &lower, 
-                             std::vector<int64_t> &upper) {
-  // lower and upper have the same size!
-  if (lower.size() == 0) return true;
-  const int64_t val = get6bytes(&buf[0]);
-  for (size_t i = 0; i < lower.size(); i++) 
-    if (val >= lower[i] && val <= upper[i]) 
-      return true;
-  return false;
-}
 
 // #############################################################################
 // Message Parser Functions
@@ -567,18 +503,20 @@ void MessageParser::prune_vectors() {
 // Parses a message if the object is active and the message type belongs to this
 // class! 
 void MessageParser::parse_message(char * buf) {
-
+  
   if (!active) return; 
   
   // -> if !any(msg_types == buf[2]) return...
   bool cont = false;
   for (char type : msg_types) if (type == buf[0]) cont = true;
   if (!cont) return;
+  
   msg_buf_idx++;
   
-  // check indices
-  if (msg_buf_idx < start_count) return;
-  if (msg_buf_idx > end_count) {
+  // check indices; -1 as msg_buf_idx has already advanced, 
+  // msg_buf_idx has already advanced b.c. of possible early returns
+  if (msg_buf_idx - 1 < start_count) return;
+  if (msg_buf_idx - 1 > end_count) {
     // stop parsing future messages
     active = false;
     return;
@@ -735,7 +673,7 @@ void MessageParser::parse_message(char * buf) {
     } else if (buf[0] == 'U') {
       
       const int64_t tt = get8bytes(&buf[19]);
-      std::memcpy(&(order_ref[index]), &tt, sizeof(double));
+      std::memcpy(&(new_order_ref[index]), &tt, sizeof(double));
       
       shares[index] = get4bytes(&buf[27]);
       price[index]  = ((double) get4bytes(&buf[31])) / 10000.0;
@@ -906,8 +844,8 @@ Rcpp::List MessageParser::get_data_frame() {
     
     res[4] = stock;
     res[5] = reference_price;
-    res[6] = lower_price;
-    res[7] = upper_price;
+    res[6] = upper_price;
+    res[7] = lower_price;
     res[8] = extension;
     
   } else if (type == "orders") {
@@ -960,6 +898,6 @@ Rcpp::List MessageParser::get_data_frame() {
   // need to call data.table::setalloccol() on data in R!
   res.names() = colnames;
   res.attr("class") = Rcpp::StringVector::create("data.table", "data.frame");
-
+  
   return res;
 }

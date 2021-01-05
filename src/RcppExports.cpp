@@ -18,15 +18,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gunzipFile_impl
-void gunzipFile_impl(std::string infile, std::string outfile, int64_t bufferSize);
-RcppExport SEXP _RITCH_gunzipFile_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP bufferSizeSEXP) {
+// filter_itch_impl
+void filter_itch_impl(std::string infile, std::string outfile, int64_t start, int64_t end, Rcpp::CharacterVector filter_msg_type, Rcpp::IntegerVector filter_stock_locate, Rcpp::NumericVector min_timestamp, Rcpp::NumericVector max_timestamp, bool append, int64_t max_buffer_size, bool quiet);
+RcppExport SEXP _RITCH_filter_itch_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP startSEXP, SEXP endSEXP, SEXP filter_msg_typeSEXP, SEXP filter_stock_locateSEXP, SEXP min_timestampSEXP, SEXP max_timestampSEXP, SEXP appendSEXP, SEXP max_buffer_sizeSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type infile(infileSEXP);
     Rcpp::traits::input_parameter< std::string >::type outfile(outfileSEXP);
-    Rcpp::traits::input_parameter< int64_t >::type bufferSize(bufferSizeSEXP);
-    gunzipFile_impl(infile, outfile, bufferSize);
+    Rcpp::traits::input_parameter< int64_t >::type start(startSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type end(endSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type filter_msg_type(filter_msg_typeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type filter_stock_locate(filter_stock_locateSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type min_timestamp(min_timestampSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type max_timestamp(max_timestampSEXP);
+    Rcpp::traits::input_parameter< bool >::type append(appendSEXP);
+    Rcpp::traits::input_parameter< int64_t >::type max_buffer_size(max_buffer_sizeSEXP);
+    Rcpp::traits::input_parameter< bool >::type quiet(quietSEXP);
+    filter_itch_impl(infile, outfile, start, end, filter_msg_type, filter_stock_locate, min_timestamp, max_timestamp, append, max_buffer_size, quiet);
+    return R_NilValue;
+END_RCPP
+}
 // gunzip_file_impl
 void gunzip_file_impl(std::string infile, std::string outfile, int64_t buffer_size);
 RcppExport SEXP _RITCH_gunzip_file_impl(SEXP infileSEXP, SEXP outfileSEXP, SEXP buffer_sizeSEXP) {
@@ -90,7 +101,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RITCH_count_messages_impl", (DL_FUNC) &_RITCH_count_messages_impl, 3},
-    {"_RITCH_gunzipFile_impl", (DL_FUNC) &_RITCH_gunzipFile_impl, 3},
+    {"_RITCH_filter_itch_impl", (DL_FUNC) &_RITCH_filter_itch_impl, 11},
     {"_RITCH_gunzip_file_impl", (DL_FUNC) &_RITCH_gunzip_file_impl, 3},
     {"_RITCH_gzip_file_impl", (DL_FUNC) &_RITCH_gzip_file_impl, 3},
     {"_RITCH_read_itch_impl", (DL_FUNC) &_RITCH_read_itch_impl, 10},

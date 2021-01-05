@@ -93,12 +93,13 @@ add_meta_to_filename <- function(file, date, exchange) {
     
   } else if (grepl("(?<!NASDAQ)_ITCH", file, perl = TRUE)) { # 20170130.BX_ITCH_50.gz
     
-    file <- gsub("\\d{8}", format(date, "%Y%m%d"), file)
+    # replace the last 8 digits with the date
+    file <- gsub("\\d{8}(?=[^0-9]+50.*)", format(date, "%Y%m%d"), file, perl = TRUE)
     file <- gsub("(?<=\\d{8}\\.)[^_]+", exchange, file, perl = TRUE)
     
   } else {
     
-    # Unkown format... use 20101224.TEST_ITCH_50
+    # Unknown format... use 20101224.TEST_ITCH_50
     has_gz <- grepl("\\.gz$", file)
     if (has_gz) file <- gsub("\\.gz$", "", file)
     file <- gsub("\\.?_?ITCH_?50", "", file)
@@ -151,4 +152,82 @@ open_itch_ftp <- function() {
   url <- "ftp://emi.nasdaq.com/ITCH/"
   browseURL(url)
   return(invisible(url))
+}
+
+check_msg_types <- function(filter_msg_type, quiet) {
+  # allow msg_classes: 'AF' (multiple values are split), 
+  # c('A', 'F'), c(NA, 'A') (NAs are ommited)
+  filter_msg_type <- unique(filter_msg_type)
+  
+  if (any(nchar(filter_msg_type) > 1, na.rm = TRUE)) {
+    x <- sapply(filter_msg_type, strsplit, split = "")
+    filter_msg_type <- as.character(unlist(x))
+  }
+    
+  filter_msg_type <- filter_msg_type[!is.na(filter_msg_type)]
+  
+  if (!quiet && length(filter_msg_type) > 0)
+    cat(paste0("[Filter]     msg_type: '",
+               paste(filter_msg_type, collapse = "', '"),
+               "'\n"))
+  
+  return(filter_msg_type)
+}
+check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
+  min_timestamp <- min_timestamp[!is.na(min_timestamp)]
+  max_timestamp <- max_timestamp[!is.na(max_timestamp)]
+  
+  lmin <- length(min_timestamp)
+  lmax <- length(max_timestamp)
+  
+  txt <- "[Filter]     timestamp: "
+  if (lmin != lmax) {
+    # either vector has to have size 1 the other 0
+    if ((lmin == 0 && lmax == 1) ||
+        (lmin == 1 && lmax == 0)) {
+      if (lmin == 0) {
+        min_timestamp <- 0
+        txt <- paste0(txt, "<= ", bit64::as.integer64(max_timestamp))
+      } else { # lmax == 0
+        max_timestamp <- -1
+        txt <- paste0(txt, ">= ", bit64::as.integer64(min_timestamp))
+      } 
+    } else {
+      stop(paste("min_ and and max_timestamp have to have the same length", 
+                 "or only one has to have size 1!"))
+    }
+  } else { # lmin == lmax
+    txt <- paste0(txt, 
+                  paste(bit64::as.integer64(min_timestamp), 
+                        bit64::as.integer64(max_timestamp),
+                        sep = " - ", collapse = ", "))
+  }
+  if (length(min_timestamp) != 0 && !quiet) cat(txt, "\n")
+  
+  min_timestamp <- bit64::as.integer64(min_timestamp)
+  max_timestamp <- bit64::as.integer64(max_timestamp)
+  
+  return(list(min = min_timestamp, max = max_timestamp))
+}
+
+check_stock_filters <- function(filter_stock, stock_directory, 
+                                filter_stock_locate, infile) {
+  
+  if (!(length(filter_stock) == 1 && is.na(filter_stock))) {
+    if (length(stock_directory) == 1 && is.na(stock_directory)) {
+      warning("filter_stock is given, but no stock_directory is specified. Trying to extract stock directory from file\n")
+      stock_directory <- read_stock_directory(infile, quiet = TRUE)
+    }
+    
+    if (!all(filter_stock %chin% stock_directory$stock)) {
+      stop(paste0("Not all stocks found in stock_directory, missing: '",
+                  paste(filter_stock[!filter_stock %chin% stock_directory$stock],
+                        collapse = "', '"),
+                  "'"))
+    }
+    # extend locate code by the stocks:
+    filter_stock_locate <- c(filter_stock_locate,
+                             stock_directory[stock %chin%filter_stock, stock_locate])
+  }
+  return(filter_stock_locate)
 }

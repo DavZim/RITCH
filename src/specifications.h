@@ -51,35 +51,13 @@ const std::vector<std::string> MSG_CLASSES {
 // How many classes there are
 const int MSG_CLASS_SIZE = MSG_CLASSES.size();
 
-// small helper function to get the message size for a char
-inline int get_message_size(const char msg) {
-  return MSG_SIZES[msg - 'A'] + 2;
-}
-
-/*
- * @brief      Formats an integer number to a std::string with thousands separator
- *
- * @param      num    The number to format
- * @param      sep    The thousands separator, default value is a comma
- * @param      s      The return string, this is only used internally, as the function
- *                    is called recursively
- *
- * @return       The number as a string
- */
-inline std::string format_thousands(int64_t num,
-                            const std::string sep = ",",
-                            const std::string s = "") {
-  if (num < 1000) {
-    return std::to_string(num) + s;
-  } else {
-    std::string last_three = std::to_string(num % 1000);
-    const int num_zeros = 3 - last_three.length();
-    last_three = std::string(num_zeros, '0').append(last_three);
-    
-    const int64_t remainder = (int64_t) num / 1000;
-    const std::string res = sep + last_three + s;
-    return format_thousands(remainder, sep, res);
-  }
-}
+// translates msg_type to MSG_CLASSES position
+// e.g., msg_type 'h' has value 2, belongs to the third class in MSG_CLASSES: trading_status
+const int TYPE_CLASS_TRANSLATOR [] = {
+// A   B  C  D  E  F   G  H   I  J  K  L   M   N   O   P   Q  R  S  T
+   8, 10, 9, 9, 9, 8, -1, 2, 11, 7, 6, 4, -1, 12, -1, 10, 10, 1, 0, -1,
+// U  V  W  X  Y   Z   [   \   ]   ^   _   `   a   b   c   d   e   f   g  h
+   9, 5, 5, 9, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2
+};
 
 #endif //SPECIFICATIONS_H

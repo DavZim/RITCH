@@ -1,65 +1,126 @@
 #include "write_functions.h"
 
-// sets inside a char buffer b, 2 bytes from the value val, returns number of bytes changed
-// i.e., convert val = 8236 to 0x202c
-uint64_t set2bytes(char* b, int32_t val) {
-  b[1] = val         & 0xff;
-  b[0] = (val >> 8)  & 0xff;
-  // Rprintf("Converting: %15i -> 0x %02x %02x\n",
-  //         val, b[0], b[1]);
-  return 2;
-}
 
-// sets inside a char buffer b, 4 bytes from the value val, returns number of bytes changed
-// i.e., convert val = 11900 to 0x00002e7c
-uint64_t set4bytes(char* b, int32_t val) {
-  b[3] = val         & 0xffff;
-  b[2] = (val >> 8)  & 0xffff;
-  b[1] = (val >> 16) & 0xffff;
-  b[0] = (val >> 24) & 0xffff;
-  // Rprintf("Converting: %15i -> 0x %02x %02x %02x %02x\n",
-  //         val, b[0], b[1], b[2], b[3]);
-  return 4;
-}
-// sets inside a char buffer b, 6 bytes from the value val, returns number of bytes changed
-// i.e., 25200002107428 to 0x16eb552c8824
-uint64_t set6bytes(char* b, int64_t val) {
-  b[5] = val         & 0xffffff;
-  b[4] = (val >> 8)  & 0xffffff;
-  b[3] = (val >> 16) & 0xffffff;
-  b[2] = (val >> 24) & 0xffffff;
-  b[1] = (val >> 32) & 0xffffff;
-  b[0] = (val >> 40) & 0xffffff;
-  // Rprintf("Converting: %15lld -> 0x %02x %02x %02x %02x %02x %02x\n",
-  //         (long long) val, b[0], b[1], b[2], b[3], b[4], b[5]);
-  return 6;
-}
-// sets inside a char buffer b, 8 bytes from the value val, returns number of bytes changed
-// i.e., 4 to 0x0000000000000004
-uint64_t set8bytes(char* b, int64_t val) {
-  b[7] = val         & 0xffffffff;
-  b[6] = (val >> 8)  & 0xffffffff;
-  b[5] = (val >> 16) & 0xffffffff;
-  b[4] = (val >> 24) & 0xffffffff;
-  b[3] = (val >> 32) & 0xffffffff;
-  b[2] = (val >> 40) & 0xffffffff;
-  b[1] = (val >> 48) & 0xffffffff;
-  b[0] = (val >> 56) & 0xffffffff;
-  // Rprintf("Converting: %15lld -> 0x %02x %02x %02x %02x %02x %02x %02x %02x\n",
-  //         (long long) val, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
-  return 8;
-}
-// sets inside a char buffer b, n bytes from the string x, returns number of bytes changed
-// i.e., "UFO" with 8 to 0x55534f2020202020 (filled with whitespaces)
-uint64_t setCharBytes(char* b, std::string x, uint64_t n) {
-  char *st = new char[n + 1];
-  if (x.size() > n) Rprintf("ERROR: setChar Bytes for string '%s' larger than capacity %i\n", x.c_str(), n);
-  for (uint64_t j = 0; j < n; j++) st[j] = ' '; // fill with n spaces
-  for (uint64_t j = 0; j < x.size(); j++) st[j] = x[j]; // copy the string x
-  memcpy(b, st, n);
-  // Rprintf("Set %i char Bytes from '%s' -> 0x %02x %02x %02x %02x %02x %02x %02x %02x\n",
-  //         n, x.c_str(), b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
-  return n;
+/* 
+ * #############################################################################
+ * Main Write Function 
+ * #############################################################################
+ * 
+ * ll is a list of data.frames, where each df is sorted by timestamp
+ * filename, the filename to write to
+ * gz if the file should be a gz-compressed file
+ * returns the number of bytes written
+ */
+
+// [[Rcpp::export]]
+int64_t write_itch_impl(Rcpp::List ll, std::string filename, 
+                        bool append,
+                        bool gz,
+                        size_t max_buffer_size,
+                        bool quiet) {
+  
+  if (max_buffer_size > 5e9) {
+    Rcpp::warning("max_buffer_size set to > 5e9, capping it to 5e9\n");
+    max_buffer_size = 5e9;
+  }
+  if (max_buffer_size < 52) {
+    Rcpp::warning("max_buffer_size set to < 52, increasing to 52\n");
+    max_buffer_size = 52;
+  }
+  
+  const int list_length = ll.size();
+  size_t msg_size = 0;
+  int64_t total_msgs = 0;
+  
+  const int64_t max_val = std::numeric_limits<int64_t>::max();
+  std::vector<int64_t> indices (list_length);
+  std::vector<int64_t> timestamps (list_length);
+  
+  if (!quiet) Rprintf("[Counting]   ");
+  // initiate the indices, timestamps as well as count the required buffer size
+  for (int ii = 0; ii < list_length; ii++) {
+    Rcpp::List df = ll.at(ii);
+    Rcpp::CharacterVector mt = df["msg_type"];
+    Rcpp::NumericVector ts = df["timestamp"];
+    
+    // populate the indices
+    indices[ii] = 0;
+    
+    // populate the timestamps
+    std::memcpy(&(timestamps[ii]), &(ts[0]), sizeof(int64_t));
+    // Rprintf("ts[0] is %+" PRId64 "; ts is now +" PRId64 "\n", ts[0], timestamps[ii]);
+    
+    for (int l = 0; l < mt.size(); l++) {
+      const char msg = Rcpp::as<char>(mt[l]);
+      msg_size += get_message_size(msg);
+      total_msgs++;
+    }
+  }
+  if (!quiet) Rprintf("%s messages (%s bytes) found\n",
+      format_thousands(total_msgs).c_str(),
+      format_thousands(msg_size).c_str());
+  
+  // min of max_buffer_size and msg_size, but only 32 bit for buffer - is large enough
+  const size_t buff_size = max_buffer_size > msg_size ? msg_size : max_buffer_size;
+  char * buf;
+  buf = (char*) calloc(buff_size, sizeof(char));
+  int64_t msg_ct = 0;
+  
+  // implement multi buffer....
+  int64_t i = 0, total_bytes = 0;
+  bool first_write = true;
+  
+  if (!quiet) Rprintf("[Converting] to binary .");
+  while (msg_ct < total_msgs) {
+    // find at which list position (lp) the lowest timestamp is
+    const int lp = get_min_val_pos(timestamps);
+    Rcpp::List df = ll[lp];
+    int64_t lp_idx = indices[lp];
+    
+    Rcpp::NumericVector ts = df["timestamp"];
+    Rcpp::CharacterVector mt = df["msg_type"];
+    
+    const char msg_type = Rcpp::as<char>(mt[lp_idx]);
+    
+    const int64_t msg_length = get_message_size(msg_type);
+    if (i + msg_length > buff_size) {
+      if (!quiet) Rprintf(".");
+      // write_buffer
+      // append can only be set on the first write... afterwards append by default
+      write_buffer_to_file(buf, i, filename, first_write ? append : true, gz);
+      first_write = false;
+      
+      // empty buffer
+      buf = (char*) calloc(buff_size, sizeof(char));
+      total_bytes += i;
+      // reset value in buffer to 0
+      i = 0;
+    }
+    
+    // load the message to the buffer
+    i += load_message_to_buffer(&(buf[i]), lp_idx, df);
+    
+    // update the timestamps information
+    // lp_idx was increased in load_message_to_buffer by one!
+    if (lp_idx == ts.size()) {
+      // take the max value if the end of this df is reached
+      std::memcpy(&(timestamps[lp]), &max_val, sizeof(int64_t));
+    } else {
+      std::memcpy(&(timestamps[lp]), &(ts[lp_idx]), sizeof(int64_t));
+    }
+    // at position lp, the index is increased by one.
+    // next loop, take the next row/observation
+    indices[lp] += 1;
+    msg_ct++;
+  }
+  
+  if (!quiet) Rprintf("\n[Writing]    to file\n");
+  total_bytes += i;
+  // Rprintf("Write data to file '%s'\n", filename.c_str());
+  write_buffer_to_file(buf, i, filename, first_write ? append : true, gz);
+  free(buf);
+  
+  return total_bytes;
 }
 
 /* 
@@ -680,137 +741,21 @@ void write_buffer_to_file(char* buf, int64_t size,
   if (!gz) {
     FILE* outfile;
     outfile = fopen(filename.c_str(), mode);
-    if (outfile == NULL) Rcpp::stop("File Error!\n");
+    if (outfile == NULL) {
+      char buffer [50];
+      sprintf (buffer, "File Error number %i!", errno);
+      Rcpp::stop(buffer);
+    }
     fwrite(&buf[0], 1, size, outfile);
     fclose(outfile);
   } else {
     gzFile gzfile = gzopen(filename.c_str(), mode);
-    if (gzfile == NULL) Rcpp::stop("File Error!\n");
+    if (gzfile == NULL) {
+      char buffer [50];
+      sprintf (buffer, "File Error number %i!", errno);
+      Rcpp::stop(buffer);
+    }
     gzwrite(gzfile, &buf[0], size);
     gzclose(gzfile);
   }
-}
-
-
-/* 
- * #############################################################################
- * Main Write Function 
- * #############################################################################
- * 
- * ll is a list of data.frames, where each df is sorted by timestamp
- * filename, the filename to write to
- * gz if the file should be a gz-compressed file
- * returns the number of bytes written
- */
-
-// [[Rcpp::export]]
-int64_t write_itch_impl(Rcpp::List ll, std::string filename, 
-                        bool append,
-                        bool gz,
-                        size_t max_buffer_size,
-                        bool quiet) {
-  
-  
-  if (max_buffer_size > 5e9) {
-    Rcpp::warning("max_buffer_size set to > 5e9, capping it to 5e9\n");
-    max_buffer_size = 5e9;
-  }
-  if (max_buffer_size < 52) {
-    Rcpp::warning("max_buffer_size set to < 52, increasing to 52\n");
-    max_buffer_size = 52;
-  }
-  
-  const int list_length = ll.size();
-  size_t msg_size = 0;
-  int64_t total_msgs = 0;
-  
-  const int64_t max_val = std::numeric_limits<int64_t>::max();
-  std::vector<int64_t> indices (list_length);
-  std::vector<int64_t> timestamps (list_length);
-  
-  if (!quiet) Rprintf("[Counting]   ");
-  // initiate the indices, timestamps as well as count the required buffer size
-  for (int ii = 0; ii < list_length; ii++) {
-    Rcpp::List df = ll.at(ii);
-    Rcpp::CharacterVector mt = df["msg_type"];
-    Rcpp::NumericVector ts = df["timestamp"];
-    
-    // populate the indices
-    indices[ii] = 0;
-    
-    // populate the timestamps
-    std::memcpy(&(timestamps[ii]), &(ts[0]), sizeof(int64_t));
-    // Rprintf("ts[0] is %+" PRId64 "; ts is now +" PRId64 "\n", ts[0], timestamps[ii]);
-    
-    for (int l = 0; l < mt.size(); l++) {
-      const char msg = Rcpp::as<char>(mt[l]);
-      msg_size += get_message_size(msg);
-      total_msgs++;
-    }
-  }
-  if (!quiet) Rprintf("%s messages (%s bytes) found\n",
-      format_thousands(total_msgs).c_str(),
-      format_thousands(msg_size).c_str());
-  
-  // min of max_buffer_size and msg_size, but only 32 bit for buffer - is large enough
-  const size_t buff_size = max_buffer_size > msg_size ? msg_size : max_buffer_size;
-  char * buf;
-  buf = (char*) calloc(buff_size, sizeof(char));
-  int64_t msg_ct = 0;
-  
-  // implement multi buffer....
-  int64_t i = 0, total_bytes = 0;
-  bool first_write = true;
-  
-  if (!quiet) Rprintf("[Converting] to binary .");
-  while (msg_ct < total_msgs) {
-    // find at which list position (lp) the lowest timestamp is
-    const int lp = get_min_val_pos(timestamps);
-    Rcpp::List df = ll[lp];
-    int64_t lp_idx = indices[lp];
-    
-    Rcpp::NumericVector ts = df["timestamp"];
-    Rcpp::CharacterVector mt = df["msg_type"];
-    
-    const char msg_type = Rcpp::as<char>(mt[lp_idx]);
-    
-    const int64_t msg_length = get_message_size(msg_type);
-    if (i + msg_length > buff_size) {
-      if (!quiet) Rprintf(".");
-      // write_buffer
-      // append can only be set on the first write... afterwards append by default
-      write_buffer_to_file(buf, i, filename, first_write ? append : true, gz);
-      first_write = false;
-      
-      // empty buffer
-      buf = (char*) calloc(buff_size, sizeof(char));
-      total_bytes += i;
-      // reset value in buffer to 0
-      i = 0;
-    }
-    
-    // load the message to the buffer
-    i += load_message_to_buffer(&(buf[i]), lp_idx, df);
-    
-    // update the timestamps information
-    // lp_idx was increased in load_message_to_buffer by one!
-    if (lp_idx == ts.size()) {
-      // take the max value if the end of this df is reached
-      std::memcpy(&(timestamps[lp]), &max_val, sizeof(int64_t));
-    } else {
-      std::memcpy(&(timestamps[lp]), &(ts[lp_idx]), sizeof(int64_t));
-    }
-    // at position lp, the index is increased by one.
-    // next loop, take the next row/observation
-    indices[lp] += 1;
-    msg_ct++;
-  }
-  
-  if (!quiet) Rprintf("\n[Writing]    to file\n");
-  total_bytes += i;
-  // Rprintf("Write data to file '%s'\n", filename.c_str());
-  write_buffer_to_file(buf, i, filename, first_write ? append : true, gz);
-  free(buf);
-
-  return total_bytes;
 }

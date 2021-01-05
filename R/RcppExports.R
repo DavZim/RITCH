@@ -5,8 +5,9 @@ count_messages_impl <- function(filename, max_buffer_size, quiet) {
     .Call('_RITCH_count_messages_impl', PACKAGE = 'RITCH', filename, max_buffer_size, quiet)
 }
 
-gunzipFile_impl <- function(infile, outfile, bufferSize = 1e9L) {
-    invisible(.Call('_RITCH_gunzipFile_impl', PACKAGE = 'RITCH', infile, outfile, bufferSize))
+filter_itch_impl <- function(infile, outfile, start, end, filter_msg_type, filter_stock_locate, min_timestamp, max_timestamp, append, max_buffer_size, quiet) {
+    invisible(.Call('_RITCH_filter_itch_impl', PACKAGE = 'RITCH', infile, outfile, start, end, filter_msg_type, filter_stock_locate, min_timestamp, max_timestamp, append, max_buffer_size, quiet))
+}
 
 gunzip_file_impl <- function(infile, outfile, buffer_size = 1e9L) {
     invisible(.Call('_RITCH_gunzip_file_impl', PACKAGE = 'RITCH', infile, outfile, buffer_size))

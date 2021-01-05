@@ -5,7 +5,11 @@ std::vector<int64_t> count_messages_internal(std::string filename,
                                              int64_t max_buffer_size) {
   FILE* infile;
   infile = fopen(filename.c_str(), "rb");
-  if (infile == NULL) Rcpp::stop("File Error!\n");
+  if (infile == NULL) {
+    char buffer [50];
+    sprintf (buffer, "File Error number %i!", errno);
+    Rcpp::stop(buffer);
+  }
   
   // get size of the file
   fseek(infile, 0L, SEEK_END);
@@ -45,25 +49,6 @@ std::vector<int64_t> count_messages_internal(std::string filename,
   free(buf);
   fclose(infile);
   return count;
-}
-
-// the count_messages_internal function is optimized and therefore contains
-// unused messages (they are used for faster access speeds!) 
-// (see also Specifications.h)
-// this function extracts the needed message classes from the raw vector
-std::vector<int64_t> take_needed_messages(std::vector<int64_t> &v) {
-  std::vector<int64_t> res;
-  for (const char act_msg : ACT_MSG_NAMES) {
-    size_t i = 0;
-    for (const char msg : MSG_NAMES) {
-      if (msg == act_msg) {
-        res.push_back(v[i]);
-        break;
-      }
-      i++;
-    }
-  }
-  return res;
 }
 
 // [[Rcpp::export]]

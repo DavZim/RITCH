@@ -7,33 +7,51 @@
 #'
 #' For faster file-reads (at the tradeoff of increased memory usages), you can
 #' increase the \code{buffer_size} to 1GB (1e9) or more.
+#' 
+#' If you access the same file multiple times, you can provide the message 
+#' counts as outputted from \code{\link{count_messages}} to the \code{n_max} 
+#' argument, this allows skipping one pass over the file per read instruction.
 #'
-#' If you read multiple different message types from the same file, you can
-#' provide the message counts as outputted from \code{\link{count_messages}} to
-#' the \code{n_max} argument, this allows skipping one pass over the
-#' file per read instruction.
+#' If you need to read in multiple message classes, you can specify multiple 
+#' message classes to \code{read_itch}, which results in only a single file pass.
 #'
 #' If the file is too large to be loaded into the workspace at once, you can
 #' specify different \code{skip} and \code{n_max} to load only
 #' a specific range of messages.
-#'
+#' Alternatively, you can filter certain messages to another file using 
+#' \code{\link{filter_itch}}, which is substantially faster than parsing a file
+#' and filtering it.
+#' 
 #' Note that all read functions allow both plain ITCH files as well as gzipped
-#' files. If a gzipped file is found, it will look for a plain ITCH file with
-#' the same name and use that instead. If this file is not found, it will be
-#' created. Use \code{force_cleanup = TRUE} to force the deletion of the
-#' unzipped file after use.
-#'
-#' @param file the path to the input file, either a gz-file or a plain ITCH file
-#' @param msg_class the class to load, can be "orders", "trades", "modifications", ... Only applies to the read_itch() function.
+#' files.
+#' If a gzipped file is found, it will look for a plain ITCH file with
+#' the same name and use that instead. 
+#' If this file is not found, it will be created by unzipping the archive. 
+#' Note that the unzipped file is NOT deleted by default (the file will be 
+#' created in the current working directory). 
+#' It might result in increased disk usage but reduces future read times for
+#' that specific file.
+#' To force RITCH to delete "temporary" files after uncompressing, use
+#' \code{force_cleanup = TRUE} (only deletes the files if they were extracted 
+#' before, does not remove the archive itself).
+#' 
+#' @param file the path to the input file, either a gz-archive or a plain ITCH file
+#' @param filter_msg_class a vector of classes to load, can be "orders", "trades", 
+#'   "modifications", ... see also \code{\link{get_msg_classes}}.
+#'   Default value is to take all message classes.
 #' @param skip Number of messages to skip before starting parsing messages,
-#' note it only applies to messages of this type.
+#' note the skip parameter applies to the specific message class, i.e., it would
+#' skip the messages for each type (e.g., skip the first 10 messages for each class).
 #' @param n_max Maximum number of messages to parse, default is to read all values.
 #'  Can also be a data.frame of msg_types and counts, as returned by
-#'  \code{\link{count_messages}}
+#'  \code{\link{count_messages}}. 
+#'  Note the n_max parameter applies to the specific message class not the whole
+#'  file.
 #' @param filter_msg_type a character vector, specifying a filter for message types.
 #'  Note that this can be used to only return 'A' orders for instance.
 #' @param filter_stock_locate an integer vector, specifying a filter for locate codes.
-#'  The locate codes can be looked up by calling \code{\link{read_stock_directory}}.
+#'  The locate codes can be looked up by calling \code{\link{read_stock_directory}}
+#'  or by downloading from NASDAQ by using \code{\link{download_stock_directory}}.
 #'  Note that some message types (e.g., system events, MWCB, and IPO) do not use
 #'  a locate code.
 #' @param min_timestamp an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
@@ -55,9 +73,9 @@
 #' if you have a large amount of RAM, 1e9 (1GB) might be faster
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
 #' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
-#' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
+#' @param force_gunzip only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
-#' @param force_cleanup only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
+#' @param force_cleanup only applies if the input file is a gz-archive If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
 #' @param ... Additional arguments passed to \code{read_itch}
 #' @param add_descriptions add longer descriptions to shortened variables.
 #' The added information is taken from the official ITCH documentation
@@ -66,11 +84,7 @@
 #' @details
 #' The details of the different messages types can be found in the official
 #' ITCH specification (see also \code{\link{open_itch_specification}})
-#'
-#' \itemize{
-#'  \item{\code{read_itch}: Generic function called by the other read
-#'    functions.}
-#' }
+#' 
 #' @references \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}
 #'
 #' @return a data.table containing the messages
@@ -89,6 +103,7 @@
 #' str(od)
 #' str(tr)
 #' str(md)
+#' str(ll)
 #' 
 #' # additional options:
 #' 
@@ -102,7 +117,7 @@
 #' msg_count <- count_messages(file)
 #' od <- read_orders(file, n_max = msg_count)
 #'   
-#' # .gz files will be automatically unzipped
+#' # .gz archives will be automatically unzipped
 #' gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 #' od <- read_orders(gz_file)
 #' # force a decompress and delete the decompressed file afterwards
@@ -111,7 +126,17 @@ NULL
 
 #' @rdname read_functions
 #' @export
-read_itch <- function(file, msg_class,
+#' @details
+#' \itemize{
+#'  \item{\code{read_itch}: Reads a message class message, can also read multiple
+#'  classes in one file-pass.}
+#' }
+#' @examples 
+#' 
+#' ## read_itch()
+#' read_itch(file, "orders")
+#' read_itch(file, c("orders", "trades", "modifications"))
+read_itch <- function(file, filter_msg_class = NA,
                       skip = 0, n_max = -1,
                       filter_msg_type = NA_character_,
                       filter_stock_locate = NA_integer_,
@@ -122,9 +147,6 @@ read_itch <- function(file, msg_class,
                       force_gunzip = FALSE, force_cleanup = FALSE) {
   t0 <- Sys.time()
   msg_classes <- list(
-    "trades" = c("P", "Q", "B"),
-    "orders" = c("A", "F"),
-    "modifications" = c("E", "C", "X", "D", "U"),
     "system_events" = "S",
     "stock_directory" = "R",
     "trading_status" = c("H", "h"),
@@ -133,12 +155,17 @@ read_itch <- function(file, msg_class,
     "mwcb" = c("V", "W"),
     "ipo" = "K",
     "luld" = "J",
+    "orders" = c("A", "F"),
+    "modifications" = c("E", "C", "X", "D", "U"),
+    "trades" = c("P", "Q", "B"),
     "noii" = "I",
     "rpii" = "N"
   )
+  if (length(filter_msg_class) == 1 && is.na(filter_msg_class))
+    filter_msg_class <- names(msg_classes)
   
-  if (!all(msg_class %in% names(msg_classes))) 
-    stop("Invalid msg_class detected")
+  if (!all(filter_msg_class %in% names(msg_classes))) 
+    stop("Invalid filter_msg_class detected")
   
   # treat n_max
   n_max_is_dataframe <- is.data.frame(n_max)
@@ -146,71 +173,37 @@ read_itch <- function(file, msg_class,
     if (!all(c("msg_type", "count") %in% names(n_max)))
       stop("If n_max is a data.frame/table, it must contain 'msg_type' and 'count'!")
     skip <- 0
-    n_max <- as.integer(n_max[msg_type %in% msg_classes[[msg_class]], sum(count)])
+    n_max <- as.integer(n_max[msg_type %in% msg_classes[[filter_msg_class]],
+                              sum(count)])
   }
   # +1 as we want to skip
-  start <- max(skip + 1, 0)
-  end <- max(skip + n_max, -1)
+  start <- max(skip, 0)
+  end <- max(skip + n_max - 1, -1)
+  if (end < start) end <- -1
+  
   if (is.numeric(n_max) && n_max != -1 && !quiet && !n_max_is_dataframe)
-    cat("NOTE: as n_max overrides counting the messages, the numbers for messages may be off.\n")
+    cat("[Note]       n_max overrides counting the messages. Number of messages may be off\n")
+  
+  if (!quiet && (start != 0 | end >= 0))
+    cat(sprintf("[Filter]     skip: %i n_max: %i (%i - %i)\n", 
+                skip, n_max, start + 1, end + 1))
   
   # Treat filters
   # Message types
-  # allow msg_classes: 'AF' (multiple values are split), c('A', 'F'), c(NA, 'A') (NAs are ommited)
-  filter_msg_type <- unique(filter_msg_type)
-  if (any(nchar(filter_msg_type) > 1, na.rm = TRUE))
-    filter_msg_type <- as.character(unlist(sapply(filter_msg_type, strsplit, split = "")))
-  filter_msg_type <- filter_msg_type[!is.na(filter_msg_type)]
-  if (!quiet && length(filter_msg_type) > 0)
-    cat(paste0("[Filter]     msg_type: '",
-               paste(filter_msg_type, collapse = "', '"),
-               "'\n"))
+  filter_msg_type <- check_msg_types(filter_msg_type, quiet)
   
   # locate code
   filter_stock_locate <- filter_stock_locate[!is.na(filter_stock_locate)]
   filter_stock_locate <- as.integer(filter_stock_locate)
   
   # Timestamp
-  min_timestamp <- min_timestamp[!is.na(min_timestamp)]
-  max_timestamp <- max_timestamp[!is.na(max_timestamp)]
-  
-  min_timestamp <- bit64::as.integer64(min_timestamp)
-  max_timestamp <- bit64::as.integer64(max_timestamp)
-  
-  if (!(length(min_timestamp) == length(max_timestamp) ||
-        length(min_timestamp) == 0 | length(max_timestamp) == 0))
-    stop("min_timestamp and max_timestamp have to have the same length or have to be not specified!")
-  
-  if (!quiet && (length(min_timestamp) > 0 | length(max_timestamp) > 0)) {
-    txt <- "[Filter]     timestamp: "
-    if (length(max_timestamp) == 0) {
-      txt <- paste0(txt, ">= ", min_timestamp)
-    } else if (length(min_timestamp) == 0) {
-      txt <- paste0(txt, "<= ", max_timestamp)
-    } else if (length(min_timestamp) == length(max_timestamp)) {
-      txt <- paste0(txt, paste(min_timestamp, max_timestamp,
-                               sep = " - ", collapse = ", "))
-    }
-    cat(txt, "\n")
-  }
+  t <- check_timestamps(min_timestamp, max_timestamp, quiet)
+  min_timestamp <- t$min
+  max_timestamp <- t$max
   
   # Stock
-  if (!(length(filter_stock) == 1 && is.na(filter_stock))) {
-    if (length(stock_directory) == 1 && is.na(stock_directory)) {
-      warning("filter_stock is given, but no stock_directory is specified. Trying to extract stock directory from file\n")
-      stock_directory <- read_stock_directory(file, quiet = TRUE)
-    }
-    
-    if (!all(filter_stock %chin% stock_directory$stock)) {
-      stop(paste0("Not all stocks found in stock_directory, missing: '",
-                  paste(filter_stock[!filter_stock %chin% stock_directory$stock],
-                        collapse = "', '"),
-                  "'"))
-    }
-    # extend locate code by the stocks:
-    filter_stock_locate <- c(filter_stock_locate,
-                             stock_directory[stock %chin%filter_stock, stock_locate])
-  }
+  filter_stock_locate <- check_stock_filters(filter_stock, stock_directory, 
+                                             filter_stock_locate, file)
   
   if (!quiet && length(filter_stock_locate) > 0)
     cat(paste0("[Filter]     stock_locate: '",
@@ -223,12 +216,10 @@ read_itch <- function(file, msg_class,
           length(max_timestamp) > 0) && !quiet)
     cat("NOTE: as filter arguments were given, the number of messages may be off\n")
   
-  
   # Set the default value of the buffer size
-  if (buffer_size < 0)
-    buffer_size <- ifelse(grepl("\\.gz$", file),
-                          min(3 * file.size(file), 1e9),
-                          1e8)
+  if (buffer_size < 0) buffer_size <- ifelse(grepl("\\.gz$", file),
+                                             min(3 * file.size(file), 1e9),
+                                             1e8)
   
   if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
   if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
@@ -238,12 +229,12 @@ read_itch <- function(file, msg_class,
   orig_file <- file
   file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
   
-  res_raw <- read_itch_impl(msg_class, file, start, end,
+  res_raw <- read_itch_impl(filter_msg_class, file, start, end,
                             filter_msg_type, filter_stock_locate,
                             min_timestamp, max_timestamp,
                             buffer_size, quiet)
   
-  if (!quiet) cat("\n[Converting] to data.table\n")
+  if (!quiet) cat("[Converting] to data.table\n")
   
   res <- lapply(res_raw, data.table::setalloccol)
   
@@ -266,7 +257,16 @@ read_itch <- function(file, msg_class,
   res <- lapply(res, function(df) df[msg_type != ""])
   
   # if the res list has only one element, unlist on one level!
-  if (length(res) == 1) res <- res[[1]]
+  
+  if (length(res) == 1) {
+    res <- res[[1]]
+  } else {
+    # take only messages with nrow > 0
+    res <- res[sapply(res, nrow) > 0]
+    
+    if (length(res) == 0 && !quiet) 
+      warning("No messages found for selected filters")
+  }
   
   a <- gc()
   
@@ -280,10 +280,20 @@ read_itch <- function(file, msg_class,
 
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_system_events}: Reads system event messages. Message type 
+#'    \code{S}}
+#' }
+#' @examples 
+#' 
+#' ## read_system_events()
+#' read_system_events(file)
+#' read_system_events(file, add_descriptions = TRUE)
 read_system_events <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "system_events"
+  dots$filter_msg_class <- "system_events"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -307,12 +317,23 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_stock_directory}: Reads stock trading messages. Message 
+#'    type \code{R}}
+#' }
+#' @examples 
+#' 
+#' ## read_stock_directory()
+#' read_stock_directory(file)
+#' read_stock_directory(file, add_descriptions = TRUE)
 read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "stock_directory"
+  dots$filter_msg_class <- "stock_directory"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -360,20 +381,67 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
-read_trading_status <- function(file, ...) {
+#' @details 
+#' \itemize{
+#'  \item{\code{read_trading_status}: Reads trading status messages. Message 
+#'    type \code{H} and \code{h}}
+#' }
+#' @examples 
+#' 
+#' ## read_trading_status()
+#' read_trading_status(file)
+#' read_trading_status(file, add_descriptions = TRUE)
+read_trading_status <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "trading_status"
-  do.call(read_itch, dots)
+  dots$filter_msg_class <- "trading_status"
+  res <- do.call(read_itch, dots)
+  
+  if (add_descriptions) {
+    names_ <- names(res)
+    
+    trs <- data.table::data.table(
+      trading_state = c("H", "P", "Q", "T"),
+      trading_state_note = c(
+        "Halted across all US equity markets / SROs",
+        "Paused across all US equity markets / SROs (Nasdaq-listed securities only",
+        "Quotation only period for cross-SRO halt or pause",
+        "Trading on Nasdaq"
+      )
+    )
+    res <- merge(res, trs, by = "trading_state", all.x = TRUE)
+    
+    mkt <- data.table::data.table(
+      market_code = c("Q", "B", "X"),
+      market_code_note = c("Nasdaq", "BX", "PSX")
+    )
+    res <- merge(res, mkt, by = "market_code", all.x = TRUE)
+    
+    data.table::setcolorder(res, names_)
+  }
+  
+  return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_reg_sho}: Reads messages regarding reg SHO. Message type 
+#'    \code{Y}}
+#' }
+#' @examples 
+#' 
+#' ## read_reg_sho()
+#' read_reg_sho(file)
+#' read_reg_sho(file, add_descriptions = TRUE)
 read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "reg_sho"
+  dots$filter_msg_class <- "reg_sho"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -394,12 +462,23 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_market_participant_states}: Reads messages regarding the 
+#'    status of market participants. Message type \code{L}}
+#' }
+#' @examples 
+#' 
+#' ## read_market_participant_states()
+#' read_market_participant_states(file)
+#' read_market_participant_states(file, add_descriptions = TRUE)
 read_market_participant_states <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "market_participant_states"
+  dots$filter_msg_class <- "market_participant_states"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -423,12 +502,22 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_mwcb}: Reads messages regarding Market-Wide-Circuit-Breakers
+#'    (MWCB). Message type \code{V} and \code{W}}
+#' }
+#' @examples 
+#' 
+#' ## read_mwcb()
+#' read_mwcb(file)
 read_mwcb <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "mwcb"
+  dots$filter_msg_class <- "mwcb"
   # no filter for mwcb... they are always set to 0! in the messages
   if ((length(dots$filter_stock_locate) > 0 && !is.na(dots$filter_stock_locate)) ||
       (length(dots$filter_stock) > 0 && !is.na(dots$filter_stock))) 
@@ -437,12 +526,22 @@ read_mwcb <- function(file, ...) {
   dots$filter_stock <- NA_character_
   do.call(read_itch, dots)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_ipo}: Reads messages regarding IPOs. Message type \code{K}}
+#' }
+#' @examples 
+#' 
+#' ## read_ipo()
+#' read_ipo(file)
+#' read_ipo(file, add_descriptions = TRUE)
 read_ipo <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "ipo"
+  dots$filter_msg_class <- "ipo"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -461,44 +560,95 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_luld}: Reads messages regarding LULDs (limit up-limit down)
+#'    auction collars. Message type \code{J}}
+#' }
+#' @examples 
+#' 
+#' ## read_luld()
+#' read_luld(file)
 read_luld <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "luld"
+  dots$filter_msg_class <- "luld"
   do.call(read_itch, dots)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details
+#' \itemize{
+#'  \item{\code{read_orders}: Reads order messages. Message type \code{A} and 
+#'    \code{F}}
+#' }
+#' @examples 
+#' 
+#' ## read_orders()
+#' read_orders(file)
 read_orders <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "orders"
+  dots$filter_msg_class <- "orders"
   do.call(read_itch, dots)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_modifications}: Reads order modification messages. Message 
+#'    type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}}
+#' }
+#' @examples 
+#' 
+#' ## read_modifications()
+#' read_modifications(file)
 read_modifications <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "modifications"
+  dots$filter_msg_class <- "modifications"
   do.call(read_itch, dots)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_trades}: Reads trade messages. Message type \code{P}, 
+#'    \code{Q} and \code{B}}
+#' }
+#' @examples 
+#' 
+#' ## read_trades()
+#' read_trades(file)
 read_trades <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "trades"
+  dots$filter_msg_class <- "trades"
   do.call(read_itch, dots)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_noii}: Reads Net Order Imbalance Indicatio (NOII) messages. 
+#'    Message type \code{I}}
+#' }
+#' @examples 
+#' 
+#' ## read_noii()
+#' read_noii(file)
+#' read_noii(file, add_descriptions = TRUE)
 read_noii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "noii"
+  dots$filter_msg_class <- "noii"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
@@ -545,12 +695,23 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
   
   return(res)
 }
+
 #' @rdname read_functions
 #' @export
+#' @details 
+#' \itemize{
+#'  \item{\code{read_rpii}: Reads Retail Price Improvement Indicator (RPII) 
+#'    messages. Message type \code{N}}
+#' }
+#' @examples 
+#' 
+#' ## read_rpii()
+#' read_rpii(file)
+#' read_rpii(file, add_descriptions = TRUE)
 read_rpii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
-  dots$msg_class <- "rpii"
+  dots$filter_msg_class <- "rpii"
   res <- do.call(read_itch, dots)
   
   if (add_descriptions) {
