@@ -8,7 +8,7 @@ gz_file  <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITC
 expect_true(file.exists(raw_file))
 expect_true(file.exists(gz_file))
 
-tmpfile <- tempfile("20101224", fileext = ".TEST_ITCH_50")
+tmpfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 tmpfile
 
 gunzip_file(gz_file, tmpfile)

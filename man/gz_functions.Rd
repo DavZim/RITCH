@@ -14,7 +14,7 @@ gunzip_file(
 
 gzip_file(
   infile,
-  outfile = paste0(infile, ".gz"),
+  outfile = NA,
   buffer_size = min(4 * file.size(infile), 2e+09)
 )
 }
@@ -43,12 +43,16 @@ Allows the compression and uncompression of files
 }
 }
 \examples{
-file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
-(outfile <- gunzip_file(file, "tmp"))
+gzfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+file   <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+
+# uncompress file
+(outfile <- gunzip_file(gzfile, "tmp"))
 file.info(outfile)
 unlink(outfile)
 
-(outfile <- gzip_file("tmp"))
+# compress file
+(outfile <- gzip_file(file))
 file.info(outfile)
 unlink(outfile)
 }

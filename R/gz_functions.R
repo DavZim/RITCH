@@ -16,7 +16,9 @@
 #' @return The filename of the unzipped file, invisibly
 #'
 #' @examples
-#' file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+#' gzfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+#' file   <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
+#' 
 NULL
 
 #' @rdname gz_functions
@@ -26,7 +28,8 @@ NULL
 #'  \item{\code{gunzip_file}: uncompresses a gz-archive to raw binary data}
 #' }
 #' @examples
-#' (outfile <- gunzip_file(file, "tmp"))
+#' # uncompress file
+#' (outfile <- gunzip_file(gzfile, "tmp"))
 #' file.info(outfile)
 #' unlink(outfile)
 #' 
@@ -46,13 +49,29 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
 #'  \item{\code{gzip_file}: compresses a raw binary data file to a gz-archive}
 #' }
 #' @examples 
-#' (outfile <- gzip_file("tmp"))
+#' # compress file
+#' (outfile <- gzip_file(file))
 #' file.info(outfile)
 #' unlink(outfile)
-gzip_file <- function(infile, outfile = paste0(infile, ".gz"),
+gzip_file <- function(infile, 
+                      outfile = NA,
                       buffer_size = min(4 * file.size(infile), 2e9)) {
   stopifnot(file.exists(infile))
+  
+  if (is.na(outfile)) {
+    outfile <- ifelse(grepl("\\.gz$", infile),
+                      infile, 
+                      paste0(infile, ".gz"))
+    # remove path
+    xx <- strsplit(outfile, "/")[[1]]
+    outfile <- xx[length(xx)]
+  }
   if (file.exists(outfile)) unlink(outfile)
+  
+  if (grepl("\\.gz$", infile)) {
+    warning("Infile is already a gzipped-archive")
+    return(invisible(infile))
+  }
   
   gzip_file_impl(infile, outfile, buffer_size)
   return(invisible(outfile))
