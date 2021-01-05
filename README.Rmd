@@ -26,7 +26,9 @@ A full list of messages is shown later.
 The main purpose of this package is to parse the binary ITCH files to a [`data.table`](https://CRAN.R-project.org/package=data.table) in `R`.
 
 The package leverages [`Rcpp`](https://CRAN.R-project.org/package=Rcpp) and `C++` for efficient message parsing.
-As an example, parsing 100 million orders from the `01302020.NASDAQ_ITCH50.gz` NASDAQ sample file (13 GB uncompressed) takes around 30 seconds or 0.3 secs per 1 million orders.
+<!-- As an example, parsing 100 million orders from the `01302020.NASDAQ_ITCH50` NASDAQ sample file (13 GB) takes around 30 seconds or 0.3 secs per 1 million orders. -->
+
+<!-- read_orders("../RITCH_data/01302020.NASDAQ_ITCH50", n_max = 1e8, buffer_size = 1e9) -->
 
 Note that the package provides a small simulated sample dataset in the `ITCH_50` format for testing and example purposes.
 Helper functions are provided to list and download sample files from NASDAQs official FTP server.
@@ -62,19 +64,39 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
 # count the number of messages in the file
 msg_count <- count_messages(file)
-str(msg_count)
+dim(msg_count)
+names(msg_count)
 
 # read the orders into a data.table
 orders <- read_orders(file)
-str(orders)
+dim(orders)
+names(orders)
 
 # read the first 100 trades
 trades <- read_trades(file, n_max = 100)
-str(trades)
+dim(trades)
+names(trades)
 ```
 Note that the file can be a plain `ITCH_50` file or a gzipped `ITCH_50.gz` file, which will be decompressed to the current directory.
 
 If you want to know more about the functions of the package, read on.
+
+## Main Functions
+
+`RITCH` provides the following main functions:
+
+- `read_itch(file, ...)` to read an ITCH file
+Convenient wrappers for different message classes such as `orders`, `trades`, etc are also provided as `read_orders()`, `read_trades()`, ...
+- `filter_itch(infile, outfile, ...)` to filter an ITCH file and write directly to another file without loading the data into R
+- `write_itch(data, file, ...)` to write a dataset to an ITCH file
+
+There are also some helper functions provided, a selection is:
+
+- `download_sample_file(choice)` to download a sample file from the NASDAQ FTP server and `list_sample_files()` to get a list of all available sample files
+- `download_stock_directory(exchange, date)` to download the stock locate information for a given exchange and date
+- `open_itch_ftp()` to open the official NASDAQ FTP server in your browser
+- `gzip_file(infile, outfile)` and `gunzip_file(infile, outfile)` for gzip functionality
+- `open_itch_specification()` to open the official NASDAQ ITCH specification PDF in your browser
 
 ## Writing ITCH Files
 
@@ -97,6 +119,7 @@ A simple write example would be to read all modifications from an ITCH file and 
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 md <- read_modifications(file, quiet = TRUE)
 dim(md)
+names(md)
 
 outfile <- write_itch(md, "modifications", compress = TRUE)
 
@@ -105,7 +128,7 @@ files <- c(full_file = file, subset_file = outfile)
 sapply(files, function(x) file.info(x)[["size"]])
 ```
 ```{r, include = FALSE}
-if (file.exists(outfile)) unlink(outfile)
+unlink(outfile)
 ```
 
 
@@ -120,82 +143,65 @@ A typical work flow would look like this:
 ## Read in the different message classes
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
-# create a list of functions which are used to read the data, in this case:
-# system_events, stock_directory, and orders
-read_functions <- list(
-  system_event = read_system_events, 
-  stock_directory = read_stock_directory, 
-  orders = read_orders)
-
 # read in the different message types
-data <- lapply(
-  read_functions, 
-  function(f) f(file, filter_stock_locate = c(1, 3), quiet = TRUE)
-)
+data <- read_itch(file, 
+                  c("system_events", "stock_directory", "orders"),
+                  filter_stock_locate = c(1, 3), 
+                  quiet = TRUE)
+
 str(data, max.level = 1)
 
 
 ## Write the different message classes
-outfile <- write_itch(data, "alc_char_subset", compress = TRUE)
+outfile <- write_itch(data, 
+                      "alc_char_subset", 
+                      compress = TRUE)
 outfile
 
 # compare file sizes
-files <- c(full_file = file, subset_file = outfile)
-sapply(files, function(x) file.info(x)[["size"]])
+sapply(c(full_file = file, subset_file = outfile), 
+       file.size)
 
 
 ## Lastly, compare the two datasets to see if they are identical
-data2 <- lapply(read_functions, function(f) f(outfile, quiet = TRUE))
+data2 <- read_itch(outfile, quiet = TRUE)
 all.equal(data, data2)
 ```
 ```{r, include=FALSE}
 # remove files from write_itch again...
-if (file.exists(outfile)) unlink(outfile)
+unlink(outfile)
 outfile_unz <- gsub("\\.gz$", "", outfile)
-if (file.exists(outfile_unz)) unlink(outfile_unz)
+unlink(outfile_unz)
 ```
 
-For comparison, the same format in the [`qs`](https://CRAN.R-project.org/package=qs) format results in `44956` bytes.
-<!---qs::qsave(data, "data.qs", preset = "archive");file.info("data.qs")[["size"]]-->
+For comparison, the same format in the [`qs`](https://CRAN.R-project.org/package=qs) format results in `44788` bytes.
+<!---qs::qsave(data, "data.qs", preset = "archive");file.info("data.qs")[["size"]];unlink("data.qs")-->
 
 ## ITCH Messages
 
 There are a total of 22 different message types which are grouped into 13 classes by `RITCH`.
 
 The messages and their respective classes are:
+```{r, echo=FALSE}
+d <- get_msg_classes()
+d$msg_type <- paste0("<code>", d$msg_type, "</code>")
+d$read_function <- paste0("<code>", "read_", d$msg_class, "()", "</code>")
 
-| Type   | Official Name                                      | `RITCH` class  | `RITCH` read function              | ITCH Section   |  
-| -----: | :-----                                             | ---:           | ---:                               | -------------: |  
-| `S`    | System Event Message                               |  System Events | `read_system_events()`             | 4.1            |  
-| `R`    | Stock Directory                                    |  Stock Directory| `read_stock_directory()`           | 4.2.1          |  
-| `H`    | Stock Trading Action                               |  Trading Status| `read_trading_status()`            | 4.2.2          |  
-| `Y`    | Reg SHO Short Sale Price Test Restricted Indicator |  Reg SHO       | `read_reg_sho()`                   | 4.2.3          |  
-| `L`    | Market Participant Position                        |  Market Participant States | `read_market_participant_states()` | 4.2.4          |  
-| `V`    | MWCB Decline Level Message                         |  MWCB          | `read_mwcb()`                      | 4.2.5.1        |  
-| `W`    | MWCB Status Message                                |  MWCB          | `read_mwcb()`                      | 4.2.5.2        |  
-| `K`    | IPO Quoting Period Update                          |  IPO           | `read_ipo()`                       | 4.2.6          |  
-| `J`    | Limit Up - Limit Down (LULD) Auction Collar        |  LULD          | `read_luld()`                      | 4.2.7          |  
-| `h`    | Operational Halt                                   |  Trading Status| `read_trading_status()`            | 4.2.8          |  
-| `A`    | Add Order - no MPID Attribution                    |  Orders        | `read_orders()`                    | 4.3.1          |  
-| `F`    | Add Order with MPID Attribution                    |  Orders        | `read_orders()`                    | 4.3.2          |  
-| `E`    | Order Executed Message                             |  Trades        | `read_trades()`                    | 4.4.1          |  
-| `C`    | Order Executed with Price Message                  |  Trades        | `read_trades()`                    | 4.4.2          |  
-| `X`    | Order Cancel Message                               |  Trades        | `read_trades()`                    | 4.4.3          |  
-| `D`    | Order Delete Message                               |  Trades        | `read_trades()`                    | 4.4.4          |  
-| `U`    | Order Replace Message                              |  Trades        | `read_trades()`                    | 4.4.5          |  
-| `P`    | Trade Message (Non-Cross)                          |  Modifications | `read_modifications()`             | 4.5.1          |  
-| `Q`    | Cross Trade Message                                |  Modifications | `read_modifications()`             | 4.5.2          |  
-| `B`    | Broken Trade/Order Execution Message               |  Modifications | `read_modifications()`             | 4.5.3          |  
-| `I`    | Net Order Imbalance Indicator (NOII) Message       |  NOII          | `read_noii()`                      | 4.6            |  
-| `N`    | Retail Price Improvement Indicator (RPII)          |  RPII          | `read_rpii()`                      | 4.7            |  
+data.table::setcolorder(d, c("msg_type", "msg_class", "read_function", 
+                             "msg_name", "doc_nr"))
+data.table::setnames(d, c("Type", "<code>RITCH</code> Class", 
+                          "<code>RITCH</code> Read Function", "ITCH Name", 
+                          "ITCH Spec Section"))
 
+knitr::kable(d, escape = FALSE)
+```
 
 Note that if you are interested in the exact definition of the messages and its components, you should look into the [official ITCH specification](https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf), which can also be opened by calling `open_itch_specification()`.
 
 
 ## Data
 
-The `RITCH` package provides a small, artificial dataset in the ITCH format for example and testing purposes.
+The `RITCH` package provides a small, artificial dataset in the ITCH format for example and test purposes.
 To learn more about the dataset check `?ex20101224.TEST_ITCH_50`.
 
 To access the dataset use:
@@ -247,14 +253,16 @@ while (n_parsed < n_messages) {
   # read in a batch
   df <- read_orders(file, quiet = TRUE, skip = n_parsed, n_max = n_batch)
   cat(sprintf(": with %04i orders\n", nrow(df)))
-  # do someting with the data, e.g., save data
+  # use the data
   # ...
   n_parsed <- n_parsed + n_batch
 }
 ```
 
-### Filter Data
-You can also filter a dataset directly while reading messages for `msg_type`, `stock_locate`, `timestamp` range, as well as `stock`. Note that filtering for a specific stock, is just a shorthand lookup for the stocks `stock_locate`s, therefore a `stock_directory` needs to be supplied (either by providing the output from `read_stock_directory()` or `download_stock_locate()`) or the function will try to extract the stock directory from the file.
+### Filter when Reading Data
+
+You can also filter a dataset directly while reading messages for `msg_type`, `stock_locate`, `timestamp` range, as well as `stock`.
+Note that filtering for a specific stock, is just a shorthand lookup for the stocks' `stock_locate` code, therefore a `stock_directory` needs to be supplied (either by providing the output from `read_stock_directory()` or `download_stock_locate()`) or the function will try to extract the stock directory from the file (might take some time depending on the size of the file).
 
 ```{r}
 # read in the stock directory as we filter for stock names later on
@@ -262,7 +270,7 @@ sdir <- read_stock_directory(file, quiet = TRUE)
 
 od <- read_orders(
   file, 
-  filter_msg_type = "A",          # take only no MPID add orders
+  filter_msg_type = "A",          # take only 'No MPID add orders'
   min_timestamp = 43200000000000, # start at 12:00:00.000000
   max_timestamp = 55800000000000, # end at 15:30:00.000000
   filter_stock_locate = 1,        # take only stock with code 1
@@ -270,14 +278,51 @@ od <- read_orders(
   stock_directory = sdir          # provide the stock_directory to match stock names to stock_locates
 )
 
+# count the different message types
 od[, .(n = .N), by = msg_type]
+# see if the timestamp is in the specified range
 range(od$timestamp)
+# count the stock/stock-locate codes
 od[, .(n = .N), by = .(stock_locate, stock)]
 ```
 
-If you are interested in gaining a better understanding of the internal data structures, converting data to and from binary, have a look at the `debug` folder and its contents.
+### Filter Data to File
 
-### Create a Plot with Trades and Orders of the largest ETFs
+On larger files, reading the data into memory might not be the best idea, especially if only a small subset is actually needed.
+In this case, the `filter_itch` function will come in handy.
+
+The basic design is identical to the `read_itch` function but instead of reading the messages into memory, they are immediately written to a file.
+
+Taking the filter data example from above, we can do the following
+
+```{r}
+# the function returns the final name of the output file
+outfile <- filter_itch(
+  infile = file,
+  outfile = "filtered",
+  filter_msg_type = "A",          # take only 'No MPID add orders'
+  min_timestamp = 43200000000000, # start at 12:00:00.000000
+  max_timestamp = 55800000000000, # end at 15:30:00.000000
+  filter_stock_locate = 1,        # take only stock with code 1
+  filter_stock = "CHAR",          # but also take stock CHAR
+  stock_directory = sdir          # provide the stock_directory to match stock names to stock_locates
+)
+
+file.size(outfile)
+
+# read in the orders from the filtered file
+od2 <- read_orders(outfile)
+
+# check that the filtered dataset contains the same information as in the example above
+all.equal(od, od2)
+```
+```{r, include=FALSE}
+# remove files from filter_itch again...
+unlink(outfile)
+```
+
+
+## Create a Plot with Trades and Orders of the largest ETFs
 
 As a last step, a quick visualization of the example dataset
 
@@ -307,8 +352,10 @@ ggplot() +
 ```
 
 
-## Open Issues
+## Other Notes
 
 If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality, please feel free to create an issue or a pull request. 
 
 Citation and CRAN release are WIP.
+
+If you are interested in gaining a better understanding of the internal data structures, converting data to and from binary, have a look at the `debug` folder and its contents (only available on the [RITCH's Github page](https://github.com/DavZim/RITCH/)).
