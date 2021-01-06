@@ -175,8 +175,7 @@ filter_itch <- function(infile, outfile,
   
   a <- gc()
   
-  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
+  report_end(t0, quiet, infile)
   
   return(invisible(outfile))
 }

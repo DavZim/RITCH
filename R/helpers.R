@@ -250,3 +250,44 @@ check_buffer_size <- function(buffer_size, file) {
                   "the function crashes, try to use a smaller buffer_size"))
   return(buffer_size)
 }
+
+#' Formats a number of bytes 
+#'
+#' @param x the value
+#' @param digits the number of digits to display, default value is 2
+#' @param unit_suffix the unit suffix, default value is 'B' (for bytes),
+#' useful is also 'B/s' if you have read/write speeds
+#' @param base the base for kilo, mega, ... definition, default is 1000
+#' 
+#' @return
+#' @export
+#'
+#' @examples
+#' format_bytes(1234)
+#' format_bytes(1234567890)
+#' format_bytes(123456789012, unit_suffix = "iB", base = 1024)
+format_bytes <- function(x, digits = 2, unit_suffix = "B", base = 1000) {
+  nr <- floor(log(x, base))
+  # future proof it :)
+  mtch <- c("", "K", "M", "G", "T", "P", "E", "Z", "Y")
+  units <- paste0(mtch[nr + 1], unit_suffix)
+  val <- x / base^nr
+  
+  res <- sprintf(sprintf("%%.%if%%s", digits), val, units)
+  names(res) <- names(x)
+  res
+}
+
+report_end <- function(t0, quiet, file = NA) {
+  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+  
+  if (is.na(file)) {
+    txt <- ""
+  } else {
+    if (file.exists(file)) size <- file.size(file) else size <- file
+    speed_txt <- format_bytes(size / diff_secs, digits = 2,
+                              unit_suffix = "B/s")
+    txt <- sprintf(" at %s", speed_txt)
+  }
+  if (!quiet) cat(sprintf("[Done]       in %.2f secs%s\n", diff_secs, txt))
+}

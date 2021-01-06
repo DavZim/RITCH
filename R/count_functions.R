@@ -56,8 +56,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
     df <- df[dd, on = "msg_type"]
   }
   
-  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
+  report_end(t0, quiet, orig_file)
   
   return(df)
 }

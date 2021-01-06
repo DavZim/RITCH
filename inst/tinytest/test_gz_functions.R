@@ -18,14 +18,6 @@ expect_equal(
 tmpfile2 <- tempfile(fileext = "_20101224.TEST_ITCH_50.gz")
 gzip_file(tmpfile, tmpfile2)
 
-# somehow MacOS does not produce the same archive...
-if (Sys.info()[["sysname"]] != "Darwin") {
-  expect_equal(
-    tools::md5sum(gz_file)[[1]],
-    tools::md5sum(tmpfile2)[[1]]
-  )
-}
-
 # check that the file contents are identical
 expect_equal(
   read_itch(raw_file, quiet = TRUE),

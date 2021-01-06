@@ -62,7 +62,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 msg_count <- count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs
+#> [Done]       in 0.00 secs at 539.57MB/s
 dim(msg_count)
 #> [1] 22  2
 names(msg_count)
@@ -73,7 +73,7 @@ orders <- read_orders(file)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.08 secs
+#> [Done]       in 0.08 secs at 6.06MB/s
 dim(orders)
 #> [1] 5000   13
 names(orders)
@@ -87,7 +87,7 @@ trades <- read_trades(file, n_max = 100)
 #> [Filter]     skip: 0 n_max: 100 (1 - 100)
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.04 secs
+#> [Done]       in 0.04 secs at 13.05MB/s
 dim(trades)
 #> [1] 100  14
 names(trades)
@@ -167,13 +167,13 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs
+#> [Done]       in 0.01 secs at 3.43MB/s
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
-sapply(files, function(x) file.info(x)[["size"]])
+format_bytes(sapply(files, file.size))
 #>   full_file subset_file 
-#>      465048       23950
+#>  "465.05KB"   "23.95KB"
 ```
 
 ### Comprehensive Write Example
@@ -210,15 +210,17 @@ outfile <- write_itch(data,
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs
+#> [Done]       in 0.01 secs at 4.53MB/s
 outfile
 #> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
 
 # compare file sizes
-sapply(c(full_file = file, subset_file = outfile), 
-       file.size)
+format_bytes(
+  sapply(c(full_file = file, subset_file = outfile), 
+         file.size)
+)
 #>   full_file subset_file 
-#>      465048       37889
+#>  "465.05KB"   "37.89KB"
 
 
 ## Lastly, compare the two datasets to see if they are identical
@@ -404,7 +406,7 @@ od <- read_orders(
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.05 secs
+#> [Done]       in 0.04 secs at 11.14MB/s
 
 # count the different message types
 od[, .(n = .N), by = msg_type]
@@ -450,17 +452,17 @@ outfile <- filter_itch(
 #> [Filter]     stock_locate: '1', '3'
 #> [Bytes]      scanned 465048, filtered 41116
 #> [Messages]   scanned 10979, filtered 1082
-#> [Done]       in 0.05 secs
+#> [Done]       in 0.04 secs at 11.57MB/s
 
-file.size(outfile)
-#> [1] 41116
+format_bytes(file.size(outfile))
+#> [1] "41.12KB"
 
 # read in the orders from the filtered file
 od2 <- read_orders(outfile)
 #> [Counting]   num messages 1,082
 #> [Counting]   num 'orders' messages 1,082
 #> [Converting] to data.table
-#> [Done]       in 0.05 secs
+#> [Done]       in 0.04 secs at 1.03MB/s
 
 # check that the filtered dataset contains the same information as in the example above
 all.equal(od, od2)

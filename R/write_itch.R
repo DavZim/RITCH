@@ -95,9 +95,9 @@ write_itch <- function(ll, file, add_meta = TRUE,
   bytes <- write_itch_impl(ll, file, append = append, gz = compress, 
                            max_buffer_size = buffer_size, quiet = quiet)
   
-  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   if (!quiet) cat(sprintf("[Outfile]    '%s'\n", file))
-  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
+
+  report_end(t0, quiet, file)
   
   return(invisible(file))
 }

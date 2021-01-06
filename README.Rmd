@@ -125,7 +125,7 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
-sapply(files, function(x) file.info(x)[["size"]])
+format_bytes(sapply(files, file.size))
 ```
 ```{r, include = FALSE}
 unlink(outfile)
@@ -159,8 +159,10 @@ outfile <- write_itch(data,
 outfile
 
 # compare file sizes
-sapply(c(full_file = file, subset_file = outfile), 
-       file.size)
+format_bytes(
+  sapply(c(full_file = file, subset_file = outfile), 
+         file.size)
+)
 
 
 ## Lastly, compare the two datasets to see if they are identical
@@ -308,7 +310,7 @@ outfile <- filter_itch(
   stock_directory = sdir          # provide the stock_directory to match stock names to stock_locates
 )
 
-file.size(outfile)
+format_bytes(file.size(outfile))
 
 # read in the orders from the filtered file
 od2 <- read_orders(outfile)

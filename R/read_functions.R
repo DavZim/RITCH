@@ -263,10 +263,9 @@ read_itch <- function(file, filter_msg_class = NA,
       warning("No messages found for selected filters")
   }
   
-  a <- gc()
   
-  diff_secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  if (!quiet) cat(sprintf("[Done]       in %.2f secs\n", diff_secs))
+  a <- gc()
+  report_end(t0, quiet, orig_file)
   
   return(res)
 }
