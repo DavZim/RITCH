@@ -238,13 +238,17 @@ read_itch <- function(file, filter_msg_class = NA,
   
   if (add_meta) {
     # add the date and exchange
-    res <- lapply(res, function(df)
+    res <- lapply(res, function(df) {
+      dtime <- nanotime::nanotime(NULL)
+      if (nrow(df) > 0)
+        dtime <- nanotime::nanotime(as.Date(filedate)) + df$timestamp
+      
       df[, ':=' (
         date = filedate,
-        datetime = nanotime::nanotime(as.Date(filedate)) + df$timestamp,
+        datetime = dtime,
         exchange = get_exchange_from_filename(file)
-        )]
-    )
+      )]
+    })
   }
   
   # remove messages with empty msg_types, this can be the case if n_max was set
