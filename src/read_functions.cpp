@@ -64,7 +64,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     MessageParser* msgp_ptr = new MessageParser(cls, start, end);
     
     // check if this class needs to be activated?!
-    for (const std::string c : classes) if (c == cls) msgp_ptr->activate();
+    for (const std::string &c : classes) if (c == cls) msgp_ptr->activate();
     
     int64_t num_msg_this_type = 0;
     std::vector<char> this_msg_types = msgp_ptr->msg_types;

@@ -83,7 +83,7 @@ int64_t write_itch_impl(Rcpp::List ll, std::string filename,
     const char msg_type = Rcpp::as<char>(mt[lp_idx]);
     
     const int64_t msg_length = get_message_size(msg_type);
-    if (i + msg_length > buff_size) {
+    if (i + msg_length > (int64_t) buff_size) {
       if (!quiet) Rprintf(".");
       // write_buffer
       // append can only be set on the first write... afterwards append by default
