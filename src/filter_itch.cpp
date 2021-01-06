@@ -72,7 +72,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
   char * obuf;
   ibuf = (char*) malloc(buf_size);
   obuf = (char*) malloc(buf_size);
-  // Rprintf("Allocating buffer to size %" PRId64 "\n", buf_size);
+  // Rprintf("Allocating buffer to size %lld\n", buf_size);
   
   int64_t bytes_read = 0, this_buffer_size = 0, bytes_written = 0;
   int64_t msg_read = 0, msg_count = 0;
@@ -121,7 +121,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
       
       if (o + msg_size > buf_size) {
         // write to buffer until o
-        // Rprintf("New obuf, write  %9" PRId64 " bytes to ofile next msg %i\n",
+        // Rprintf("New obuf, write  %9lld bytes to ofile next msg %i\n",
         //         o, msg_size);
         fwrite(obuf, sizeof(char), o, ofile);
         // reset obuf
@@ -132,10 +132,10 @@ void filter_itch_impl(std::string infile, std::string outfile,
       }
       
       if (parse_message) {
-        // Rprintf("Filter ibuf at %" PRId64 " copy into obuf at %" PRId64 "\n",
+        // Rprintf("Filter ibuf at %lld copy into obuf at %lld\n",
         // i, o);
         msg_read++;
-        // Rprintf("Copying '%i' from ibuf at %" PRId64 " to obuf at %" PRId64 "\n",
+        // Rprintf("Copying '%i' from ibuf at %lld to obuf at %lld\n",
         //         msg_size, i, o);
         std::memcpy(&(obuf[o]), &(ibuf[i]), msg_size);
         o += msg_size;
@@ -149,7 +149,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
     
     // offset file pointer to fit the next message into the buffer
     const int64_t offset = i - this_buffer_size;
-    // Rprintf("Filter ibuf at %6" PRId64 " offsetting by %3" PRId64 " - Total bytes read %" PRId64 "\n",
+    // Rprintf("Filter ibuf at %6lld offsetting by %3lld - Total bytes read %lld\n",
     //         i, offset, bytes_read + i);
     fseek(ifile, offset, SEEK_CUR);
     bytes_read += i;
@@ -157,14 +157,14 @@ void filter_itch_impl(std::string infile, std::string outfile,
   
   if (o > 0) {
     // write to buffer until o
-    // Rprintf("Last obuf, write %9" PRId64 " bytes to ofile\n", o);
+    // Rprintf("Last obuf, write %9lld bytes to ofile\n", o);
     fwrite(obuf, sizeof(char), o, ofile);
   }
   
   if (!quiet) {
-    Rprintf("[Bytes]      scanned %" PRId64 ", filtered %" PRId64"\n",
+    Rprintf("[Bytes]      scanned %lld, filtered %lld\n",
             filesize, bytes_written + o);
-    Rprintf("[Messages]   scanned %" PRId64 ", filtered %" PRId64"\n",
+    Rprintf("[Messages]   scanned %lld, filtered %lld\n",
             msg_count, msg_read);
   }
   

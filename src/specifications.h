@@ -1,6 +1,8 @@
 #ifndef SPECIFICATIONS_H
 #define SPECIFICATIONS_H
 
+// to fix windows int64_t typedef issues...
+#include <stdint.h>
 #include <string>
 #include <vector>
 

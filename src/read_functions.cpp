@@ -102,7 +102,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
   char * buf;
   buf = (char*) malloc(buf_size);
-  // Rprintf("Allocating buffer to size %" PRId64 "\n", buf_size);
+  // Rprintf("Allocating buffer to size %lld\n", buf_size);
   
   int64_t bytes_read = 0, this_buffer_size = 0;
   bool max_ts_reached = false;
@@ -116,7 +116,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     
     int msg_size = 0;
     do {
-      // Rprintf("offset %" PRId64 ":%" PRId64 " (size size %" PRId64 ") '%c'\n",
+      // Rprintf("offset %lld:%lld (size size %lld) '%c'\n",
       //         bytes_read + i, bytes_read + i + get_message_size(buf[i + 2]),
       //         get_message_size(buf[i + 2]), buf[i + 2]);
       
@@ -143,13 +143,13 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
       if (parse_message) msg_parsers[mt - 'A']->parse_message(&buf[i + 2]);
       
       // Rprintf("  take ? %i\n", msg_parsers[mt - 'A']->active ? 1 : 0);
-      // Rprintf("msg size %" PRId64 "\n", msg_size);
+      // Rprintf("msg size %lld\n", msg_size);
       i += msg_size;
-      // Rprintf("  i %" PRId64 "\n", i);
+      // Rprintf("  i %lld\n", i);
       
-      // Rprintf("i + msg_size <= this_buffer_size %" PRId64 " <= %" PRId64 "\n",
+      // Rprintf("i + msg_size <= this_buffer_size %lld <= %lld\n",
       // i + msg_size, this_buffer_size);
-      // Rprintf("bytes_read + i <= filesize %" PRId64 " <= %" PRId64 "\n",
+      // Rprintf("bytes_read + i <= filesize %lld <= %lld\n",
       // bytes_read + i, filesize);
       
     } while (i + msg_size <= this_buffer_size && bytes_read + i <= filesize);
@@ -258,7 +258,7 @@ void MessageParser::activate() {
 void MessageParser::init_vectors(int64_t n) {
   if (!active) return;
   size = n;
-  // Rprintf("Resize %s to %" PRId64 "\n", type.c_str(), n);
+  // Rprintf("Resize %s to %lld\n", type.c_str(), n);
   
   msg_type        = Rcpp::CharacterVector(n);
   stock_locate    = Rcpp::IntegerVector(n);
@@ -772,7 +772,7 @@ Rcpp::List MessageParser::get_data_frame() {
   
   // prune vector
   if (index != msg_type.size()) {
-    // Rprintf("Pruning found index '%" PRId64 "' msg_type_size '%" PRId64 "'!\n",
+    // Rprintf("Pruning found index '%lld' msg_type_size '%lld'!\n",
     //         index, msg_type.size());
     prune_vectors();
   }

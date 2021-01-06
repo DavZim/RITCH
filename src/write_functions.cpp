@@ -48,7 +48,7 @@ int64_t write_itch_impl(Rcpp::List ll, std::string filename,
     
     // populate the timestamps
     std::memcpy(&(timestamps[ii]), &(ts[0]), sizeof(int64_t));
-    // Rprintf("ts[0] is %+" PRId64 "; ts is now +" PRId64 "\n", ts[0], timestamps[ii]);
+    // Rprintf("ts[0] is %+lld; ts is now %+lld\n", ts[0], timestamps[ii]);
     
     for (int l = 0; l < mt.size(); l++) {
       const char msg = Rcpp::as<char>(mt[l]);
