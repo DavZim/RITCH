@@ -9,8 +9,8 @@ License: GPL-3
 Depends: R (>= 3.5.0)
 Imports: data.table,
   Rcpp (>= 0.12.12),
-  nanotime,
-  bit64
+  nanotime (>= 0.3.2),
+  bit64 (>= 4.0.5)
 LinkingTo: Rcpp
 Encoding: UTF-8
 RoxygenNote: 7.1.1
