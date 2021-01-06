@@ -4,7 +4,7 @@ Title: R Parser for the ITCH-Protocol
 Version: 0.1.11
 Author: David Zimmermann
 Maintainer: David Zimmermann <david_j_zimmermann@hotmail.com>
-Description: RITCH allows to parse files that use the ITCH-Protocol (version 5.0) to an R data.table.
+Description: Allows to efficiently parse ITCH files (version 5.0) to an R data.table.
 License: GPL-3
 Depends: R (>= 3.5.0)
 Imports: data.table,
