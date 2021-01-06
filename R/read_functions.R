@@ -217,12 +217,7 @@ read_itch <- function(file, filter_msg_class = NA,
     cat("NOTE: as filter arguments were given, the number of messages may be off\n")
   
   # Set the default value of the buffer size
-  if (buffer_size < 0) buffer_size <- ifelse(grepl("\\.gz$", file),
-                                             min(3 * file.size(file), 1e9),
-                                             1e8)
-  
-  if (buffer_size < 50) stop("buffer_size has to be at least 50 bytes, otherwise the messages won't fit")
-  if (buffer_size > 5e9) warning("You are trying to allocate a large array on the heap, if the function crashes, try to use a smaller buffer_size")
+  buffer_size <- check_buffer_size(buffer_size, file)
   
   filedate <- get_date_from_filename(file)
   

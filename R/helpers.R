@@ -173,6 +173,7 @@ check_msg_types <- function(filter_msg_type, quiet) {
   
   return(filter_msg_type)
 }
+
 check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
   min_timestamp <- min_timestamp[!is.na(min_timestamp)]
   max_timestamp <- max_timestamp[!is.na(max_timestamp)]
@@ -230,4 +231,20 @@ check_stock_filters <- function(filter_stock, stock_directory,
                              stock_directory[stock %chin%filter_stock, stock_locate])
   }
   return(filter_stock_locate)
+}
+
+check_buffer_size <- function(buffer_size, file) {
+  if (is.na(buffer_size) || buffer_size < 0)
+    buffer_size <- ifelse(grepl("\\.gz$", file), 
+                          min(3 * file.size(file), 1e9),
+                          1e8)
+  
+  if (buffer_size < 50) 
+    stop(paste("buffer_size has to be at least 50 bytes, otherwise the", 
+               "messages won't fit"))
+  
+  if (buffer_size > 5e9) 
+    warning(paste("You are trying to allocate a large array on the heap, if", 
+                  "the function crashes, try to use a smaller buffer_size"))
+  return(buffer_size)
 }
