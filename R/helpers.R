@@ -239,6 +239,8 @@ check_buffer_size <- function(buffer_size, file) {
                           min(3 * file.size(file), 1e9),
                           1e8)
   
+  if (!is.integer(buffer_size) || !is.numeric(buffer_size)) buffer_size <- 1e8
+  
   if (buffer_size < 50) 
     stop(paste("buffer_size has to be at least 50 bytes, otherwise the", 
                "messages won't fit"))
