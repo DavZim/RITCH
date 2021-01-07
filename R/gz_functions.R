@@ -35,7 +35,8 @@ NULL
 #' 
 gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
                         buffer_size = min(4 * file.size(infile), 2e9)) {
-  stopifnot(file.exists(infile))
+
+  if (!file.exists(infile)) stop(sprintf("File '%s' not found!", infile))
   if (file.exists(outfile)) unlink(outfile)
   
   gunzip_file_impl(infile, outfile, buffer_size)
@@ -56,7 +57,8 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
 gzip_file <- function(infile, 
                       outfile = NA,
                       buffer_size = min(4 * file.size(infile), 2e9)) {
-  stopifnot(file.exists(infile))
+  
+  if (!file.exists(infile)) stop(sprintf("File '%s' not found!", infile))
   
   if (is.na(outfile)) {
     outfile <- ifelse(grepl("\\.gz$", infile),

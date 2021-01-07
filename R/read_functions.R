@@ -233,9 +233,6 @@ read_itch <- function(file, filter_msg_class = NA,
   
   res <- lapply(res_raw, data.table::setalloccol)
   
-  # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file
-  if (grepl("\\.gz$", orig_file) && force_cleanup) unlink(gsub("\\.gz", "", file))
-  
   if (add_meta) {
     # add the date and exchange
     res <- lapply(res, function(df) {
@@ -271,6 +268,11 @@ read_itch <- function(file, filter_msg_class = NA,
   a <- gc()
   report_end(t0, quiet, orig_file)
   
+  # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file
+  if (grepl("\\.gz$", orig_file) && force_cleanup) {
+    if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", file))
+    unlink(gsub("\\.gz$", "", file))
+  }
   return(res)
 }
 

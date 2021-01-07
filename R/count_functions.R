@@ -49,14 +49,17 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
   
   df <- data.table::setalloccol(df)
   
-  if (grepl("\\.gz$", orig_file) && force_cleanup) unlink(gsub("\\.gz", "", file))
-  
   if (add_meta_data) {
     dd <- RITCH::get_msg_classes()
     df <- df[dd, on = "msg_type"]
   }
   
   report_end(t0, quiet, orig_file)
+  
+  if (grepl("\\.gz$", orig_file) && force_cleanup) {
+    unlink(gsub("\\.gz", "", file))
+    if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", file))
+  }
   
   return(df)
 }

@@ -164,18 +164,22 @@ filter_itch <- function(infile, outfile,
                    min_timestamp, max_timestamp,
                    append, buffer_size, quiet)
   
-  # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file
-  if (grepl("\\.gz$", orig_infile) && force_cleanup) 
-    unlink(gsub("\\.gz", "", file))
-  
   if (gz) {
     if (!quiet) cat(sprintf("[gzip]       outfile\n"))
+    of <- outfile
     outfile <- gzip_file(outfile)
+    unlink(of) # delete the temporary file
   }
   
   a <- gc()
   
   report_end(t0, quiet, infile)
   
+  # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file
+  if (grepl("\\.gz$", orig_infile) && force_cleanup) {
+    if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", infile))
+    unlink(gsub("\\.gz$", "", infile))
+  }
+
   return(invisible(outfile))
 }
