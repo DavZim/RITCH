@@ -4,12 +4,22 @@ library(data.table)
 suppressPackageStartupMessages(library(bit64))
 
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
+outfile <- "testfile_20101224.TEST_ITCH_50"
 
 ################################################################################
 # Test that the first and last messages are parsed
-filter_itch(infile, outfile, filter_msg_class = "system_events", quiet = TRUE)
+of <- filter_itch(infile, outfile, filter_msg_class = "system_events", quiet = TRUE)
 
+# the filename is not changed
+expect_equal(of, outfile)
+
+unlink(of)
+of <- filter_itch(infile, "testfile", filter_msg_class = "system_events", quiet = TRUE)
+
+# the outfile name is correctly constructed!
+expect_equal(of, outfile)
+
+# test file contents
 expect_equal(file.size(outfile), 84)
 df <- read_system_events(outfile, quiet = TRUE)
 expect_equal(nrow(df), 6)
@@ -226,7 +236,6 @@ unlink(outfile)
 ################################################################################
 ################################################################################
 # Test n_max
-outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 
 # max number of messages is 5000, taking all messages results in the same file
 filter_itch(infile, outfile, n_max = 5000, quiet = TRUE)
@@ -246,7 +255,6 @@ unlink(outfile)
 
 ################################################################################
 # Test skip
-outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 
 # skipping 0 messages results in the same file
 filter_itch(infile, outfile, skip = 0, quiet = TRUE)
@@ -286,7 +294,6 @@ unlink(outfile)
 min_ts <- 40505246803501 # Q1 of all orders
 max_ts <- 49358420393946 # Q3 of all orders
 
-outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 filter_itch(
   infile, outfile, 
   filter_msg_class = c("orders", "trades"),
@@ -306,7 +313,8 @@ expect_equal(sapply(filtered_res, nrow),
              c(orders = 100, trades = 100, modifications = 100))
 
 # read in the original file, and apply the same filters to each class
-df_orig <- read_itch(infile,  c("orders", "trades", "modifications"), quiet = TRUE)
+df_orig <- read_itch(infile,  c("orders", "trades", "modifications"),
+                     quiet = TRUE)
 # apply the filters
 msg_types <- c('D', 'A', 'F', 'P', 'Q', 'B')
 df_orig_res <- lapply(df_orig, function(d) 
@@ -322,27 +330,29 @@ unlink(outfile)
 ################################################################################
 # filter_itch works on gz input files
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
-outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 
 outfile <- filter_itch(infile, outfile, filter_msg_class = "orders", 
-                       quiet = TRUE)
+                       quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 expect_equal(file.size(outfile), 190012)
 
-odf <- read_orders(outfile, quiet = TRUE)
-idf <- read_orders(infile, quiet = TRUE)
+odf <- read_orders(outfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+idf <- read_orders(infile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 expect_equal(odf, idf)
 unlink(outfile)
 
 
 ################################################################################
 # works also on gz-output files
+outfile <- "gz_testfile_20101224.TEST_ITCH_50"
 
 gzoutfile <- filter_itch(infile, outfile, filter_msg_class = "orders", gz = TRUE,
-                         quiet = TRUE)
+                         quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 
+expect_true(file.exists(gzoutfile))
 expect_equal(file.size(gzoutfile), 72619)
 
-odf <- read_orders(gzoutfile, quiet = TRUE)
-idf <- read_orders(infile, quiet = TRUE)
+odf <- read_orders(gzoutfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+idf <- read_orders(infile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+
 expect_equal(odf, idf)
 unlink(gzoutfile)

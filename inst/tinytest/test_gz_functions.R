@@ -5,18 +5,19 @@ library(tinytest)
 raw_file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 gz_file  <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 
+tmpfile <- "raw_20101224.TEST_ITCH_50"
+tmpfile2 <- "gz_20101224.TEST_ITCH_50.gz"
+
 expect_true(file.exists(raw_file))
 expect_true(file.exists(gz_file))
 
-tmpfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 gunzip_file(gz_file, tmpfile)
 expect_equal(
   tools::md5sum(raw_file)[[1]],
   tools::md5sum(tmpfile)[[1]]
 )
 
-tmpfile2 <- tempfile(fileext = "_20101224.TEST_ITCH_50.gz")
-gzip_file(tmpfile, tmpfile2)
+gzip_file(raw_file, tmpfile2)
 
 # check that the file contents are identical
 expect_equal(
@@ -24,9 +25,8 @@ expect_equal(
   read_itch(tmpfile2, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 )
 expect_equal(
-  read_itch(tmpfile, quiet = TRUE),
+  read_itch(raw_file, quiet = TRUE),
   read_itch(tmpfile2, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 )
 
 unlink(c(tmpfile, tmpfile2))
-

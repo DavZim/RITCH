@@ -35,6 +35,7 @@ expect_equal(class(ct), c("data.table", "data.frame"))
 expect_equal(nrow(ct), 22)
 expect_equal(ct, ct_exp)
 
+# force_cleanup = FALSE leaves the raw file behind
 ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE, 
                       force_cleanup = FALSE)
 expect_equal(ct, ct2)
