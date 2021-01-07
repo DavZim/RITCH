@@ -253,13 +253,13 @@ check_buffer_size <- function(buffer_size, file) {
 
 #' Formats a number of bytes 
 #'
-#' @param x the value
+#' @param x the values
 #' @param digits the number of digits to display, default value is 2
 #' @param unit_suffix the unit suffix, default value is 'B' (for bytes),
 #' useful is also 'B/s' if you have read/write speeds
 #' @param base the base for kilo, mega, ... definition, default is 1000
 #' 
-#' @return
+#' @return the values as a character
 #' @export
 #'
 #' @examples
@@ -267,6 +267,7 @@ check_buffer_size <- function(buffer_size, file) {
 #' format_bytes(1234567890)
 #' format_bytes(123456789012, unit_suffix = "iB", base = 1024)
 format_bytes <- function(x, digits = 2, unit_suffix = "B", base = 1000) {
+  if (!all(is.finite(x))) return(rep(NA, length(x)))
   nr <- floor(log(x, base))
   # future proof it :)
   mtch <- c("", "K", "M", "G", "T", "P", "E", "Z", "Y")

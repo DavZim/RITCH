@@ -7,7 +7,7 @@
 format_bytes(x, digits = 2, unit_suffix = "B", base = 1000)
 }
 \arguments{
-\item{x}{the value}
+\item{x}{the values}
 
 \item{digits}{the number of digits to display, default value is 2}
 
@@ -17,7 +17,7 @@ useful is also 'B/s' if you have read/write speeds}
 \item{base}{the base for kilo, mega, ... definition, default is 1000}
 }
 \value{
-
+the values as a character
 }
 \description{
 Formats a number of bytes
