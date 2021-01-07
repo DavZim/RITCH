@@ -78,6 +78,8 @@ dim(trades)
 names(trades)
 ```
 Note that the file can be a plain `ITCH_50` file or a gzipped `ITCH_50.gz` file, which will be decompressed to the current directory.
+You may also note that the output reports quite a low read speed in the `MB/s`.
+This lowish number is due to including the parsing process, furthermore, due to overhead of setup code, this number gets higher on larger files.
 
 If you want to know more about the functions of the package, read on.
 
