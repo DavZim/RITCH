@@ -72,8 +72,9 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     for (const char mt : this_msg_types) num_msg_this_type += count[mt - 'A'];
     
     if (msgp_ptr->active) {
-      if (!quiet) Rprintf("[Counting]   num '%s' messages %s\n",
-          cls.c_str(), format_thousands(num_msg_this_type).c_str());
+      if (!quiet && num_msg_this_type != 0)
+        Rprintf("[Counting]   num '%s' messages %s\n",
+                cls.c_str(), format_thousands(num_msg_this_type).c_str());
       
       // Rprintf("Active and resized to '%i'\n", num_msg_this_type);
       msgp_ptr->init_vectors(num_msg_this_type);
