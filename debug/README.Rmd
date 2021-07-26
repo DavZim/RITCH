@@ -107,7 +107,7 @@ dbg_hex_count_messages(incomplete_hex_string)
 hex_string <- paste(
   "00 00", # first 2 empty nibbles
   "46", # message type 'F'
-  "20 2c", # stock locate 8263
+  "20 2c", # stock locate 8236
   "00 00", # tracking number 0
   "16 eb 55 2c 88 24", # timestamp 25200002107428
   "00 00 00 00 00 00 00 04", # order ref 4
