@@ -318,7 +318,7 @@ action, 5000 trade, 5000 order, and 2000 order modification messages. As
 seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
-MASDAQ provides sample ITCH files on their official FTP server at
+NASDAQ provides sample ITCH files on their official FTP server at
 <ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`) which can
 be used to test code on larger datasets. Note that the sample files are
 up to 5GB compressed, which inflate to about 13GB. To interact with the
