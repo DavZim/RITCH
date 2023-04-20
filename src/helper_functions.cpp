@@ -7,7 +7,7 @@ int get_message_size(const char msg) {
 }
 
 // the count_messages_internal function is optimized and therefore contains
-// unused messages (they are used for faster access speeds!) 
+// unused messages (they are used for faster access speeds!)
 // (see also Specifications.h)
 // this function extracts the needed message classes from the raw vector
 std::vector<int64_t> take_needed_messages(std::vector<int64_t> &v) {
@@ -44,7 +44,7 @@ std::string format_thousands(int64_t num,
     std::string last_three = std::to_string(num % 1000);
     const int num_zeros = 3 - last_three.length();
     last_three = std::string(num_zeros, '0').append(last_three);
-    
+
     const int64_t remainder = (int64_t) num / 1000;
     const std::string res = sep + last_three + s;
     return format_thousands(remainder, sep, res);
@@ -112,7 +112,7 @@ Rcpp::NumericVector to_int64(Rcpp::NumericVector v) {
   return v;
 }
 
-// helper functions that check if a buffer value is in a vector of filters 
+// helper functions that check if a buffer value is in a vector of filters
 // equivalent of R buf_val %in% filter
 bool passes_filter(char* buf, std::vector<char> &filter) {
   if (filter.size() == 0) return true;
@@ -129,7 +129,7 @@ bool passes_filter(char* buf, std::vector<int> &filter) {
 // check larger/smaller inclusive for 8 byte numbers (timestamp)
 // equivalent to R (buf_val >= lower & buf_val <= upper)
 bool passes_filter_in(char* buf,
-                      std::vector<int64_t> &lower, 
+                      std::vector<int64_t> &lower,
                       std::vector<int64_t> &upper) {
   // lower and upper have the same size!
   if (lower.size() == 0) return true;
@@ -137,7 +137,7 @@ bool passes_filter_in(char* buf,
   for (size_t i = 0; i < lower.size(); i++) {
     if (val >= lower[i] && val <= upper[i]) return true;
   }
-    
+
   return false;
 }
 

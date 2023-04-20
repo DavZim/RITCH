@@ -26,7 +26,7 @@ Rcpp::NumericVector to_int64(Rcpp::NumericVector v);
 // function that checks if a buffer passes a filter
 bool passes_filter(char* buf, std::vector<char> &filter);
 bool passes_filter(char* buf, std::vector<int> &filter);
-bool passes_filter_in(char* buf, std::vector<int64_t> &lower, 
+bool passes_filter_in(char* buf, std::vector<int64_t> &lower,
                       std::vector<int64_t> &upper);
 
 // set functions, set X bytes in a buffer

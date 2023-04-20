@@ -61,7 +61,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 msg_count <- count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 397.42MB/s
+#> [Done]       in 0.01 secs at 87.25MB/s
 dim(msg_count)
 #> [1] 22  2
 names(msg_count)
@@ -72,7 +72,7 @@ orders <- read_orders(file)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.08 secs at 5.89MB/s
+#> [Done]       in 0.09 secs at 5.05MB/s
 dim(orders)
 #> [1] 5000   13
 names(orders)
@@ -86,7 +86,7 @@ trades <- read_trades(file, n_max = 100)
 #> [Filter]     skip: 0 n_max: 100 (1 - 100)
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.05 secs at 9.38MB/s
+#> [Done]       in 0.06 secs at 7.74MB/s
 dim(trades)
 #> [1] 100  14
 names(trades)
@@ -170,7 +170,7 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 2.22MB/s
+#> [Done]       in 0.01 secs at 1.94MB/s
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
@@ -191,9 +191,9 @@ A typical work flow would look like this:
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
 # read in the different message types
-data <- read_itch(file, 
+data <- read_itch(file,
                   c("system_events", "stock_directory", "orders"),
-                  filter_stock_locate = c(1, 3), 
+                  filter_stock_locate = c(1, 3),
                   quiet = TRUE)
 
 str(data, max.level = 1)
@@ -205,20 +205,20 @@ str(data, max.level = 1)
 
 
 ## Write the different message classes
-outfile <- write_itch(data, 
-                      "alc_char_subset", 
+outfile <- write_itch(data,
+                      "alc_char_subset",
                       compress = TRUE)
 #> [Counting]   2,520 messages (95,766 bytes) found
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 2.89MB/s
+#> [Done]       in 0.02 secs at 2.28MB/s
 outfile
 #> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
 
 # compare file sizes
 format_bytes(
-  sapply(c(full_file = file, subset_file = outfile), 
+  sapply(c(full_file = file, subset_file = outfile),
          file.size)
 )
 #>   full_file subset_file 
@@ -394,7 +394,7 @@ size of the file).
 sdir <- read_stock_directory(file, quiet = TRUE)
 
 od <- read_orders(
-  file, 
+  file,
   filter_msg_type = "A",          # take only 'No MPID add orders'
   min_timestamp = 43200000000000, # start at 12:00:00.000000
   max_timestamp = 55800000000000, # end at 15:30:00.000000
@@ -409,7 +409,7 @@ od <- read_orders(
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 7.66MB/s
+#> [Done]       in 0.07 secs at 6.71MB/s
 
 # count the different message types
 od[, .(n = .N), by = msg_type]
@@ -455,7 +455,7 @@ outfile <- filter_itch(
 #> [Filter]     stock_locate: '1', '3'
 #> [Bytes]      scanned 465048, filtered 41116
 #> [Messages]   scanned 10979, filtered 1082
-#> [Done]       in 0.06 secs at 8.29MB/s
+#> [Done]       in 0.06 secs at 7.34MB/s
 
 format_bytes(file.size(outfile))
 #> [1] "41.12KB"
@@ -465,7 +465,7 @@ od2 <- read_orders(outfile)
 #> [Counting]   num messages 1,082
 #> [Counting]   num 'orders' messages 1,082
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 721.61KB/s
+#> [Done]       in 0.07 secs at 592.53KB/s
 
 # check that the filtered dataset contains the same information as in the example above
 all.equal(od, od2)
@@ -490,13 +490,13 @@ trades <- read_trades(file, quiet = TRUE)
 orders[, buy := ifelse(buy, "Bid", "Ask")]
 
 ggplot() +
-  geom_point(data = orders, 
+  geom_point(data = orders,
              aes(x = as.POSIXct(datetime), y = price, color = buy), alpha = 0.2) +
   geom_step(data = trades, aes(x = as.POSIXct(datetime), y = price), size = 0.2) +
   facet_grid(stock~., scales = "free_y") +
   theme_light() +
   labs(title = "Orders and Trades of Three Simulated Stocks",
-       subtitle = "Date: 2010-12-24 | Exchange: TEST", 
+       subtitle = "Date: 2010-12-24 | Exchange: TEST",
        caption = "Source: RITCH package", x = "Time", y = "Price", color = "Side") +
   scale_y_continuous(labels = scales::dollar) +
   scale_color_brewer(palette = "Set1")

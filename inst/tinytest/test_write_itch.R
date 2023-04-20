@@ -16,7 +16,7 @@ expect_equal(file.size(infile)[[1]], file.size(outfile)[[1]])
 
 ################################################################################
 # expect identical files
-expect_equal(tools::md5sum(infile)[[1]], 
+expect_equal(tools::md5sum(infile)[[1]],
              tools::md5sum(outfile)[[1]])
 
 # read in the file again and compare to outfile
@@ -30,7 +30,7 @@ expect_equal(ll, ll2)
 # appending throws warning
 outfile <- write_itch(ll, outfile, quiet = TRUE, add_meta = FALSE)
 expect_warning(
-  outfile <- write_itch(ll, outfile, quiet = TRUE, add_meta = FALSE, 
+  outfile <- write_itch(ll, outfile, quiet = TRUE, add_meta = FALSE,
                         append = TRUE)
 )
 expect_equal(file.size(outfile), 465048 * 2)
@@ -97,12 +97,12 @@ unlink(outfile)
 ################################################################################
 ################################################################################
 #### check append and compress
-write_itch(ll, outfile, compress = TRUE, buffer_size = 100, add_meta = FALSE, 
+write_itch(ll, outfile, compress = TRUE, buffer_size = 100, add_meta = FALSE,
            quiet = TRUE)
 expect_equal(file.size(outfile), 417247)
 
 expect_warning(
-  outfile <- write_itch(ll, outfile, compress = TRUE, append = TRUE, 
+  outfile <- write_itch(ll, outfile, compress = TRUE, append = TRUE,
                         buffer_size = 100, add_meta = FALSE, quiet = TRUE)
 )
 
@@ -111,7 +111,7 @@ expect_warning(
 expect_equal(file.size(outfile), 417247 * 2)
 
 expect_equal(lapply(ll, function(x) rbindlist(list(x, x))),
-             read_itch(outfile, quiet = TRUE, force_gunzip = TRUE, 
+             read_itch(outfile, quiet = TRUE, force_gunzip = TRUE,
                        force_cleanup = TRUE))
 
 unlink(outfile)

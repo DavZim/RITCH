@@ -74,8 +74,8 @@ get_modifications(file, ...)
 \arguments{
 \item{file}{the path to the input file, either a gz-archive or a plain ITCH file}
 
-\item{filter_msg_class}{a vector of classes to load, can be "orders", "trades", 
-"modifications", ... see also \code{\link{get_msg_classes}}.
+\item{filter_msg_class}{a vector of classes to load, can be "orders", "trades",
+"modifications", ... see also \code{\link[=get_msg_classes]{get_msg_classes()}}.
 Default value is to take all message classes.}
 
 \item{skip}{Number of messages to skip before starting parsing messages,
@@ -84,7 +84,7 @@ skip the messages for each type (e.g., skip the first 10 messages for each class
 
 \item{n_max}{Maximum number of messages to parse, default is to read all values.
 Can also be a data.frame of msg_types and counts, as returned by
-\code{\link{count_messages}}. 
+\code{\link[=count_messages]{count_messages()}}.
 Note the n_max parameter applies to the specific message class not the whole
 file.}
 
@@ -92,16 +92,16 @@ file.}
 Note that this can be used to only return 'A' orders for instance.}
 
 \item{filter_stock_locate}{an integer vector, specifying a filter for locate codes.
-The locate codes can be looked up by calling \code{\link{read_stock_directory}}
-or by downloading from NASDAQ by using \code{\link{download_stock_directory}}.
+The locate codes can be looked up by calling \code{\link[=read_stock_directory]{read_stock_directory()}}
+or by downloading from NASDAQ by using \code{\link[=download_stock_directory]{download_stock_directory()}}.
 Note that some message types (e.g., system events, MWCB, and IPO) do not use
 a locate code.}
 
-\item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+\item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64:as.integer64.character]{bit64::as.integer64()}})
 of minimum timestamp (inclusive).
 Note: min and max timestamp must be supplied with the same length or left empty.}
 
-\item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+\item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64:as.integer64.character]{bit64::as.integer64()}})
 of maxium timestamp (inclusive).
 Note: min and max timestamp must be supplied with the same length or left empty.}
 
@@ -112,9 +112,9 @@ if this is not found, it will try to extract the stock directory from the file,
 else an error is thrown.}
 
 \item{stock_directory}{A data.frame containing the stock-locate code relationship.
-As outputted by \code{\link{read_stock_directory}}.
+As outputted by \code{\link[=read_stock_directory]{read_stock_directory()}}.
 Only used if \code{filter_stock} is set. To download the stock directory from
-NASDAQs server, use \code{\link{download_stock_directory}}.}
+NASDAQs server, use \code{\link[=download_stock_directory]{download_stock_directory()}}.}
 
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB),
 if you have a large amount of RAM, 1e9 (1GB) might be faster}
@@ -132,7 +132,7 @@ if set to TRUE, the existing file is overwritten. Default value is FALSE}
 
 \item{add_descriptions}{add longer descriptions to shortened variables.
 The added information is taken from the official ITCH documentation
-see also \code{\link{open_itch_specification}}}
+see also \code{\link[=open_itch_specification]{open_itch_specification()}}}
 }
 \value{
 a data.table containing the messages
@@ -141,113 +141,114 @@ a data.table containing the messages
 For faster file-reads (at the tradeoff of increased memory usages), you can
 increase the \code{buffer_size} to 1GB (1e9) or more.
 
-If you access the same file multiple times, you can provide the message 
-counts as outputted from \code{\link{count_messages}} to the \code{n_max} 
+If you access the same file multiple times, you can provide the message
+counts as outputted from \code{\link[=count_messages]{count_messages()}} to the \code{n_max}
 argument, this allows skipping one pass over the file per read instruction.
 
-If you need to read in multiple message classes, you can specify multiple 
+If you need to read in multiple message classes, you can specify multiple
 message classes to \code{read_itch}, which results in only a single file pass.
 
 If the file is too large to be loaded into the workspace at once, you can
 specify different \code{skip} and \code{n_max} to load only
 a specific range of messages.
-Alternatively, you can filter certain messages to another file using 
-\code{\link{filter_itch}}, which is substantially faster than parsing a file
+Alternatively, you can filter certain messages to another file using
+\code{\link[=filter_itch]{filter_itch()}}, which is substantially faster than parsing a file
 and filtering it.
 
 Note that all read functions allow both plain ITCH files as well as gzipped
 files.
 If a gzipped file is found, it will look for a plain ITCH file with
-the same name and use that instead. 
-If this file is not found, it will be created by unzipping the archive. 
-Note that the unzipped file is NOT deleted by default (the file will be 
-created in the current working directory). 
+the same name and use that instead.
+If this file is not found, it will be created by unzipping the archive.
+Note that the unzipped file is NOT deleted by default (the file will be
+created in the current working directory).
 It might result in increased disk usage but reduces future read times for
 that specific file.
 To force RITCH to delete "temporary" files after uncompressing, use
-\code{force_cleanup = TRUE} (only deletes the files if they were extracted 
+\code{force_cleanup = TRUE} (only deletes the files if they were extracted
 before, does not remove the archive itself).
 }
 \details{
 The details of the different messages types can be found in the official
-ITCH specification (see also \code{\link{open_itch_specification}})
+ITCH specification (see also \code{\link[=open_itch_specification]{open_itch_specification()}})
 
 \itemize{
- \item{\code{read_itch}: Reads a message class message, can also read multiple
- classes in one file-pass.}
+\item \code{read_itch}: Reads a message class message, can also read multiple
+classes in one file-pass.
 }
 
 \itemize{
- \item{\code{read_system_events}: Reads system event messages. Message type 
-   \code{S}}
+\item \code{read_system_events}: Reads system event messages. Message type \code{S}
 }
 
 \itemize{
- \item{\code{read_stock_directory}: Reads stock trading messages. Message 
-   type \code{R}}
+\item \code{read_stock_directory}: Reads stock trading messages. Message type \code{R}
 }
 
 \itemize{
- \item{\code{read_trading_status}: Reads trading status messages. Message 
-   type \code{H} and \code{h}}
+\item \code{read_trading_status}: Reads trading status messages. Message type \code{H}
+and \code{h}
 }
 
 \itemize{
- \item{\code{read_reg_sho}: Reads messages regarding reg SHO. Message type 
-   \code{Y}}
+\item \code{read_reg_sho}: Reads messages regarding reg SHO. Message type \code{Y}
 }
 
 \itemize{
- \item{\code{read_market_participant_states}: Reads messages regarding the 
-   status of market participants. Message type \code{L}}
+\item \code{read_market_participant_states}: Reads messages regarding the
+status of market participants. Message type \code{L}
 }
 
 \itemize{
- \item{\code{read_mwcb}: Reads messages regarding Market-Wide-Circuit-Breakers
-   (MWCB). Message type \code{V} and \code{W}}
+\item \code{read_mwcb}: Reads messages regarding Market-Wide-Circuit-Breakers
+(MWCB). Message type \code{V} and \code{W}
 }
 
 \itemize{
- \item{\code{read_ipo}: Reads messages regarding IPOs. Message type \code{K}}
+\item \code{read_ipo}: Reads messages regarding IPOs. Message type \code{K}
 }
 
 \itemize{
- \item{\code{read_luld}: Reads messages regarding LULDs (limit up-limit down)
-   auction collars. Message type \code{J}}
+\item \code{read_luld}: Reads messages regarding LULDs (limit up-limit down)
+auction collars. Message type \code{J}
 }
 
 \itemize{
- \item{\code{read_orders}: Reads order messages. Message type \code{A} and 
-   \code{F}}
+\item \code{read_orders}: Reads order messages. Message type \code{A} and \code{F}
 }
 
 \itemize{
- \item{\code{read_modifications}: Reads order modification messages. Message 
-   type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}}
+\item \code{read_modifications}: Reads order modification messages. Message
+type \code{E}, \code{C}, \code{X}, \code{D}, and \code{U}
 }
 
 \itemize{
- \item{\code{read_trades}: Reads trade messages. Message type \code{P}, 
-   \code{Q} and \code{B}}
+\item \code{read_trades}: Reads trade messages. Message type \code{P}, \code{Q} and \code{B}
 }
 
 \itemize{
- \item{\code{read_noii}: Reads Net Order Imbalance Indicatio (NOII) messages. 
-   Message type \code{I}}
+\item \code{read_noii}: Reads Net Order Imbalance Indicatio (NOII) messages.
+Message type \code{I}
 }
 
 \itemize{
- \item{\code{read_rpii}: Reads Retail Price Improvement Indicator (RPII) 
-   messages. Message type \code{N}}
+\item \code{read_rpii}: Reads Retail Price Improvement Indicator (RPII)
+messages. Message type \code{N}
 }
 
 For backwards compatability reasons, the following functions are provided as
 well:
-\itemize{\item{\code{get_orders}: Redirects to \code{read_orders}}}
+\itemize{
+\item \code{get_orders}: Redirects to \code{read_orders}
+}
 
-\itemize{\item{\code{get_trades}: Redirects to \code{read_trades}}}
+\itemize{
+\item \code{get_trades}: Redirects to \code{read_trades}
+}
 
-\itemize{\item{\code{get_modifications}: Redirects to \code{read_modifications}}}
+\itemize{
+\item \code{get_modifications}: Redirects to \code{read_modifications}
+}
 }
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
@@ -255,7 +256,7 @@ od <- read_orders(file)
 tr <- read_trades(file)
 md <- read_modifications(file)
 
-## Alternatively 
+## Alternatively
 od <- read_itch(file, "orders")
 
 ll <- read_itch(file, c("orders", "trades", "modifications"))
@@ -276,7 +277,7 @@ od <- read_orders(file, skip = 3, n_max = 10)
 # a message count can be provided for slightly faster reads
 msg_count <- count_messages(file)
 od <- read_orders(file, n_max = msg_count)
-  
+
 # .gz archives will be automatically unzipped
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 od <- read_orders(gz_file)

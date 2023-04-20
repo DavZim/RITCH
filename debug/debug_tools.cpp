@@ -1,8 +1,8 @@
 /*
  * #######################################################
- * This file holds debug functions to look at and and write 
+ * This file holds debug functions to look at and and write
  * ITCH hex buffers
- * 
+ *
  * Functions include:
  * - dbg_get_message_length to get the length of a message
  * - dbg_itch_file to open an interactive mode in which the
@@ -14,14 +14,13 @@
  * - dbg_hex_to_dbl
  * - dbg_hex_count_messages to count the orders in a hex string
  * - dbg_hex_compare to compare two hex strings
- * 
+ *
  * Convert Hex Strings into data.tables and vice versa
  * - orders: dbg_hex_to_orders and dbg_messages_to_hex
  * - trades:
  * - modifications:
- * -
- * 
- * 
+ *
+ *
  * #######################################################
  */
 
@@ -51,17 +50,17 @@ dbg_get_message_length <- function(x) {
 */
 
 // counts message types in a buffer
-std::vector<int64_t> count_messages_buffer(char* buf, 
+std::vector<int64_t> count_messages_buffer(char* buf,
                                            const uint64_t n_bytes) {
-  std::vector<int64_t> count(N_TYPES, 0); 
+  std::vector<int64_t> count(N_TYPES, 0);
   uint64_t i = 0;
   while (i < n_bytes) {
     const char mt = buf[i + 2];
-    
+
     count[mt - 'A']++;
     i += get_message_size(mt);
   }
-  
+
   return take_needed_messages(count);
 }
 int64_t sum_messages(std::vector<int64_t>& count, char msg) {
@@ -70,45 +69,45 @@ int64_t sum_messages(std::vector<int64_t>& count, char msg) {
 
 /*
  * Prints the bytes of each message of an ITCH file
- * Inputs are either 
+ * Inputs are either
  *  - numeric which result in printing the next N values
- *  - a single character which corresponds to the message types and prints the next instance of the message 
+ *  - a single character which corresponds to the message types and prints the next instance of the message
  */
 // [[Rcpp::export]]
 void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50",
                    int64_t buffer_size = 1e9) {
-  
+
   // to allow readline / user feedbakc
   Rcpp::Environment base = Rcpp::Environment("package:base");
   Rcpp::Function readline = base["readline"];
   Rcpp::Function as_character = base["as.character"];
-  
+
   const bool is_gz = filename.substr(filename.size() - 3, filename.size()) == ".gz";
-  
+
   // only one buffer is used...
   char* bufferPtr;
   int64_t bufferCharSize = sizeof(char) * buffer_size;
   bufferPtr = (char*) malloc(bufferCharSize);
-  
+
   FILE* rawfile;
   gzFile gzfile;
-  
+
   if (is_gz) {
     gzfile = gzopen(filename.c_str(), "rb");
   } else {
     rawfile = fopen(filename.c_str(), "rb");
   }
-  
+
   int64_t buf_size;
   if (is_gz) {
     buf_size = gzread(gzfile, bufferPtr, bufferCharSize);
   } else {
     buf_size = fread(bufferPtr, 1, bufferCharSize, rawfile);
   }
-  
+
   std::vector<int64_t> counts_all = count_messages_buffer(bufferPtr, buf_size);
   std::vector<int64_t> counts = take_needed_messages(counts_all);
-  
+
   Rprintf("Debugging File '%s' (.gz-file? %s)\n", filename.c_str(), is_gz ? "yes" : "no");
   Rprintf("Usage:\n");
   Rprintf("- Empty: next message\n");
@@ -124,7 +123,7 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
   Rprintf("=============================\n");
   // Use the Buffer
   int64_t idx;
-  
+
   int i = 0;
   idx = 0;
   std::string exit_code = "";
@@ -143,7 +142,7 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
     char num = bufferPtr[idx + 2];
     const int l = get_message_size(num);
     // Rprintf("At offset '0x%04x' msg '%c' msg len %i (0x%04x)\n", idx, num, l, l);
-    
+
     if (skip_print) {
       if (num != msg_filter) {
         // if the current message is not equal to the message filter, skip printing and advance
@@ -154,17 +153,17 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
         skip_print = false;
       }
     }
-    
+
     Rprintf("'%c' (len 2 + %i) idx %4i at offset %5i (0x%04x) | ", num, l - 2, i, idx, idx);
     Rprintf("(%02x %02x) ", bufferPtr[idx], bufferPtr[idx + 1]);
     for (int x = 2; x < l; x++) Rprintf("%02x ", bufferPtr[idx + x]);
     Rprintf("\n");
-    
-    // interactive element, allow numeric input (for N messages), 
+
+    // interactive element, allow numeric input (for N messages),
     // Message Types for the next message type, or other non empty for quit
     if (i >= skip_end) {
       exit_code = Rcpp::as<std::string>(as_character(readline("#RITCH> ")));
-      
+
       if (exit_code != "") {
         // check if all numeric, than skip N
         const bool only_numeric = exit_code.find_first_not_of("0123456789") == std::string::npos;
@@ -175,15 +174,15 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
         } else {
           // check messages
           char exit_msg = exit_code.at(0);
-          
+
           // check if the input is an itch message
-          
+
           bool is_itch_message = false;
           for (const char c : ACT_MSG_NAMES) if (c == exit_msg) {
             is_itch_message = true;
             break;
           }
-          
+
           if (is_itch_message) {
             const bool has_message = sum_messages(counts, exit_msg) > 0;
             if (!has_message) {
@@ -192,7 +191,7 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
             }
             skip_print = true;
             msg_filter = exit_code[0];
-            
+
             Rcpp::Rcout << "Applied filter to message type '" << msg_filter << "'\n";
           } else {
             // else break
@@ -202,14 +201,14 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
         }
       } // else: continue with next message
     }
-    
+
     idx += l;
     i++;
   }
-  
+
   free(bufferPtr);
   if (is_gz) {
-    gzclose(gzfile); 
+    gzclose(gzfile);
   } else {
     fclose(rawfile);
   }
@@ -240,12 +239,12 @@ dbg_hex_to_dbl <- function(h, prec = 4) {
 // converts a std::string of hex values to a buffer
 char * to_buffer(std::string x) {
   x.erase(remove_if(x.begin(), x.end(), isspace), x.end());
-  const uint64_t n_bytes = x.size() / 2; 
+  const uint64_t n_bytes = x.size() / 2;
   char * buf;
   // Rprintf("Found %u bytes\n", x.size() / 2);
   buf = (char*) calloc(x.size() / 2, sizeof(char));
-  
-  for (int j = 0; j < n_bytes; j++) 
+
+  for (int j = 0; j < n_bytes; j++)
     buf[j] = std::stoul(x.substr(j * 2, 2), nullptr, 16);
   return buf;
 }
@@ -258,14 +257,14 @@ char * to_buffer(std::string x) {
 Rcpp::DataFrame hex_count_messages_impl(std::string x) {
   // remove whitespaces
   x.erase(remove_if(x.begin(), x.end(), isspace), x.end());
-  const uint64_t n_bytes = x.size() / 2; 
+  const uint64_t n_bytes = x.size() / 2;
   char * buf = to_buffer(x);
-  
+
   std::vector<int64_t> count = count_messages_buffer(buf, n_bytes);
-  
+
   Rcpp::StringVector types;
   for (char c : ACT_MSG_NAMES) types.push_back(c);
-  
+
   Rcpp::List df(2);
   df.names() = Rcpp::CharacterVector::create("msg_type", "count");
   df["msg_type"] = types;
@@ -274,9 +273,9 @@ Rcpp::DataFrame hex_count_messages_impl(std::string x) {
   std::memcpy(&(ct[0]), &(count[0]), len * sizeof(double));
   ct.attr("class") = "integer64";
   df["count"] = ct;
-  
+
   df.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
-  
+
   return df;
 }
 /***R
@@ -289,7 +288,7 @@ dbg_hex_compare <- function(x, y) {
   y <- reset_whitespaces(y)
   xx <- strsplit(x, " ")[[1]]
   yy <- strsplit(y, " ")[[1]]
-  
+
   min_x <- min(length(xx), length(yy))
   cat(sprintf(" %3s | %4s | %4s | %4s\n%s\n", "idx", "x", "y", "diff",
               paste(rep("-", 25), collapse = "")))
@@ -306,30 +305,30 @@ dbg_hex_count_messages <- function(x) {
 }
 */
 
-/* 
+/*
  * HEX to Ordertypes
  */
 
 Rcpp::DataFrame dbg_hex_to_df(std::string x, std::string msg_class) {
   // create buffer
   x.erase(remove_if(x.begin(), x.end(), isspace), x.end());
-  const uint64_t n_bytes = x.size() / 2; 
+  const uint64_t n_bytes = x.size() / 2;
   char * buf = to_buffer(x);
   std::vector<int64_t> count = count_messages_buffer(buf, n_bytes);
-  
+
   int64_t n_messages = 0;
   for (const int64_t p : count) n_messages += p;
-  
+
   MessageParser mp(msg_class, 0, 100); // take max 100 messages...
   mp.activate();
   mp.init_vectors(n_messages + 100);
   int64_t i = 2;
-  
+
   while (i < n_bytes) {
     mp.parse_message(&buf[i]);
     i += get_message_size(buf[i]);
   }
-  
+
   return mp.get_data_frame();
 }
 //[[Rcpp::export]]
@@ -394,40 +393,40 @@ Rcpp::DataFrame dbg_hex_to_rpii(std::string x) {
  * ############################################################################
  */
 //[[Rcpp::export]]
-std::string dbg_messages_to_hex(Rcpp::DataFrame df, 
+std::string dbg_messages_to_hex(Rcpp::DataFrame df,
                                 size_t max_buffer_size = 1e8) {
   Rcpp::CharacterVector msgs = df["msg_type"];
   const int total_messages = msgs.length();
   // Rprintf("Found %i order messages\n", total_messages);
   char * buf;
-  
+
   size_t req_size = 0;
   for (int i = 0; i < total_messages; i++) {
     const char msg = Rcpp::as<char>(msgs[i]);
     req_size += get_message_size(msg);
   }
-  
+
   req_size = req_size > max_buffer_size ? max_buffer_size : req_size;
   // Rprintf("Need %u bytes for the messages\n", req_size);
   // allocate memory to the buffer and initialise it to 0
   buf = (char*) calloc(req_size, sizeof(char));
-  
+
   int64_t i = 0;
   int64_t msg_ct = 0;
   while (msg_ct < total_messages) {
     // Rprintf("Parsing Message %i\n", msg_ct);
     i += load_message_to_buffer(&(buf[i]), msg_ct, df);
   }
-  
+
   std::stringstream ss;
-  for(int j = 0; j < i; ++j) 
-    ss << 
-      std::setfill('0') << 
+  for(int j = 0; j < i; ++j)
+    ss <<
+      std::setfill('0') <<
         std::setw(2) <<
-          std::hex << 
+          std::hex <<
            (int) (((int) buf[j] >> (8*0)) & 0xff) << // (int) buf[j]
               " ";
   std::string res = ss.str();
-  
+
   return res.substr(0, res.size() - 1);
 }

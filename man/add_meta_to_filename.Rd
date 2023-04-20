@@ -9,8 +9,8 @@ add_meta_to_filename(file, date, exchange)
 \arguments{
 \item{file}{the filename}
 
-\item{date}{the date as a date-class or as a string that is understood by 
-\code{\link[base]{as.Date}}.}
+\item{date}{the date as a date-class or as a string that is understood by
+\code{\link[base:as.Date]{base::as.Date()}}.}
 
 \item{exchange}{the name of the exchange}
 }

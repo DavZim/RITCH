@@ -1,8 +1,8 @@
 ##############################
 #' This script takes an existing dataset and samples and obfuscates the data
 #' to create a smaller testing/example dataset.
-#' 
-#' Messages that are sampled are: 
+#'
+#' Messages that are sampled are:
 #' - System Event Messages
 #' - Stock Directory
 #' - Trading Status
@@ -40,8 +40,8 @@ stock_select <- c("TSLA" = "ALC", "NIO" = "BOB", "BABA" = "CHAR")
 
 loc_codes <- loc_code[
   stock %chin% names(stock_select)
-][, 
-  .(stock_old = stock, 
+][,
+  .(stock_old = stock,
     old_loc_code = stock_locate,
     stock = stock_select[stock])
 ][order(stock)][, stock_locate := 1:.N][]
@@ -54,7 +54,7 @@ remove_price_outliers <- function(dt, sigma = 3) {
   dd[, diff := (price - rmean), by = stock]
   dd[, diff := (diff - mean(diff, na.rm = TRUE)) / sd(diff, na.rm = TRUE), by = .(buy, stock)]
   dd <- dd[diff > -sigma & diff < sigma]
-  
+
   dd[, -c("diff", "rmean")]
 }
 
@@ -65,13 +65,13 @@ obfuscate_prices <- function(dt) {
                            tar_range     = c(20,  5,   15),
                            est_min_price = c(410, 2.5, 210),
                            est_range     = c(30,  6,   6))
-  
+
   dd <- merge(dt, price_info, by = "stock", all.x = TRUE)
   # dd[, ':=' (
   #   min_price = min(price),
   #   price_range = max(price) - min(price)
   # ), by = stock]
-  
+
   # scale the price by the base prices...
   dd[, price := (price - est_min_price) / est_range * (tar_range) + tar_range]
   dd[, price := round(price, 4)]
@@ -127,7 +127,7 @@ trstat <- trad_stat[stock_locate %in% loc_codes$old_loc_code][
 ][]
 
 # add the new stock_locates
-trstat <- merge(trstat[, -c("stock_locate")], 
+trstat <- merge(trstat[, -c("stock_locate")],
                 loc_codes[, .(stock, stock_locate)],
                 by = "stock", all.x = TRUE)
 
@@ -220,7 +220,7 @@ outfile <- "inst/extdata/ex20101224.TEST_ITCH_50"
 write_itch(ll, outfile, add_meta = FALSE, quiet = TRUE)
 write_itch(ll, outfile, compress = TRUE, add_meta = FALSE, quiet = TRUE)
 
-cat(sprintf("Wrote sample dataset to '%s' with size '%.2f'KB\n", 
+cat(sprintf("Wrote sample dataset to '%s' with size '%.2f'KB\n",
             outfile, file.info(outfile)[["size"]] / 1024))
 
 #######################################

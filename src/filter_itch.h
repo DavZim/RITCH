@@ -5,7 +5,7 @@
 #include "specifications.h"
 #include "helper_functions.h"
 
-void filter_itch_impl(std::string infile, std::string outfile, 
+void filter_itch_impl(std::string infile, std::string outfile,
                       int64_t start, int64_t end,
                       Rcpp::CharacterVector filter_msg_type,
                       Rcpp::IntegerVector filter_stock_locate,

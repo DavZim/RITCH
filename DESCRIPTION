@@ -17,5 +17,6 @@ Imports: data.table,
 LinkingTo: Rcpp
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-Suggests: 
+Suggests:
     tinytest
+Roxygen: list(markdown = TRUE)

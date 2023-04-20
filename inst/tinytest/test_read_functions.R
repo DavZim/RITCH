@@ -25,7 +25,7 @@ expect_true(file.info(gzfile)[["size"]] == 159965)
 #### Count messages
 ct <- count_messages(file, quiet = TRUE)
 ct_exp <- data.table(
-  msg_type = c("S", "R", "H", "Y", "L", "V", "W", "K", "J", "h", "A", "F", "E", 
+  msg_type = c("S", "R", "H", "Y", "L", "V", "W", "K", "J", "h", "A", "F", "E",
                "C", "X", "D", "U", "P", "Q", "B", "I", "N"),
   count = as.int64(c(6, 3, 3, 0, 0, 0, 0, 0, 0, 0, 4997, 3, 198, 0, 45, 1745,
                      12, 5000, 0, 0, 0, 0))
@@ -36,14 +36,14 @@ expect_equal(nrow(ct), 22)
 expect_equal(ct, ct_exp)
 
 # force_cleanup = FALSE leaves the raw file behind
-ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE, 
+ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE,
                       force_cleanup = FALSE)
 expect_equal(ct, ct2)
 expect_true(file.exists(file_raw))
 unlink(file_raw)
 
 # check that force_cleanup works
-ct3 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE, 
+ct3 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE,
                       force_cleanup = TRUE)
 expect_equal(ct, ct3)
 expect_false(file.exists(file_raw))
@@ -193,15 +193,15 @@ classes_exp <- list(
   market_category = "character",
   financial_status = "character",
   lot_size = "integer",
-  round_lots_only = "logical", 
+  round_lots_only = "logical",
   issue_classification = "character",
-  issue_subtype = "character", 
-  authentic = "logical", 
-  short_sell_closeout = "logical", 
-  ipo_flag = "logical", 
+  issue_subtype = "character",
+  authentic = "logical",
+  short_sell_closeout = "logical",
+  ipo_flag = "logical",
   luld_price_tier = "character",
-  etp_flag = "logical", 
-  etp_leverage = "integer", 
+  etp_flag = "logical",
+  etp_leverage = "integer",
   inverse = "logical",
   date = c("POSIXct", "POSIXt"),
   datetime = structure("nanotime", package = "nanotime"),
@@ -222,17 +222,17 @@ tstat <- read_trading_status(file, quiet = TRUE)
 
 classes_exp <- list(
   msg_type = "character",
-  stock_locate = "integer", 
-  tracking_number = "integer", 
+  stock_locate = "integer",
+  tracking_number = "integer",
   timestamp = "integer64",
   stock = "character",
-  trading_state = "character", 
-  reserved = "character", 
-  reason = "character", 
-  market_code = "character", 
+  trading_state = "character",
+  reserved = "character",
+  reason = "character",
+  market_code = "character",
   operation_halted = "logical",
   date = c("POSIXct", "POSIXt"),
-  datetime = structure("nanotime", package = "nanotime"), 
+  datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
@@ -253,9 +253,9 @@ expect_equal(unique(tstat$exchange), "TEST")
 rs <- read_reg_sho(file, quiet = TRUE)
 
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", stock = "character", regsho_action = "character", 
-  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", stock = "character", regsho_action = "character",
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
@@ -268,10 +268,10 @@ expect_equal(lapply(rs, class), classes_exp)
 ## Market Participant States
 mps <- read_market_participant_states(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", mpid = "character", stock = "character", 
-  primary_mm = "logical", mm_mode = "character", participant_state = "character", 
-  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", mpid = "character", stock = "character",
+  primary_mm = "logical", mm_mode = "character", participant_state = "character",
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
@@ -284,8 +284,8 @@ expect_equal(lapply(mps, class), classes_exp)
 ## MWCB
 mwcb <- read_mwcb(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", level1 = "numeric", level2 = "numeric", 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", level1 = "numeric", level2 = "numeric",
   level3 = "numeric", breached_level = "integer", date = c("POSIXct", "POSIXt"),
   datetime = structure("nanotime", package = "nanotime"), exchange = "character"
 )
@@ -298,9 +298,9 @@ expect_equal(lapply(mwcb, class), classes_exp)
 ## IPO
 ipo <- read_ipo(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", stock = "character", release_time = "integer", 
-  release_qualifier = "character", ipo_price = "numeric", date = c("POSIXct", "POSIXt"), 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", stock = "character", release_time = "integer",
+  release_qualifier = "character", ipo_price = "numeric", date = c("POSIXct", "POSIXt"),
   datetime = structure("nanotime", package = "nanotime"), exchange = "character"
 )
 
@@ -312,11 +312,11 @@ expect_equal(lapply(ipo, class), classes_exp)
 ## NOII
 noii <- read_noii(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", paired_shares = "integer64", imbalance_shares = "integer64", 
-  imbalance_direction = "character", stock = "character", far_price = "numeric", 
-  near_price = "numeric", reference_price = "numeric", cross_type = "character", 
-  variation_indicator = "character", date = c("POSIXct", "POSIXt"), 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", paired_shares = "integer64", imbalance_shares = "integer64",
+  imbalance_direction = "character", stock = "character", far_price = "numeric",
+  near_price = "numeric", reference_price = "numeric", cross_type = "character",
+  variation_indicator = "character", date = c("POSIXct", "POSIXt"),
   datetime = structure("nanotime", package = "nanotime"), exchange = "character"
 )
 
@@ -328,9 +328,9 @@ expect_equal(lapply(noii, class), classes_exp)
 # RPII
 rpii <- read_rpii(file, quiet = TRUE)
 classes_exp <- list(
-  msg_type = "character", stock_locate = "integer", tracking_number = "integer", 
-  timestamp = "integer64", stock = "character", interest_flag = "character", 
-  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"), 
+  msg_type = "character", stock_locate = "integer", tracking_number = "integer",
+  timestamp = "integer64", stock = "character", interest_flag = "character",
+  date = c("POSIXct", "POSIXt"), datetime = structure("nanotime", package = "nanotime"),
   exchange = "character"
 )
 
@@ -391,20 +391,20 @@ expect_error(
 
 expect_equal(
   orders[timestamp >= start_ts & timestamp <= end_ts],
-  read_orders(file, quiet = TRUE, 
+  read_orders(file, quiet = TRUE,
               min_timestamp = start_ts, max_timestamp = end_ts)
 )
 # can only specify one min/max timestamp
 expect_equal(
   orders[timestamp >= start_ts],
-  read_orders(file, quiet = TRUE, 
+  read_orders(file, quiet = TRUE,
               min_timestamp = start_ts)
 )
 # multiple timestamps
 expect_equal(
   orders[timestamp >= start_ts & timestamp <= end_ts |
            timestamp >= start_ts2 & timestamp <= end_ts2],
-  read_orders(file, quiet = TRUE, 
+  read_orders(file, quiet = TRUE,
               min_timestamp = c(start_ts, start_ts2),
               max_timestamp = c(end_ts, end_ts2))
 )
@@ -414,7 +414,7 @@ sdir <- read_stock_directory(file, quiet = TRUE)
 # warning as no stock_directory is specified
 expect_warning(read_orders(file, quiet = TRUE, filter_stock = "ALC"))
 expect_equal(orders[stock == "ALC"],
-             read_orders(file, quiet = TRUE, filter_stock = "ALC", 
+             read_orders(file, quiet = TRUE, filter_stock = "ALC",
                          stock_directory = sdir))
 expect_equal(orders[stock == "BOB"],
              read_orders(file, quiet = TRUE, filter_stock = "BOB",
@@ -439,7 +439,7 @@ expect_equal(
               filter_msg_type = "A",
               min_timestamp = start_ts,
               max_timestamp = end_ts,
-              filter_stock = "ALC", 
+              filter_stock = "ALC",
               stock_directory = sdir)
 )
 

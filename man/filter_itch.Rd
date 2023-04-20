@@ -26,31 +26,31 @@ filter_itch(
 )
 }
 \arguments{
-\item{infile}{the input file where the messages are taken from, can be a 
+\item{infile}{the input file where the messages are taken from, can be a
 gz-archive or a plain ITCH file.}
 
-\item{outfile}{the output file where the filtered messages are written to. 
+\item{outfile}{the output file where the filtered messages are written to.
 Note that the date and exchange information from the \code{infile} are used,
-see also \code{\link{add_meta_to_filename}} for further information.}
+see also \code{\link[=add_meta_to_filename]{add_meta_to_filename()}} for further information.}
 
-\item{filter_msg_class}{a vector of classes to load, can be "orders", "trades", 
-"modifications", ... see also \code{\link{get_msg_classes}}.
+\item{filter_msg_class}{a vector of classes to load, can be "orders", "trades",
+"modifications", ... see also \code{\link[=get_msg_classes]{get_msg_classes()}}.
 Default value is to take all message classes.}
 
 \item{filter_msg_type}{a character vector, specifying a filter for message types.
 Note that this can be used to only return 'A' orders for instance.}
 
 \item{filter_stock_locate}{an integer vector, specifying a filter for locate codes.
-The locate codes can be looked up by calling \code{\link{read_stock_directory}}
-or by downloading from NASDAQ by using \code{\link{download_stock_directory}}.
+The locate codes can be looked up by calling \code{\link[=read_stock_directory]{read_stock_directory()}}
+or by downloading from NASDAQ by using \code{\link[=download_stock_directory]{download_stock_directory()}}.
 Note that some message types (e.g., system events, MWCB, and IPO) do not use
 a locate code.}
 
-\item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+\item{min_timestamp}{an 64 bit integer vector (see also \code{\link[bit64:as.integer64.character]{bit64::as.integer64()}})
 of minimum timestamp (inclusive).
 Note: min and max timestamp must be supplied with the same length or left empty.}
 
-\item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64]{as.integer64}})
+\item{max_timestamp}{an 64 bit integer vector (see also \code{\link[bit64:as.integer64.character]{bit64::as.integer64()}})
 of maxium timestamp (inclusive).
 Note: min and max timestamp must be supplied with the same length or left empty.}
 
@@ -61,9 +61,9 @@ if this is not found, it will try to extract the stock directory from the file,
 else an error is thrown.}
 
 \item{stock_directory}{A data.frame containing the stock-locate code relationship.
-As outputted by \code{\link{read_stock_directory}}.
+As outputted by \code{\link[=read_stock_directory]{read_stock_directory()}}.
 Only used if \code{filter_stock} is set. To download the stock directory from
-NASDAQs server, use \code{\link{download_stock_directory}}.}
+NASDAQs server, use \code{\link[=download_stock_directory]{download_stock_directory()}}.}
 
 \item{skip}{Number of messages to skip before starting parsing messages,
 note the skip parameter applies to the specific message class, i.e., it would
@@ -71,19 +71,19 @@ skip the messages for each type (e.g., skip the first 10 messages for each class
 
 \item{n_max}{Maximum number of messages to parse, default is to read all values.
 Can also be a data.frame of msg_types and counts, as returned by
-\code{\link{count_messages}}. 
+\code{\link[=count_messages]{count_messages()}}.
 Note the n_max parameter applies to the specific message class not the whole
 file.}
 
-\item{append}{if the messages should be appended to the outfile, default is 
+\item{append}{if the messages should be appended to the outfile, default is
 false. Note, this is helpful if \code{skip} and or \code{n_max} are used for
 batch filtering.}
 
-\item{overwrite}{if an existing outfile with the same name should be 
+\item{overwrite}{if an existing outfile with the same name should be
 overwritten. Default value is false}
 
-\item{gz}{if the output file should be gzip-compressed. Note that the name 
-of the output file will be appended with .gz if not already present. The 
+\item{gz}{if the output file should be gzip-compressed. Note that the name
+of the output file will be appended with .gz if not already present. The
 final output name is returned. Default value is false.}
 
 \item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB),
@@ -97,18 +97,18 @@ if set to TRUE, the existing file is overwritten. Default value is FALSE}
 \item{force_cleanup}{only applies if the input file is a gz-archive If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 }
 \value{
-the name of the output file (maybe different from the inputted 
+the name of the output file (maybe different from the inputted
 outfile due to adding the date and exchange), silently
 }
 \description{
-This function allows to perform very fast filter operations on large ITCH 
+This function allows to perform very fast filter operations on large ITCH
 files. The messages are written to another ITCH file.
 }
 \details{
-Note that this can be especially useful on larger files or where memory 
-is not large enough to filter the datalimits the analysis. 
+Note that this can be especially useful on larger files or where memory
+is not large enough to filter the datalimits the analysis.
 
-As with the \code{\link{read_itch}} functions, it allows to filter for 
+As with the \code{\link[=read_itch]{read_itch()}} functions, it allows to filter for
 \code{msg_class}, \code{msg_type}, \code{stock_locate}/\code{stock}, and
 \code{timestamp}.
 }
@@ -116,7 +116,7 @@ As with the \code{\link{read_itch}} functions, it allows to filter for
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 outfile <- tempfile(fileext = "_20101224.TEST_ITCH_50")
 filter_itch(
-  infile, outfile, 
+  infile, outfile,
   filter_msg_class = c("orders", "trades"),
   filter_msg_type = "R", # stock_directory
   skip = 0, n_max = 100
@@ -125,11 +125,11 @@ filter_itch(
 # expecting 100 orders, 100 trades, and 3 stock_directory entries
 count_messages(outfile)
 
-# check that the output file contains the same 
+# check that the output file contains the same
 res  <- read_itch(outfile, c("orders", "trades", "stock_directory"))
 sapply(res, nrow)
 
-res2 <- read_itch(infile,  c("orders", "trades", "stock_directory"), 
+res2 <- read_itch(infile,  c("orders", "trades", "stock_directory"),
                   n_max = 100)
 
 all.equal(res, res2)

@@ -144,23 +144,23 @@ A typical work flow would look like this:
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
 # read in the different message types
-data <- read_itch(file, 
+data <- read_itch(file,
                   c("system_events", "stock_directory", "orders"),
-                  filter_stock_locate = c(1, 3), 
+                  filter_stock_locate = c(1, 3),
                   quiet = TRUE)
 
 str(data, max.level = 1)
 
 
 ## Write the different message classes
-outfile <- write_itch(data, 
-                      "alc_char_subset", 
+outfile <- write_itch(data,
+                      "alc_char_subset",
                       compress = TRUE)
 outfile
 
 # compare file sizes
 format_bytes(
-  sapply(c(full_file = file, subset_file = outfile), 
+  sapply(c(full_file = file, subset_file = outfile),
          file.size)
 )
 
@@ -189,10 +189,10 @@ d <- get_msg_classes()
 d$msg_type <- paste0("<code>", d$msg_type, "</code>")
 d$read_function <- paste0("<code>", "read_", d$msg_class, "()", "</code>")
 
-data.table::setcolorder(d, c("msg_type", "msg_class", "read_function", 
+data.table::setcolorder(d, c("msg_type", "msg_class", "read_function",
                              "msg_name", "doc_nr"))
-data.table::setnames(d, c("Type", "<code>RITCH</code> Class", 
-                          "<code>RITCH</code> Read Function", "ITCH Name", 
+data.table::setnames(d, c("Type", "<code>RITCH</code> Class",
+                          "<code>RITCH</code> Read Function", "ITCH Name",
                           "ITCH Spec Section"))
 
 knitr::kable(d, escape = FALSE)
@@ -271,7 +271,7 @@ Note that filtering for a specific stock, is just a shorthand lookup for the sto
 sdir <- read_stock_directory(file, quiet = TRUE)
 
 od <- read_orders(
-  file, 
+  file,
   filter_msg_type = "A",          # take only 'No MPID add orders'
   min_timestamp = 43200000000000, # start at 12:00:00.000000
   max_timestamp = 55800000000000, # end at 15:30:00.000000
@@ -341,13 +341,13 @@ trades <- read_trades(file, quiet = TRUE)
 orders[, buy := ifelse(buy, "Bid", "Ask")]
 
 ggplot() +
-  geom_point(data = orders, 
+  geom_point(data = orders,
              aes(x = as.POSIXct(datetime), y = price, color = buy), alpha = 0.2) +
   geom_step(data = trades, aes(x = as.POSIXct(datetime), y = price), size = 0.2) +
   facet_grid(stock~., scales = "free_y") +
   theme_light() +
   labs(title = "Orders and Trades of Three Simulated Stocks",
-       subtitle = "Date: 2010-12-24 | Exchange: TEST", 
+       subtitle = "Date: 2010-12-24 | Exchange: TEST",
        caption = "Source: RITCH package", x = "Time", y = "Price", color = "Side") +
   scale_y_continuous(labels = scales::dollar) +
   scale_color_brewer(palette = "Set1")
@@ -356,7 +356,7 @@ ggplot() +
 
 ## Other Notes
 
-If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality, please feel free to create an issue or a pull request. 
+If you find this package useful or have any other kind of feedback, I'd be happy if you let me know. Otherwise, if you need more functionality, please feel free to create an issue or a pull request.
 
 Citation and CRAN release are WIP.
 

@@ -17,7 +17,7 @@ write_itch(
 }
 \arguments{
 \item{ll}{a data.frame or a list of data.frames of ITCH messages, in the format
-that the \code{\link{read_functions}} return}
+that the \code{\link[=read_functions]{read_functions()}} return}
 
 \item{file}{the filename of the target file. If the folder to the file does
 not exist, it will be created recursively}
@@ -28,26 +28,26 @@ Default value is TRUE. Note that adding meta information changes the filename.}
 \item{append}{if the information should be appended to the file. Default value
 is FALSE}
 
-\item{compress}{if the file should be gzipped. Default value is FALSE. 
-Note that if you compress a file, buffer_size matters a lot, with larger 
-buffers you are more likely to get smaller filesizes in the end. 
+\item{compress}{if the file should be gzipped. Default value is FALSE.
+Note that if you compress a file, buffer_size matters a lot, with larger
+buffers you are more likely to get smaller filesizes in the end.
 Alternatively, but slower, is to write the file without compression fully
 and then gzip the file using another program.}
 
-\item{buffer_size}{the maximum buffer size. Default value is 1e8 (100MB). 
+\item{buffer_size}{the maximum buffer size. Default value is 1e8 (100MB).
 Accepted values are > 52 and < 5e9}
 
 \item{quiet}{if TRUE, the status messages are suppressed, defaults to FALSE}
 
 \item{append_warning}{if append is set, a warning about timestamp ordering is
-given. Set \code{append_warning = FALSE} to silence the warning. Default 
+given. Set \code{append_warning = FALSE} to silence the warning. Default
 value is TRUE}
 }
 \value{
 the filename (invisibly)
 }
 \description{
-Note that additional information, e.g., columns that were added, will be 
+Note that additional information, e.g., columns that were added, will be
 dropped in the process and only ITCH-compliant information is saved.
 }
 \details{

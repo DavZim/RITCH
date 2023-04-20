@@ -10,7 +10,7 @@ list_sample_files()
 a data.table of the files
 }
 \description{
-Returns a data.table of the sample files on the server
+The Server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq\%20ITCH/}
 }
 \examples{
 \dontrun{

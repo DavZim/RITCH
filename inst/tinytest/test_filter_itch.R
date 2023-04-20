@@ -57,7 +57,7 @@ unlink(outfile)
 ################################################################################
 # Test Append
 filter_itch(infile, outfile, filter_msg_class = "orders", quiet = TRUE)
-filter_itch(infile, outfile, filter_msg_class = "orders", append = TRUE, 
+filter_itch(infile, outfile, filter_msg_class = "orders", append = TRUE,
             quiet = TRUE)
 
 df <- read_orders(outfile, quiet = TRUE)
@@ -72,7 +72,7 @@ unlink(outfile)
 ################################################################################
 # Test smaller buffer_size
 
-filter_itch(infile, outfile, filter_msg_class = "orders", 
+filter_itch(infile, outfile, filter_msg_class = "orders",
             buffer_size = 50,
             quiet = TRUE)
 
@@ -110,7 +110,7 @@ expect_equal(file.size(outfile), 333876)
 # check that the output file contains only orders
 df <- read_itch(outfile, quiet = TRUE)
 exp_count <- c(
-  stock_directory = 2L, trading_status = 2L, 
+  stock_directory = 2L, trading_status = 2L,
   orders = 4050L, modifications = 1626L, trades = 3115L
 )
 expect_equal(sapply(df, nrow), exp_count)
@@ -126,14 +126,14 @@ unlink(outfile)
 stock_sel <- c("BOB", "CHAR")
 sdir <- data.table(stock = stock_sel,
                    stock_locate = c(2, 3))
-filter_itch(infile, outfile, filter_stock = stock_sel, stock_directory = sdir, 
+filter_itch(infile, outfile, filter_stock = stock_sel, stock_directory = sdir,
             quiet = TRUE)
 
 expect_equal(file.size(outfile), 333876)
 # check that the output file contains only orders
 df <- read_itch(outfile, quiet = TRUE)
 exp_count <- c(
-  stock_directory = 2L, trading_status = 2L, 
+  stock_directory = 2L, trading_status = 2L,
   orders = 4050L, modifications = 1626L, trades = 3115L
 )
 expect_equal(sapply(df, nrow), exp_count)
@@ -162,7 +162,7 @@ expect_error(
   filter_itch(infile, outfile, min_timestamp = 1:2, quiet = TRUE)
 )
 expect_error(
-  filter_itch(infile, outfile, min_timestamp = 1:2, max_timestamp = 1:3, 
+  filter_itch(infile, outfile, min_timestamp = 1:2, max_timestamp = 1:3,
               quiet = TRUE)
 )
 
@@ -212,7 +212,7 @@ unlink(outfile)
 ## min and max
 min_ts <- as.integer64(45463537089764)
 max_ts <- as.integer64(51233773867238)
-filter_itch(infile, outfile, min_timestamp = min_ts, max_timestamp = max_ts, 
+filter_itch(infile, outfile, min_timestamp = min_ts, max_timestamp = max_ts,
             quiet = TRUE)
 
 expect_equal(file.size(outfile), 138558)
@@ -227,7 +227,7 @@ dd <- df[sapply(df, nrow) != 0]
 expect_true(get_func_of_ts(df, min) <= min_ts)
 expect_true(get_func_of_ts(df, max) <= max_ts)
 
-df2 <- read_itch(infile, min_timestamp = min_ts, max_timestamp = max_ts, 
+df2 <- read_itch(infile, min_timestamp = min_ts, max_timestamp = max_ts,
                  quiet = TRUE)
 expect_equal(df, df2)
 unlink(outfile)
@@ -275,7 +275,7 @@ unlink(outfile)
 # skip the first 4000 messages for each message class
 # expect to see 5000-4000 trades and 5000-4000 orders
 filter_itch(
-  infile, outfile, 
+  infile, outfile,
   skip = 4000,
   quiet = TRUE
 )
@@ -295,7 +295,7 @@ min_ts <- 40505246803501 # Q1 of all orders
 max_ts <- 49358420393946 # Q3 of all orders
 
 filter_itch(
-  infile, outfile, 
+  infile, outfile,
   filter_msg_class = c("orders", "trades"),
   filter_stock_locate = c(1, 3),
   filter_msg_type = "D",
@@ -307,9 +307,9 @@ filter_itch(
 expect_equal(file.size(outfile), 10500)
 
 # check that the output file contains the same
-filtered_res  <- read_itch(outfile, c("orders", "trades", "modifications"), 
+filtered_res  <- read_itch(outfile, c("orders", "trades", "modifications"),
                            quiet = TRUE)
-expect_equal(sapply(filtered_res, nrow), 
+expect_equal(sapply(filtered_res, nrow),
              c(orders = 100, trades = 100, modifications = 100))
 
 # read in the original file, and apply the same filters to each class
@@ -317,8 +317,8 @@ df_orig <- read_itch(infile,  c("orders", "trades", "modifications"),
                      quiet = TRUE)
 # apply the filters
 msg_types <- c('D', 'A', 'F', 'P', 'Q', 'B')
-df_orig_res <- lapply(df_orig, function(d) 
-  d[msg_type %in% msg_types & 
+df_orig_res <- lapply(df_orig, function(d)
+  d[msg_type %in% msg_types &
       stock_locate %in% c(1, 3) &
       timestamp > min_ts & timestamp < max_ts][1:100,]
 )
@@ -331,7 +331,7 @@ unlink(outfile)
 # filter_itch works on gz input files
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 
-outfile <- filter_itch(infile, outfile, filter_msg_class = "orders", 
+outfile <- filter_itch(infile, outfile, filter_msg_class = "orders",
                        quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 expect_equal(file.size(outfile), 190012)
 

@@ -34,7 +34,7 @@ void write_buffer_to_file(char* buf, int64_t size, std::string filename,
 
 // Writes a list of data.frames (already sorted by timestamp)
 // to a file, if specified, the file is a gz.file
-int64_t write_itch_impl(Rcpp::List ll, std::string filename, 
+int64_t write_itch_impl(Rcpp::List ll, std::string filename,
                         bool append = false, bool gz = false,
                         size_t max_buffer_size = 1e9, bool quiet = false);
 

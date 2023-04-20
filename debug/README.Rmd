@@ -13,9 +13,11 @@ These tools are used for debugging and understanding the data format. They are n
 If you want to play around with the tools, clone the git repository and source the `debug/debug_tools.cpp` script:
 
 ```{r, include=FALSE}
+Sys.setenv("PKG_LIBS" = "-lz")
 Rcpp::sourceCpp("debug_tools.cpp")
 ```
 ```{r, eval=FALSE}
+Sys.setenv("PKG_LIBS" = "-lz")
 Rcpp::sourceCpp("debug/debug_tools.cpp")
 ```
 
@@ -29,12 +31,12 @@ dbg_get_message_length(c("A", "F"))
 ```
 - `dbg_itch_file(filename)` allows you to interactively list messages in a file
   You are asked for input inside the function, which can be:
-  
+
   - msg type, e.g., `A`, `H`, `h` to see the next instance of that message type
   - numeric value, e.g., `3` to see the next N values
-  
+
   For example:
-  
+
 ```r
 file <- "20191230.BX_ITCH_50"
 dbg_itch_file(file)
@@ -69,15 +71,15 @@ dbg_itch_file(file)
 ## - 'I': 0
 ## - 'N': 2241182
 ## =============================
-## 'S' (len 2 + 12) idx    0 at offset     0 (0x0000) | (00 0c) 53 00 00 00 00 0a 2d f4 92 1d 67 4f 
+## 'S' (len 2 + 12) idx    0 at offset     0 (0x0000) | (00 0c) 53 00 00 00 00 0a 2d f4 92 1d 67 4f
 #RITCH> 3
 ## Showing next 3 messages
-## 'R' (len 2 + 39) idx    1 at offset    14 (0x000e) | (00 27) 52 00 01 00 00 0a 66 a0 e0 dc 44 41 20 20 20 20 20 20 20 4e 20 00 00 00 64 4e 43 5a 20 50 4e 20 31 4e 00 00 00 00 4e 
-## 'R' (len 2 + 39) idx    2 at offset    55 (0x0037) | (00 27) 52 00 02 00 00 0a 66 a0 e2 c8 6c 41 41 20 20 20 20 20 20 4e 20 00 00 00 64 4e 43 5a 20 50 4e 20 31 4e 00 00 00 01 4e 
-## 'H' (len 2 + 25) idx    3 at offset    96 (0x0060) | (00 19) 48 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 54 20 20 20 20 20 
+## 'R' (len 2 + 39) idx    1 at offset    14 (0x000e) | (00 27) 52 00 01 00 00 0a 66 a0 e0 dc 44 41 20 20 20 20 20 20 20 4e 20 00 00 00 64 4e 43 5a 20 50 4e 20 31 4e 00 00 00 00 4e
+## 'R' (len 2 + 39) idx    2 at offset    55 (0x0037) | (00 27) 52 00 02 00 00 0a 66 a0 e2 c8 6c 41 41 20 20 20 20 20 20 4e 20 00 00 00 64 4e 43 5a 20 50 4e 20 31 4e 00 00 00 01 4e
+## 'H' (len 2 + 25) idx    3 at offset    96 (0x0060) | (00 19) 48 00 01 00 00 0a 66 a0 e4 ff bd 41 20 20 20 20 20 20 20 54 20 20 20 20 20
 #RITCH> A
 ## Applied filter to message type 'A'
-## 'A' (len 2 + 36) idx 32873 at offset 973915 (0xedc5b) | (00 24) 41 20 2c 00 00 16 eb 55 2c 88 24 00 00 00 00 00 00 00 04 42 00 00 2e 7c 55 53 4f 20 20 20 20 20 00 01 fa 40 
+## 'A' (len 2 + 36) idx 32873 at offset 973915 (0xedc5b) | (00 24) 41 20 2c 00 00 16 eb 55 2c 88 24 00 00 00 00 00 00 00 04 42 00 00 2e 7c 55 53 4f 20 20 20 20 20 00 01 fa 40
 #RITCH> q
 ## Stopping Printing Messages
 ```

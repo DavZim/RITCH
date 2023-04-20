@@ -3,10 +3,10 @@
 
 #include <Rcpp.h>
 #include "specifications.h"
-#include "helper_functions.h" 
+#include "helper_functions.h"
 
 // internal main worker function that counts the messages
-std::vector<int64_t> count_messages_internal(std::string filename, 
+std::vector<int64_t> count_messages_internal(std::string filename,
                                              int64_t max_buffer_size);
 
 // Entry function for returning the count data.frame
