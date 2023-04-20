@@ -4,6 +4,8 @@
 ^README\.Rmd$
 ^[^/]+_ITCH_50$
 ^[^/]+_ITCH_50\.gz$
+^[^/]+_ITCH50$
+^[^/]+_ITCH50\.gz$
 ^README_cache$
 ^NQTVITCHspecification.*\.pdf$
 ^debug/*$
