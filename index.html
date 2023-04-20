@@ -95,7 +95,7 @@
 <span><span class="va">msg_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [Counting]   12,012 total messages found</span></span>
 <span><span class="co">#&gt; [Converting] to data.table</span></span>
-<span><span class="co">#&gt; [Done]       in 0.01 secs at 87.25MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.00 secs at 442.40MB/s</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">msg_count</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 22  2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">msg_count</span><span class="op">)</span></span>
@@ -106,7 +106,7 @@
 <span><span class="co">#&gt; [Counting]   num messages 12,012</span></span>
 <span><span class="co">#&gt; [Counting]   num 'orders' messages 5,000</span></span>
 <span><span class="co">#&gt; [Converting] to data.table</span></span>
-<span><span class="co">#&gt; [Done]       in 0.09 secs at 5.05MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.09 secs at 5.21MB/s</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">orders</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 5000   13</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">orders</span><span class="op">)</span></span>
@@ -120,7 +120,7 @@
 <span><span class="co">#&gt; [Filter]     skip: 0 n_max: 100 (1 - 100)</span></span>
 <span><span class="co">#&gt; [Counting]   num 'trades' messages 300</span></span>
 <span><span class="co">#&gt; [Converting] to data.table</span></span>
-<span><span class="co">#&gt; [Done]       in 0.06 secs at 7.74MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.06 secs at 8.28MB/s</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">trades</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 100  14</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">trades</span><span class="op">)</span></span>
@@ -181,7 +181,7 @@
 <span><span class="co">#&gt; [Converting] to binary .</span></span>
 <span><span class="co">#&gt; [Writing]    to file</span></span>
 <span><span class="co">#&gt; [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'</span></span>
-<span><span class="co">#&gt; [Done]       in 0.01 secs at 1.94MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.01 secs at 1.97MB/s</span></span>
 <span></span>
 <span><span class="co"># compare file sizes</span></span>
 <span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>full_file <span class="op">=</span> <span class="va">file</span>, subset_file <span class="op">=</span> <span class="va">outfile</span><span class="op">)</span></span>
@@ -223,7 +223,7 @@
 <span><span class="co">#&gt; [Converting] to binary .</span></span>
 <span><span class="co">#&gt; [Writing]    to file</span></span>
 <span><span class="co">#&gt; [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'</span></span>
-<span><span class="co">#&gt; [Done]       in 0.02 secs at 2.28MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.01 secs at 2.64MB/s</span></span>
 <span><span class="va">outfile</span></span>
 <span><span class="co">#&gt; [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"</span></span>
 <span></span>
@@ -529,7 +529,7 @@
 <span><span class="co">#&gt; [Counting]   num messages 12,012</span></span>
 <span><span class="co">#&gt; [Counting]   num 'orders' messages 5,000</span></span>
 <span><span class="co">#&gt; [Converting] to data.table</span></span>
-<span><span class="co">#&gt; [Done]       in 0.07 secs at 6.71MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.07 secs at 6.96MB/s</span></span>
 <span></span>
 <span><span class="co"># count the different message types</span></span>
 <span><span class="va">od</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>n <span class="op">=</span> <span class="va">.N</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">msg_type</span><span class="op">]</span></span>
@@ -568,7 +568,7 @@
 <span><span class="co">#&gt; [Filter]     stock_locate: '1', '3'</span></span>
 <span><span class="co">#&gt; [Bytes]      scanned 465048, filtered 41116</span></span>
 <span><span class="co">#&gt; [Messages]   scanned 10979, filtered 1082</span></span>
-<span><span class="co">#&gt; [Done]       in 0.06 secs at 7.34MB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.07 secs at 7.05MB/s</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/format_bytes.html">format_bytes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "41.12KB"</span></span>
@@ -578,7 +578,7 @@
 <span><span class="co">#&gt; [Counting]   num messages 1,082</span></span>
 <span><span class="co">#&gt; [Counting]   num 'orders' messages 1,082</span></span>
 <span><span class="co">#&gt; [Converting] to data.table</span></span>
-<span><span class="co">#&gt; [Done]       in 0.07 secs at 592.53KB/s</span></span>
+<span><span class="co">#&gt; [Done]       in 0.06 secs at 668.24KB/s</span></span>
 <span></span>
 <span><span class="co"># check that the filtered dataset contains the same information as in the example above</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">od</span>, <span class="va">od2</span><span class="op">)</span></span>
@@ -661,7 +661,7 @@
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=RITCH" class="external-link"><img src="https://www.r-pkg.org/badges/version/RITCH" alt="CRAN status"></a></li>
 <li><a href="https://www.r-pkg.org/pkg/RITCH" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/RITCH" alt="CRAN RStudio mirror downloads"></a></li>
-<li><a href="https://github.com/DavZim/RITCH/actions" class="external-link"><img src="https://github.com/DavZim/RITCH/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 

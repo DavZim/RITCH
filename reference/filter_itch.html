@@ -214,13 +214,13 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     msg_type: 'R', 'A', 'F', 'P', 'Q', 'B'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Bytes]      scanned 465048, filtered 8527</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Messages]   scanned 12012, filtered 203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.45MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.15 secs at 3.06MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># expecting 100 orders, 100 trades, and 3 stock_directory entries</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   203 total messages found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 41.20MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 38.13MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     msg_type count</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1:        S     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  2:        R     3</span>
@@ -253,7 +253,7 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 65.57KB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.15 secs at 57.24KB/s</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">nrow</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          orders          trades stock_directory </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             100             100               3 </span>
@@ -266,7 +266,7 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 300</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.56MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.15 secs at 3.11MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">res2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
