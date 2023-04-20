@@ -3,8 +3,8 @@ Type: Package
 Title: R Parser for the ITCH-Protocol
 Version: 0.1.12
 Author: David Zimmermann
-Maintainer: David Zimmermann <david_j_zimmermann@hotmail.com>
-Description: Allows to efficiently parse ITCH files (version 5.0) to an R data.table.
+Maintainer: David Zimmermann-Kollenda <david_j_zimmermann@hotmail.com>
+Description: Allows To Efficiently Parse ITCH Files (Version 5.0) to an R data.table.
 License: MIT + file LICENSE
 Depends: R (>= 3.5.0)
 Imports: data.table,
@@ -13,6 +13,7 @@ Imports: data.table,
   bit64 (>= 4.0.5)
 LinkingTo: Rcpp
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Suggests: 
     tinytest
+URL: https://davzim.github.io/RITCH/
