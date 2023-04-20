@@ -2,7 +2,7 @@ Package: RITCH
 Type: Package
 Title: R Parser for the ITCH-Protocol
 Version: 0.1.13
-Author: David Zimmermann
+Author: David Zimmermann-Kollenda
 Maintainer: David Zimmermann-Kollenda <david_j_zimmermann@hotmail.com>
 Description: Allows To Efficiently Parse ITCH Files (Version 5.0) to an R data.table.
 License: MIT + file LICENSE

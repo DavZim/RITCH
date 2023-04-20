@@ -38,8 +38,7 @@ list_sample_files <- function() {
 
 #' Downloads a sample ITCH File from NASDAQs Server
 #' 
-#' The Server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/
-#' }
+#' The Server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/}
 #' 
 #' Warning: the smallest file is around 300 MB, with the largest exceeding 5 GB. 
 #' There are about 17 files in total. Downloading all might take a considerable amount of time.
