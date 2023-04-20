@@ -90,7 +90,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   infile = fopen(filename.c_str(), "rb");
   if (infile == NULL) {
     char buffer [50];
-    sprintf (buffer, "File Error number %i!", errno);
+    snprintf(buffer, sizeof(buffer), "File Error number %i!", errno);
     Rcpp::stop(buffer);
   }
 

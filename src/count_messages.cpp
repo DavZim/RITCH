@@ -7,7 +7,7 @@ std::vector<int64_t> count_messages_internal(std::string filename,
   infile = fopen(filename.c_str(), "rb");
   if (infile == NULL) {
     char buffer [50];
-    sprintf (buffer, "File Error number %i!", errno);
+    snprintf(buffer, sizeof(buffer), "File Error number %i!", errno);
     Rcpp::stop(buffer);
   }
 

@@ -743,7 +743,7 @@ void write_buffer_to_file(char* buf, int64_t size,
     outfile = fopen(filename.c_str(), mode);
     if (outfile == NULL) {
       char buffer [50];
-      sprintf (buffer, "File Error number %i!", errno);
+      snprintf(buffer, sizeof(buffer), "File Error number %i!", errno);
       Rcpp::stop(buffer);
     }
     fwrite(&buf[0], 1, size, outfile);
@@ -752,7 +752,7 @@ void write_buffer_to_file(char* buf, int64_t size,
     gzFile gzfile = gzopen(filename.c_str(), mode);
     if (gzfile == NULL) {
       char buffer [50];
-      sprintf (buffer, "File Error number %i!", errno);
+      snprintf(buffer, sizeof(buffer), "File Error number %i!", errno);
       Rcpp::stop(buffer);
     }
     gzwrite(gzfile, &buf[0], size);

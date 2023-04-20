@@ -48,7 +48,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
   ifile = fopen(infile.c_str(), "rb");
   if (ifile == NULL) {
     char buffer [50];
-    sprintf (buffer, "Input File Error number %i!", errno);
+    snprintf(buffer, sizeof(buffer), "Input File Error number %i!", errno);
     Rcpp::stop(buffer);
   }
 
@@ -57,7 +57,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
   ofile = fopen(outfile.c_str(), omode.c_str());
   if (ofile == NULL)  {
     char buffer [50];
-    sprintf (buffer, "Output File Error number %i!", errno);
+    snprintf(buffer, sizeof(buffer), "Output File Error number %i!", errno);
     Rcpp::stop(buffer);
   }
 
