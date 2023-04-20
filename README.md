@@ -5,6 +5,10 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/RITCH)](https://CRAN.R-project.org/package=RITCH)
+[![CRAN RStudio mirror
+downloads](https://cranlogs.r-pkg.org/badges/RITCH)](https://www.r-pkg.org/pkg/RITCH)
 [![R-CMD-check](https://github.com/DavZim/RITCH/workflows/R-CMD-check/badge.svg)](https://github.com/DavZim/RITCH/actions)
 <!-- badges: end -->
 
@@ -17,9 +21,6 @@ this package is to parse the binary ITCH files to a
 
 The package leverages [`Rcpp`](https://CRAN.R-project.org/package=Rcpp)
 and `C++` for efficient message parsing.
-<!-- As an example, parsing 100 million orders from the `01302020.NASDAQ_ITCH50` NASDAQ sample file (13 GB) takes around 30 seconds or 0.3 secs per 1 million orders. -->
-
-<!-- read_orders("../RITCH_data/01302020.NASDAQ_ITCH50", n_max = 1e8, buffer_size = 1e9) -->
 
 Note that the package provides a small simulated sample dataset in the
 `ITCH_50` format for testing and example purposes. Helper functions are
@@ -32,8 +33,7 @@ To install `RITCH` you can use the following
 
 ``` r
 # stable version:
-# not yet available 
-# install.packages("RITCH")
+install.packages("RITCH")
 
 # development version:
 # install.packages("remotes")
@@ -62,7 +62,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 msg_count <- count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 539.57MB/s
+#> [Done]       in 0.00 secs at 435.88MB/s
 dim(msg_count)
 #> [1] 22  2
 names(msg_count)
@@ -73,7 +73,7 @@ orders <- read_orders(file)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.08 secs at 6.06MB/s
+#> [Done]       in 0.08 secs at 5.84MB/s
 dim(orders)
 #> [1] 5000   13
 names(orders)
@@ -87,7 +87,7 @@ trades <- read_trades(file, n_max = 100)
 #> [Filter]     skip: 0 n_max: 100 (1 - 100)
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.04 secs at 13.05MB/s
+#> [Done]       in 0.05 secs at 9.10MB/s
 dim(trades)
 #> [1] 100  14
 names(trades)
@@ -109,26 +109,26 @@ If you want to know more about the functions of the package, read on.
 
 `RITCH` provides the following main functions:
 
--   `read_itch(file, ...)` to read an ITCH file Convenient wrappers for
-    different message classes such as `orders`, `trades`, etc are also
-    provided as `read_orders()`, `read_trades()`, …
--   `filter_itch(infile, outfile, ...)` to filter an ITCH file and write
-    directly to another file without loading the data into R
--   `write_itch(data, file, ...)` to write a dataset to an ITCH file
+- `read_itch(file, ...)` to read an ITCH file Convenient wrappers for
+  different message classes such as `orders`, `trades`, etc are also
+  provided as `read_orders()`, `read_trades()`, …
+- `filter_itch(infile, outfile, ...)` to filter an ITCH file and write
+  directly to another file without loading the data into R
+- `write_itch(data, file, ...)` to write a dataset to an ITCH file
 
 There are also some helper functions provided, a selection is:
 
--   `download_sample_file(choice)` to download a sample file from the
-    NASDAQ FTP server and `list_sample_files()` to get a list of all
-    available sample files
--   `download_stock_directory(exchange, date)` to download the stock
-    locate information for a given exchange and date
--   `open_itch_ftp()` to open the official NASDAQ FTP server in your
-    browser
--   `gzip_file(infile, outfile)` and `gunzip_file(infile, outfile)` for
-    gzip functionality
--   `open_itch_specification()` to open the official NASDAQ ITCH
-    specification PDF in your browser
+- `download_sample_file(choice)` to download a sample file from the
+  NASDAQ FTP server and `list_sample_files()` to get a list of all
+  available sample files
+- `download_stock_directory(exchange, date)` to download the stock
+  locate information for a given exchange and date
+- `open_itch_ftp()` to open the official NASDAQ FTP server in your
+  browser
+- `gzip_file(infile, outfile)` and `gunzip_file(infile, outfile)` for
+  gzip functionality
+- `open_itch_specification()` to open the official NASDAQ ITCH
+  specification PDF in your browser
 
 ## Writing ITCH Files
 
@@ -171,7 +171,7 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 3.43MB/s
+#> [Done]       in 0.01 secs at 2.26MB/s
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
@@ -184,9 +184,8 @@ format_bytes(sapply(files, file.size))
 
 A typical work flow would look like this:
 
--   read in some message classes from file and filter for certain stocks
--   save the results for later analysis, also compress to save disk
-    space
+- read in some message classes from file and filter for certain stocks
+- save the results for later analysis, also compress to save disk space
 
 ``` r
 ## Read in the different message classes
@@ -214,7 +213,7 @@ outfile <- write_itch(data,
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 4.53MB/s
+#> [Done]       in 0.01 secs at 2.93MB/s
 outfile
 #> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
 
@@ -245,30 +244,30 @@ There are a total of 22 different message types which are grouped into
 
 The messages and their respective classes are:
 
-| Type           | <code>RITCH</code> Class    | <code>RITCH</code> Read Function                 | ITCH Name                                 | ITCH Spec Section |
-|:---------------|:----------------------------|:-------------------------------------------------|:------------------------------------------|:------------------|
-| <code>S</code> | system\_events              | <code>read\_system\_events()</code>              | System Event Message                      | 4.1               |
-| <code>R</code> | stock\_directory            | <code>read\_stock\_directory()</code>            | Stock Directory                           | 4.2.1             |
-| <code>H</code> | trading\_status             | <code>read\_trading\_status()</code>             | Stock Trading Action                      | 4.2.2             |
-| <code>Y</code> | reg\_sho                    | <code>read\_reg\_sho()</code>                    | Reg SHO Restriction                       | 4.2.3             |
-| <code>L</code> | market\_participant\_states | <code>read\_market\_participant\_states()</code> | Market Participant Position               | 4.2.4             |
-| <code>V</code> | mwcb                        | <code>read\_mwcb()</code>                        | MWCB Decline Level Message                | 4.2.5.1           |
-| <code>W</code> | mwcb                        | <code>read\_mwcb()</code>                        | MWCB Status Message                       | 4.2.5.2           |
-| <code>K</code> | ipo                         | <code>read\_ipo()</code>                         | IPO Quoting Period Update                 | 4.2.6             |
-| <code>J</code> | luld                        | <code>read\_luld()</code>                        | LULD Auction Collar                       | 4.2.7             |
-| <code>h</code> | trading\_status             | <code>read\_trading\_status()</code>             | Operational Halt                          | 4.2.8             |
-| <code>A</code> | orders                      | <code>read\_orders()</code>                      | Add Order Message                         | 4.3.1             |
-| <code>F</code> | orders                      | <code>read\_orders()</code>                      | Add Order - MPID Attribution Message      | 4.3.2             |
-| <code>E</code> | modifications               | <code>read\_modifications()</code>               | Order Executed Message                    | 4.4.1             |
-| <code>C</code> | modifications               | <code>read\_modifications()</code>               | Order Executed Message With Price Message | 4.4.2             |
-| <code>X</code> | modifications               | <code>read\_modifications()</code>               | Order Cancel Message                      | 4.4.3             |
-| <code>D</code> | modifications               | <code>read\_modifications()</code>               | Order Delete Message                      | 4.4.4             |
-| <code>U</code> | modifications               | <code>read\_modifications()</code>               | Order Replace Message                     | 4.4.5             |
-| <code>P</code> | trades                      | <code>read\_trades()</code>                      | Trade Message (Non-Cross)                 | 4.5.1             |
-| <code>Q</code> | trades                      | <code>read\_trades()</code>                      | Cross Trade Message                       | 4.5.2             |
-| <code>B</code> | trades                      | <code>read\_trades()</code>                      | Broken Trade Message                      | 4.5.3             |
-| <code>I</code> | noii                        | <code>read\_noii()</code>                        | NOII Message                              | 4.6               |
-| <code>N</code> | rpii                        | <code>read\_rpii()</code>                        | Retail Interest Message                   | 4.7               |
+| Type           | <code>RITCH</code> Class  | <code>RITCH</code> Read Function              | ITCH Name                                 | ITCH Spec Section |
+|:---------------|:--------------------------|:----------------------------------------------|:------------------------------------------|:------------------|
+| <code>S</code> | system_events             | <code>read_system_events()</code>             | System Event Message                      | 4.1               |
+| <code>R</code> | stock_directory           | <code>read_stock_directory()</code>           | Stock Directory                           | 4.2.1             |
+| <code>H</code> | trading_status            | <code>read_trading_status()</code>            | Stock Trading Action                      | 4.2.2             |
+| <code>Y</code> | reg_sho                   | <code>read_reg_sho()</code>                   | Reg SHO Restriction                       | 4.2.3             |
+| <code>L</code> | market_participant_states | <code>read_market_participant_states()</code> | Market Participant Position               | 4.2.4             |
+| <code>V</code> | mwcb                      | <code>read_mwcb()</code>                      | MWCB Decline Level Message                | 4.2.5.1           |
+| <code>W</code> | mwcb                      | <code>read_mwcb()</code>                      | MWCB Status Message                       | 4.2.5.2           |
+| <code>K</code> | ipo                       | <code>read_ipo()</code>                       | IPO Quoting Period Update                 | 4.2.6             |
+| <code>J</code> | luld                      | <code>read_luld()</code>                      | LULD Auction Collar                       | 4.2.7             |
+| <code>h</code> | trading_status            | <code>read_trading_status()</code>            | Operational Halt                          | 4.2.8             |
+| <code>A</code> | orders                    | <code>read_orders()</code>                    | Add Order Message                         | 4.3.1             |
+| <code>F</code> | orders                    | <code>read_orders()</code>                    | Add Order - MPID Attribution Message      | 4.3.2             |
+| <code>E</code> | modifications             | <code>read_modifications()</code>             | Order Executed Message                    | 4.4.1             |
+| <code>C</code> | modifications             | <code>read_modifications()</code>             | Order Executed Message With Price Message | 4.4.2             |
+| <code>X</code> | modifications             | <code>read_modifications()</code>             | Order Cancel Message                      | 4.4.3             |
+| <code>D</code> | modifications             | <code>read_modifications()</code>             | Order Delete Message                      | 4.4.4             |
+| <code>U</code> | modifications             | <code>read_modifications()</code>             | Order Replace Message                     | 4.4.5             |
+| <code>P</code> | trades                    | <code>read_trades()</code>                    | Trade Message (Non-Cross)                 | 4.5.1             |
+| <code>Q</code> | trades                    | <code>read_trades()</code>                    | Cross Trade Message                       | 4.5.2             |
+| <code>B</code> | trades                    | <code>read_trades()</code>                    | Broken Trade Message                      | 4.5.3             |
+| <code>I</code> | noii                      | <code>read_noii()</code>                      | NOII Message                              | 4.6               |
+| <code>N</code> | rpii                      | <code>read_rpii()</code>                      | Retail Interest Message                   | 4.7               |
 
 Note that if you are interested in the exact definition of the messages
 and its components, you should look into the [official ITCH
@@ -318,7 +317,7 @@ action, 5000 trade, 5000 order, and 2000 order modification messages. As
 seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
-NASDAQ provides sample ITCH files on their official FTP server at
+MASDAQ provides sample ITCH files on their official FTP server at
 <ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`) which can
 be used to test code on larger datasets. Note that the sample files are
 up to 5GB compressed, which inflate to about 13GB. To interact with the
@@ -410,7 +409,7 @@ od <- read_orders(
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.04 secs at 11.14MB/s
+#> [Done]       in 0.06 secs at 7.80MB/s
 
 # count the different message types
 od[, .(n = .N), by = msg_type]
@@ -456,7 +455,7 @@ outfile <- filter_itch(
 #> [Filter]     stock_locate: '1', '3'
 #> [Bytes]      scanned 465048, filtered 41116
 #> [Messages]   scanned 10979, filtered 1082
-#> [Done]       in 0.04 secs at 11.57MB/s
+#> [Done]       in 0.06 secs at 8.20MB/s
 
 format_bytes(file.size(outfile))
 #> [1] "41.12KB"
@@ -466,7 +465,7 @@ od2 <- read_orders(outfile)
 #> [Counting]   num messages 1,082
 #> [Counting]   num 'orders' messages 1,082
 #> [Converting] to data.table
-#> [Done]       in 0.04 secs at 1.03MB/s
+#> [Done]       in 0.06 secs at 715.20KB/s
 
 # check that the filtered dataset contains the same information as in the example above
 all.equal(od, od2)
@@ -479,6 +478,7 @@ As a last step, a quick visualization of the example dataset
 
 ``` r
 library(ggplot2)
+#> Warning: Paket 'ggplot2' wurde unter R Version 4.2.2 erstellt
 
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
@@ -500,6 +500,8 @@ ggplot() +
        caption = "Source: RITCH package", x = "Time", y = "Price", color = "Side") +
   scale_y_continuous(labels = scales::dollar) +
   scale_color_brewer(palette = "Set1")
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
 ```
 
 <img src="man/figures/README-ETF_plot-1.png" width="100%" />

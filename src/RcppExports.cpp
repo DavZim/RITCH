@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // count_messages_impl
 Rcpp::DataFrame count_messages_impl(std::string filename, int64_t max_buffer_size, bool quiet);
 RcppExport SEXP _RITCH_count_messages_impl(SEXP filenameSEXP, SEXP max_buffer_sizeSEXP, SEXP quietSEXP) {
