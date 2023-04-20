@@ -23,8 +23,8 @@ a data.table of the tickers, the respective stock locate codes, and
 the exchange/date information
 }
 \description{
-The data is downloaded from NASDAQs FTP server, which can be found here 
-\url{ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
+The data is downloaded from NASDAQs server, which can be found here 
+\url{https://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
 }
 \examples{
 \dontrun{

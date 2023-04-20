@@ -1,7 +1,7 @@
 #' Downloads the stock directory (stock locate codes) for a given date and exchange
 #' 
-#' The data is downloaded from NASDAQs FTP server, which can be found here 
-#' \url{ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
+#' The data is downloaded from NASDAQs server, which can be found here 
+#' \url{https://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
 #' 
 #' @param exchange The exchange, either NASDAQ (equivalent to NDQ), BX, or PSX
 #' @param date The date, should be of class Date. If not the value is converted 
@@ -34,7 +34,7 @@ download_stock_directory <- function(exchange, date, cache = FALSE,
   if (length(cache) != 1) stop("cache must be of size 1")
   
   if (is.character(date)) date <- as.Date(date)
-  base_url <- "ftp://emi.nasdaq.com/ITCH/Stock_Locate_Codes/"
+  base_url <- "https://emi.nasdaq.com/ITCH/Stock_Locate_Codes/"
   
   # if multiple exchanges or dates were specified, take all possible combinations 
   # and call the function recursively

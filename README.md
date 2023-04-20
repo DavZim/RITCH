@@ -24,8 +24,7 @@ and `C++` for efficient message parsing.
 
 Note that the package provides a small simulated sample dataset in the
 `ITCH_50` format for testing and example purposes. Helper functions are
-provided to list and download sample files from NASDAQs official FTP
-server.
+provided to list and download sample files from NASDAQs official server.
 
 ## Install
 
@@ -62,7 +61,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 msg_count <- count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 435.88MB/s
+#> [Done]       in 0.00 secs at 397.42MB/s
 dim(msg_count)
 #> [1] 22  2
 names(msg_count)
@@ -73,7 +72,7 @@ orders <- read_orders(file)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.08 secs at 5.84MB/s
+#> [Done]       in 0.08 secs at 5.89MB/s
 dim(orders)
 #> [1] 5000   13
 names(orders)
@@ -87,7 +86,7 @@ trades <- read_trades(file, n_max = 100)
 #> [Filter]     skip: 0 n_max: 100 (1 - 100)
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.05 secs at 9.10MB/s
+#> [Done]       in 0.05 secs at 9.38MB/s
 dim(trades)
 #> [1] 100  14
 names(trades)
@@ -119,12 +118,12 @@ If you want to know more about the functions of the package, read on.
 There are also some helper functions provided, a selection is:
 
 - `download_sample_file(choice)` to download a sample file from the
-  NASDAQ FTP server and `list_sample_files()` to get a list of all
-  available sample files
+  NASDAQ server and `list_sample_files()` to get a list of all available
+  sample files
 - `download_stock_directory(exchange, date)` to download the stock
   locate information for a given exchange and date
-- `open_itch_ftp()` to open the official NASDAQ FTP server in your
-  browser
+- `open_itch_sample_server()` to open the official NASDAQ server in your
+  browser, which hosts among other things example data files
 - `gzip_file(infile, outfile)` and `gunzip_file(infile, outfile)` for
   gzip functionality
 - `open_itch_specification()` to open the official NASDAQ ITCH
@@ -171,7 +170,7 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 2.26MB/s
+#> [Done]       in 0.01 secs at 2.22MB/s
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
@@ -213,7 +212,7 @@ outfile <- write_itch(data,
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 2.93MB/s
+#> [Done]       in 0.01 secs at 2.89MB/s
 outfile
 #> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
 
@@ -317,11 +316,12 @@ action, 5000 trade, 5000 order, and 2000 order modification messages. As
 seen by the 3 stock directory messages, the file contains data about 3
 made up stocks (see also the plot later in the Readme).
 
-MASDAQ provides sample ITCH files on their official FTP server at
-<ftp://emi.nasdaq.com/ITCH/> (or in R use `open_itch_ftp()`) which can
-be used to test code on larger datasets. Note that the sample files are
-up to 5GB compressed, which inflate to about 13GB. To interact with the
-sample files, use `list_sample_files()` and `download_sample_files()`.
+MASDAQ provides sample ITCH files on their official server at
+<https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/> (or in R use
+`open_itch_sample_server()`) which can be used to test code on larger
+datasets. Note that the sample files are up to 5GB compressed, which
+inflate to about 13GB. To interact with the sample files, use
+`list_sample_files()` and `download_sample_files()`.
 
 ## Notes on Memory and Speed
 
@@ -409,7 +409,7 @@ od <- read_orders(
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 7.80MB/s
+#> [Done]       in 0.06 secs at 7.66MB/s
 
 # count the different message types
 od[, .(n = .N), by = msg_type]
@@ -455,7 +455,7 @@ outfile <- filter_itch(
 #> [Filter]     stock_locate: '1', '3'
 #> [Bytes]      scanned 465048, filtered 41116
 #> [Messages]   scanned 10979, filtered 1082
-#> [Done]       in 0.06 secs at 8.20MB/s
+#> [Done]       in 0.06 secs at 8.29MB/s
 
 format_bytes(file.size(outfile))
 #> [1] "41.12KB"
@@ -465,7 +465,7 @@ od2 <- read_orders(outfile)
 #> [Counting]   num messages 1,082
 #> [Counting]   num 'orders' messages 1,082
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 715.20KB/s
+#> [Done]       in 0.06 secs at 721.61KB/s
 
 # check that the filtered dataset contains the same information as in the example above
 all.equal(od, od2)

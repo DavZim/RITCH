@@ -11,7 +11,7 @@
 #' @param outfile the resulting zipped or unzipped file
 #' @param buffer_size the size of the buffer to read in at once, default is 4 times the file.size (max 2Gb).
 #' 
-#' @details
+#' @details Functions are
 #' 
 #' @return The filename of the unzipped file, invisibly
 #'

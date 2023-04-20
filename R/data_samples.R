@@ -1,5 +1,5 @@
 
-#' Returns a data.table of the sample files on the FTP server
+#' Returns a data.table of the sample files on the server
 #'
 #' @return a data.table of the files
 #' @export
@@ -10,35 +10,36 @@
 #' }
 list_sample_files <- function() {
   
-  url <- "ftp://emi.nasdaq.com/ITCH/"
-  raw <- readLines(url)
+  url <- "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/"
+  raw <- suppressWarnings(readLines(url))
   
-  cont <- unlist(strsplit(raw, "\n"))
-  cont <- cont[grepl("ITCH_?50\\.gz$", cont)]
-  cont <- strsplit(cont, " +")
+  cont <- trimws(unlist(strsplit(raw, "<br>")))
+  cont <- cont[grepl("ITCH_?50\\.gz</A>$", cont)]
+  cont <- strsplit(cont, " +|HREF=\"|\">|</A>")
   
   df <- data.table::data.table(
-    file = sapply(cont, function(x) x[4]),
-    size = sapply(cont, function(x) x[3]),
+    file = sapply(cont, function(x) x[8]),
+    size = sapply(cont, function(x) x[4]),
     date = sapply(cont, function(x) x[1]),
-    time = sapply(cont, function(x) x[2])
+    time = sapply(cont, function(x) x[2]),
+    tt = sapply(cont, function(x) x[3])
   )
   
   df[, ':=' (
     file_size = as.numeric(size),
-    last_modified = as.POSIXct(paste(date, time), format = "%m-%d-%y %H:%M%p", tz = "GMT"),
+    last_modified = as.POSIXct(paste(date, time, tt), format = "%m/%d/%Y %H:%M %p", tz = "GMT"),
     exchange = get_exchange_from_filename(file),
     date = get_date_from_filename(file)
   )]
   
   return(df[, .(file, exchange, date, file_size, last_modified)])
-  
 }
 
 
-#' Downloads a sample ITCH File from NASDAQs FTP Server
+#' Downloads a sample ITCH File from NASDAQs Server
 #' 
-#' The FTP Server can be found at \url{ftp://emi.nasdaq.com/ITCH/}
+#' The Server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/
+#' }
 #' 
 #' Warning: the smallest file is around 300 MB, with the largest exceeding 5 GB. 
 #' There are about 17 files in total. Downloading all might take a considerable amount of time.
@@ -76,7 +77,7 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
                                  quiet = FALSE) {
   choice <- match.arg(choice)
   
-  url <- "ftp://emi.nasdaq.com/ITCH/"
+  url <- "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/"
   df <- list_sample_files()
   
   if (length(exchanges) != 1 && !is.na(exchanges)) 
@@ -126,7 +127,12 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
     if (check_md5sum) {
       if (!quiet) cat(paste0("Checking md5 sum of file '", file_path, "' ... "))
       md5_url <- paste0(file_url, ".md5sum")
-      md5 <- readLines(md5_url)
+      md5 <- try(readLines(md5_url), silent = TRUE)
+      if (inherits(md5, "try-error")) {
+        cat(sprintf("Could not find md5 file for file %s, skipping check\n",
+                    file_url))
+        return(file)
+      }
       expected <- strsplit(md5, " ")[[1]][1]
       got <- tools::md5sum(file_path)
       if (expected != got) {

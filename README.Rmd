@@ -30,7 +30,7 @@ The main purpose of this package is to parse the binary ITCH files to a [`data.t
 The package leverages [`Rcpp`](https://CRAN.R-project.org/package=Rcpp) and `C++` for efficient message parsing.
 
 Note that the package provides a small simulated sample dataset in the `ITCH_50` format for testing and example purposes.
-Helper functions are provided to list and download sample files from NASDAQs official FTP server.
+Helper functions are provided to list and download sample files from NASDAQs official server.
 
 ## Install
 
@@ -92,9 +92,9 @@ Convenient wrappers for different message classes such as `orders`, `trades`, et
 
 There are also some helper functions provided, a selection is:
 
-- `download_sample_file(choice)` to download a sample file from the NASDAQ FTP server and `list_sample_files()` to get a list of all available sample files
+- `download_sample_file(choice)` to download a sample file from the NASDAQ server and `list_sample_files()` to get a list of all available sample files
 - `download_stock_directory(exchange, date)` to download the stock locate information for a given exchange and date
-- `open_itch_ftp()` to open the official NASDAQ FTP server in your browser
+- `open_itch_sample_server()` to open the official NASDAQ server in your browser, which hosts among other things example data files
 - `gzip_file(infile, outfile)` and `gunzip_file(infile, outfile)` for gzip functionality
 - `open_itch_specification()` to open the official NASDAQ ITCH specification PDF in your browser
 
@@ -214,7 +214,7 @@ count_messages(file, add_meta_data = TRUE, quiet = TRUE)
 Note that the example dataset does not contain messages from all classes but is limited to 6 system messages, 3 stock directory, 3 stock trading action, 5000 trade, 5000 order, and 2000 order modification messages.
 As seen by the 3 stock directory messages, the file contains data about 3 made up stocks (see also the plot later in the Readme).
 
-MASDAQ provides sample ITCH files on their official FTP server at ftp://emi.nasdaq.com/ITCH/ (or in R use `open_itch_ftp()`) which can be used to test code on larger datasets.
+MASDAQ provides sample ITCH files on their official server at <https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/> (or in R use `open_itch_sample_server()`) which can be used to test code on larger datasets.
 Note that the sample files are up to 5GB compressed, which inflate to about 13GB.
 To interact with the sample files, use `list_sample_files()` and `download_sample_files()`.
 

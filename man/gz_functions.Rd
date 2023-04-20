@@ -32,7 +32,7 @@ The filename of the unzipped file, invisibly
 Allows the compression and uncompression of files
 }
 \details{
-
+Functions are
 
 \itemize{
  \item{\code{gunzip_file}: uncompresses a gz-archive to raw binary data}

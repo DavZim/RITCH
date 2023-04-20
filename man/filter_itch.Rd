@@ -63,7 +63,7 @@ else an error is thrown.}
 \item{stock_directory}{A data.frame containing the stock-locate code relationship.
 As outputted by \code{\link{read_stock_directory}}.
 Only used if \code{filter_stock} is set. To download the stock directory from
-NASDAQs FTP server, use \code{\link{download_stock_directory}}.}
+NASDAQs server, use \code{\link{download_stock_directory}}.}
 
 \item{skip}{Number of messages to skip before starting parsing messages,
 note the skip parameter applies to the specific message class, i.e., it would

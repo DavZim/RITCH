@@ -137,19 +137,19 @@ open_itch_specification <- function() {
   return(invisible(url))
 }
 
-#' Opens the ITCH sample FTP page
+#' Opens the ITCH sample page
 #'
-#' The FTP server can be found at \url{ftp://emi.nasdaq.com/ITCH/}.
+#' The server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq ITCH/}.
 #' 
 #' @return the URL (invisible)
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' open_itch_ftp()
+#' open_itch_sample_server()
 #' }
-open_itch_ftp <- function() {
-  url <- "ftp://emi.nasdaq.com/ITCH/"
+open_itch_sample_server <- function() {
+  url <- "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/"
   browseURL(url)
   return(invisible(url))
 }
