@@ -23,6 +23,7 @@ NULL
 #' - 3 trading status (message type `H`)
 #' - 5000 orders (4997 message type `A` and 3 `F`)
 #' - 2000 modifications (198 `F`, 45 `X`, 1745 `D`, and 12 `U` message types)
+#' - 5000 trades (message type `P`)
 #'
 #' The file is also available as `ex20101224.TEST_ITCH_50.gz`.
 #'

@@ -21,6 +21,7 @@ The data contains the following count of messages:
 \item 3 trading status (message type \code{H})
 \item 5000 orders (4997 message type \code{A} and 3 \code{F})
 \item 2000 modifications (198 \code{F}, 45 \code{X}, 1745 \code{D}, and 12 \code{U} message types)
+\item 5000 trades (message type \code{P})
 }
 
 The file is also available as \code{ex20101224.TEST_ITCH_50.gz}.
