@@ -54,5 +54,4 @@ uint64_t set6bytes(unsigned char* b, int64_t val);
 uint64_t set8bytes(unsigned char* b, int64_t val);
 uint64_t setCharBytes(unsigned char* b, std::string x, uint64_t n);
 
-
 #endif //HELPERFUNCTIONS_H
