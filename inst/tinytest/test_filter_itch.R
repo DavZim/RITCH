@@ -6,6 +6,24 @@ suppressPackageStartupMessages(library(bit64))
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 outfile <- "testfile_20101224.TEST_ITCH_50"
 
+
+################################################################################
+ # Test that filtering for all trades returns all data entries
+orig <- read_itch(infile, quiet = TRUE)
+trades <- read_trades(infile, quiet = TRUE)
+expect_equal(orig$trades, trades)
+
+res <- read_itch(infile, quiet = TRUE, filter_msg_class = "trades",
+                 filter_stock_locate = c(1, 2, 3), min_timestamp = 1,
+                 max_timestamp = 6e14, filter_msg_type = "P")
+expect_equal(res, trades)
+
+filter_itch(infile, outfile, filter_msg_class = "trades", quiet = TRUE)
+res <- read_itch(outfile, quiet = TRUE)
+expect_equal(res$trades, trades)
+unlink(outfile)
+
+
 ################################################################################
 # Test that the first and last messages are parsed
 of <- filter_itch(infile, outfile, filter_msg_class = "system_events", quiet = TRUE)
@@ -165,6 +183,10 @@ expect_error(
   filter_itch(infile, outfile, min_timestamp = 1:2, max_timestamp = 1:3,
               quiet = TRUE)
 )
+expect_error(
+  filter_itch(infile, outfile, min_timestamp = 1, max_timestamp = 1:3,
+              quiet = TRUE)
+)
 
 
 ################################################################################
@@ -179,6 +201,12 @@ exp_count <- c(
   system_events = 3L, orders = 2501L, modifications = 979L, trades = 2598L
 )
 expect_equal(sapply(df, nrow), exp_count)
+
+# read-in all data and filter the data manually
+df_all <- read_itch(infile, quiet = TRUE)
+df_all_f <- lapply(df, function(d) d[timestamp >= ms, ])
+expect_equal(df_all_f, df)
+
 # check that for all classes the min timestamp is larger than the expected value
 expect_true(get_func_of_ts(df, min) >= ms)
 
@@ -200,6 +228,12 @@ exp_count <- c(
   orders = 2500L, modifications = 1021L, trades = 2402L
 )
 expect_equal(sapply(df, nrow), exp_count)
+
+# read-in all data and filter the data manually
+df_all <- read_itch(infile, quiet = TRUE)
+df_all_f <- lapply(df, function(d) d[timestamp <= ms, ])
+expect_equal(df_all_f, df)
+
 # check that for all classes the max timestamp is smaller than the expected value
 expect_true(get_func_of_ts(df, max) <= ms)
 
@@ -216,15 +250,21 @@ filter_itch(infile, outfile, min_timestamp = min_ts, max_timestamp = max_ts,
             quiet = TRUE)
 
 expect_equal(file.size(outfile), 138558)
+
 # check that the output file contains only orders
 df <- read_itch(outfile, quiet = TRUE)
-exp_count <- c(
-  orders = 1501L, modifications = 598L, trades = 1477L
-)
+exp_count <- c(orders = 1501L, modifications = 598L, trades = 1477L)
 expect_equal(sapply(df, nrow), exp_count)
+
+# read-in all data and filter the data manually
+df_all <- read_itch(infile, quiet = TRUE)
+df_all_f <- lapply(df, function(d) d[timestamp >= min_ts & timestamp <= max_ts, ])
+expect_equal(df_all_f, df)
+
+
 # check that for all classes the max timestamp is smaller than the expected value
 dd <- df[sapply(df, nrow) != 0]
-expect_true(get_func_of_ts(df, min) <= min_ts)
+expect_true(get_func_of_ts(df, min) >= min_ts)
 expect_true(get_func_of_ts(df, max) <= max_ts)
 
 df2 <- read_itch(infile, min_timestamp = min_ts, max_timestamp = max_ts,
