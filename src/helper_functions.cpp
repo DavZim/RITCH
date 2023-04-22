@@ -2,7 +2,7 @@
 
 
 // small helper function to get the message size for a char
-int get_message_size(const char msg) {
+int get_message_size(const unsigned char msg) {
   return MSG_SIZES[msg - 'A'] + 2;
 }
 
@@ -12,9 +12,9 @@ int get_message_size(const char msg) {
 // this function extracts the needed message classes from the raw vector
 std::vector<int64_t> take_needed_messages(std::vector<int64_t> &v) {
   std::vector<int64_t> res;
-  for (const char act_msg : ACT_MSG_NAMES) {
+  for (const unsigned char act_msg : ACT_MSG_NAMES) {
     size_t i = 0;
-    for (const char msg : MSG_NAMES) {
+    for (const unsigned char msg : MSG_NAMES) {
       if (msg == act_msg) {
         res.push_back(v[i]);
         break;
@@ -55,52 +55,8 @@ std::string format_thousands(int64_t num,
 // small internal helper function to convert bytes etc
 // #############################################################################
 
-/**
- * @brief      Converts 2 bytes from a buffer in big endian to an int32_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted integer
- */
-int32_t get2bytes(char* buf) {
-  return __builtin_bswap16(*reinterpret_cast<uint16_t*>(&buf[0]));
-}
-
-/**
- * @brief      Converts 4 bytes from a buffer in big endian to an int32_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted integer
- */
-int32_t get4bytes(char* buf) {
-  return __builtin_bswap32(*reinterpret_cast<uint32_t*>(&buf[0]));
-}
-
-/**
- * @brief      Converts 6 bytes from a buffer in big endian to an int64_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted int64_t
- */
-int64_t get6bytes(char* buf) {
-  return (__builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0])) & 0xFFFFFFFFFFFF0000) >> 16;
-}
-
-/**
- * @brief      Converts 8 bytes from a buffer in big endian to an int64_t
- *
- * @param      buf   The buffer as a pointer to an array of chars
- *
- * @return     The converted int64_t
- */
-int64_t get8bytes(char* buf) {
-  return __builtin_bswap64(*reinterpret_cast<uint64_t*>(&buf[0]));
-}
-
 // return N bytes of a buffer as a string
-std::string getNBytes(char* buf, const int n, const char empty) {
+std::string getNBytes(unsigned char* buf, const int n, const unsigned char empty) {
   std::string res;
   for (int i = 0; i < n; ++i) if (buf[i] != empty) res += buf[i];
   return res;
@@ -114,26 +70,26 @@ Rcpp::NumericVector to_int64(Rcpp::NumericVector v) {
 
 // helper functions that check if a buffer value is in a vector of filters
 // equivalent of R buf_val %in% filter
-bool passes_filter(char* buf, std::vector<char> &filter) {
+bool passes_filter(unsigned char* buf, std::vector<char> &filter) {
   if (filter.size() == 0) return true;
-  for (char cc : filter) if (cc == *buf) return true;
+  for (unsigned char cc : filter) if (cc == *buf) return true;
   return false;
 }
 // same helper function as before but for int vector
-bool passes_filter(char* buf, std::vector<int> &filter) {
+bool passes_filter(unsigned char* buf, std::vector<int> &filter) {
   if (filter.size() == 0) return true;
-  const int val = get2bytes(&buf[0]);
+  const int val = (int) getNBytes32<2>(&buf[0]);
   for (int cc : filter) if (cc == val) return true;
   return false;
 }
 // check larger/smaller inclusive for 8 byte numbers (timestamp)
 // equivalent to R (buf_val >= lower & buf_val <= upper)
-bool passes_filter_in(char* buf,
+bool passes_filter_in(unsigned char* buf,
                       std::vector<int64_t> &lower,
                       std::vector<int64_t> &upper) {
   // lower and upper have the same size!
   if (lower.size() == 0) return true;
-  const int64_t val = get6bytes(&buf[0]);
+  const int64_t val = getNBytes64<6>(buf);
   for (size_t i = 0; i < lower.size(); i++) {
     if (val >= lower[i] && val <= upper[i]) return true;
   }
@@ -141,9 +97,9 @@ bool passes_filter_in(char* buf,
   return false;
 }
 
-// sets inside a char buffer b, 2 bytes from the value val, returns number of bytes changed
+// sets inside a unsigned char buffer b, 2 bytes from the value val, returns number of bytes changed
 // i.e., convert val = 8236 to 0x202c
-uint64_t set2bytes(char* b, int32_t val) {
+uint64_t set2bytes(unsigned char* b, int32_t val) {
   b[1] = val         & 0xff;
   b[0] = (val >> 8)  & 0xff;
   // Rprintf("Converting: %15i -> 0x %02x %02x\n",
@@ -151,9 +107,9 @@ uint64_t set2bytes(char* b, int32_t val) {
   return 2;
 }
 
-// sets inside a char buffer b, 4 bytes from the value val, returns number of bytes changed
+// sets inside a unsigned char buffer b, 4 bytes from the value val, returns number of bytes changed
 // i.e., convert val = 11900 to 0x00002e7c
-uint64_t set4bytes(char* b, int32_t val) {
+uint64_t set4bytes(unsigned char* b, int32_t val) {
   b[3] = val         & 0xffff;
   b[2] = (val >> 8)  & 0xffff;
   b[1] = (val >> 16) & 0xffff;
@@ -162,9 +118,9 @@ uint64_t set4bytes(char* b, int32_t val) {
   //         val, b[0], b[1], b[2], b[3]);
   return 4;
 }
-// sets inside a char buffer b, 6 bytes from the value val, returns number of bytes changed
+// sets inside a unsigned char buffer b, 6 bytes from the value val, returns number of bytes changed
 // i.e., 25200002107428 to 0x16eb552c8824
-uint64_t set6bytes(char* b, int64_t val) {
+uint64_t set6bytes(unsigned char* b, int64_t val) {
   b[5] = val         & 0xffffff;
   b[4] = (val >> 8)  & 0xffffff;
   b[3] = (val >> 16) & 0xffffff;
@@ -175,9 +131,9 @@ uint64_t set6bytes(char* b, int64_t val) {
   //         (long long) val, b[0], b[1], b[2], b[3], b[4], b[5]);
   return 6;
 }
-// sets inside a char buffer b, 8 bytes from the value val, returns number of bytes changed
+// sets inside a unsigned char buffer b, 8 bytes from the value val, returns number of bytes changed
 // i.e., 4 to 0x0000000000000004
-uint64_t set8bytes(char* b, int64_t val) {
+uint64_t set8bytes(unsigned char* b, int64_t val) {
   b[7] = val         & 0xffffffff;
   b[6] = (val >> 8)  & 0xffffffff;
   b[5] = (val >> 16) & 0xffffffff;
@@ -190,15 +146,16 @@ uint64_t set8bytes(char* b, int64_t val) {
   //         (long long) val, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
   return 8;
 }
-// sets inside a char buffer b, n bytes from the string x, returns number of bytes changed
+// sets inside a unsigned char buffer b, n bytes from the string x, returns number of bytes changed
 // i.e., "UFO" with 8 to 0x55534f2020202020 (filled with whitespaces)
-uint64_t setCharBytes(char* b, std::string x, uint64_t n) {
-  char *st = new char[n + 1];
+uint64_t setCharBytes(unsigned char* b, std::string x, uint64_t n) {
+  unsigned char *st = new unsigned char[n + 1];
   if (x.size() > n) Rprintf("ERROR: setChar Bytes for string '%s' larger than capacity %i\n", x.c_str(), n);
   for (uint64_t j = 0; j < n; j++) st[j] = ' '; // fill with n spaces
   for (uint64_t j = 0; j < x.size(); j++) st[j] = x[j]; // copy the string x
   memcpy(b, st, n);
-  // Rprintf("Set %i char Bytes from '%s' -> 0x %02x %02x %02x %02x %02x %02x %02x %02x\n",
+  // Rprintf("Set %i unsigned char Bytes from '%s' -> 0x %02x %02x %02x %02x %02x %02x %02x %02x\n",
   //         n, x.c_str(), b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
+  delete[] st;
   return n;
 }

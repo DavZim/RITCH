@@ -68,10 +68,10 @@ void filter_itch_impl(std::string infile, std::string outfile,
 
   // create buffer
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
-  char * ibuf;
-  char * obuf;
-  ibuf = (char*) malloc(buf_size);
-  obuf = (char*) malloc(buf_size);
+  unsigned char * ibuf;
+  unsigned char * obuf;
+  ibuf = (unsigned char*) malloc(buf_size);
+  obuf = (unsigned char*) malloc(buf_size);
   // Rprintf("Allocating buffer to size %lld\n", buf_size);
 
   int64_t bytes_read = 0, this_buffer_size = 0, bytes_written = 0;
@@ -92,13 +92,13 @@ void filter_itch_impl(std::string infile, std::string outfile,
 
     do {
       // check early stop in max_timestamp
-      const int64_t cur_ts = get6bytes(&ibuf[i + 2 + 5]);
+      const int64_t cur_ts = getNBytes64<6>(&ibuf[i + 2 + 5]);
       if (cur_ts > max_ts_val) {
         max_ts_reached = true;
         break;
       }
 
-      const char mt = ibuf[i + 2];
+      const unsigned char mt = ibuf[i + 2];
       // Check Filter Messages
       bool parse_message = true;
       // only check the filter if previous tests are all OK
@@ -123,7 +123,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
         // write to buffer until o
         // Rprintf("New obuf, write  %9lld bytes to ofile next msg %i\n",
         //         o, msg_size);
-        fwrite(obuf, sizeof(char), o, ofile);
+        fwrite(obuf, sizeof(unsigned char), o, ofile);
         // reset obuf
         std::memset(obuf, 0x00, buf_size);
 
@@ -158,7 +158,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
   if (o > 0) {
     // write to buffer until o
     // Rprintf("Last obuf, write %9lld bytes to ofile\n", o);
-    fwrite(obuf, sizeof(char), o, ofile);
+    fwrite(obuf, sizeof(unsigned char), o, ofile);
   }
 
   if (!quiet) {

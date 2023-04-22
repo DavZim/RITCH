@@ -18,8 +18,8 @@ std::vector<int64_t> count_messages_internal(std::string filename,
 
   // create buffer
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
-  char * buf;
-  buf = (char*) malloc(buf_size);
+  unsigned char * buf;
+  buf = (unsigned char*) malloc(buf_size);
 
   int64_t bytes_read = 0, this_buffer_size = 0;
   std::vector<int64_t> count(sizeof(MSG_SIZES)/sizeof(MSG_SIZES[0]));
@@ -68,7 +68,7 @@ Rcpp::DataFrame count_messages_impl(std::string filename,
   if (!quiet) Rprintf("[Converting] to data.table\n");
 
   Rcpp::CharacterVector names;
-  for (const char c : ACT_MSG_NAMES) names.push_back(std::string(1, c));
+  for (const unsigned char c : ACT_MSG_NAMES) names.push_back(std::string(1, c));
 
   Rcpp::NumericVector ct(N_ACT_MSGS);
   ct.attr("class") = "integer64";

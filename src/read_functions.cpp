@@ -69,7 +69,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     int64_t num_msg_this_type = 0;
     std::vector<char> this_msg_types = msgp_ptr->msg_types;
 
-    for (const char mt : this_msg_types) num_msg_this_type += count[mt - 'A'];
+    for (const unsigned char mt : this_msg_types) num_msg_this_type += count[mt - 'A'];
 
     if (msgp_ptr->active) {
       if (!quiet && num_msg_this_type != 0)
@@ -81,7 +81,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     }
 
     class_to_parsers[cls] = msgp_ptr;
-    for (const char mt : msgp_ptr->msg_types) msg_parsers[mt - 'A'] = msgp_ptr;
+    for (const unsigned char mt : msgp_ptr->msg_types) msg_parsers[mt - 'A'] = msgp_ptr;
   }
 
   // parse the messages
@@ -101,8 +101,8 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
 
   // create buffer
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
-  char * buf;
-  buf = (char*) malloc(buf_size);
+  unsigned char * buf;
+  buf = (unsigned char*) malloc(sizeof(unsigned char) * buf_size);
   // Rprintf("Allocating buffer to size %lld\n", buf_size);
 
   int64_t bytes_read = 0, this_buffer_size = 0;
@@ -122,13 +122,13 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
       //         get_message_size(buf[i + 2]), buf[i + 2]);
 
       // check early stop in max_timestamp
-      const int64_t cur_ts = get6bytes(&buf[i + 2 + 5]);
+      const int64_t cur_ts = getNBytes64<6>(&buf[i + 2 + 5]);
       if (cur_ts > max_ts_val) {
         max_ts_reached = true;
         break;
       }
 
-      const char mt = buf[i + 2];
+      const unsigned char mt = buf[i + 2];
       // Check Filter Messages
       bool parse_message = true;
       // only check the filter if previous tests are all OK
@@ -160,9 +160,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     fseek(infile, offset, SEEK_CUR);
     bytes_read += i;
   }
-
-  free(buf);
-  fclose(infile);
+  
 
   // gather the data.frames into a list
   Rcpp::List res;
@@ -172,6 +170,12 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
     res.push_back(class_to_parsers[cls]->get_data_frame());
 
   res.attr("names") = classes;
+
+  // clean up
+  free(buf);
+  fclose(infile);
+  // delete MessageParser (msgp_ptr) objects
+  for (std::string cls : MSG_CLASSES) delete class_to_parsers[cls];
 
   return res;
 }
@@ -503,13 +507,13 @@ void MessageParser::prune_vectors() {
 
 // Parses a message if the object is active and the message type belongs to this
 // class!
-void MessageParser::parse_message(char * buf) {
+void MessageParser::parse_message(unsigned char * buf) {
 
   if (!active) return;
 
   // -> if !any(msg_types == buf[2]) return...
   bool cont = false;
-  for (char type : msg_types) if (type == buf[0]) cont = true;
+  for (unsigned char type : msg_types) if (type == buf[0]) cont = true;
   if (!cont) return;
 
   msg_buf_idx++;
@@ -526,9 +530,9 @@ void MessageParser::parse_message(char * buf) {
   // for all parse:
   // msg_type, stock_locate, tracking_number and timestamp
   msg_type[index]        = std::string(1, buf[0]);
-  stock_locate[index]    = get2bytes(&buf[1]);
-  tracking_number[index] = get2bytes(&buf[3]);
-  int64_t ts = get6bytes(&buf[5]);
+  stock_locate[index]    = getNBytes32<2>(&buf[1]);
+  tracking_number[index] = getNBytes32<2>(&buf[3]);
+  int64_t ts = getNBytes64<6>(&buf[5]);
   std::memcpy(&(timestamp[index]), &ts, sizeof(double));
 
   // parse specific values for each message
@@ -539,7 +543,7 @@ void MessageParser::parse_message(char * buf) {
     stock[index]                = getNBytes(&buf[11], 8);
     market_category[index]      = std::string(1, buf[19]);
     financial_status[index]     = std::string(1, buf[20]);
-    lot_size[index]             = get4bytes(&buf[21]);
+    lot_size[index]             = getNBytes32<4>(&buf[21]);
     round_lots_only[index]      = buf[25] == 'Y';
     issue_classification[index] = std::string(1, buf[26]);
     issue_subtype[index]        = getNBytes(&buf[27], 2);
@@ -548,7 +552,7 @@ void MessageParser::parse_message(char * buf) {
     ipo_flag[index]             = buf[31] == 'Y' ? true : buf[31] == 'N' ? false : NA_LOGICAL;
     luld_price_tier[index]      = std::string(1, buf[32]);
     etp_flag[index]             = buf[33] == 'Y' ? true : buf[33] == 'N' ? false : NA_LOGICAL;
-    etp_leverage[index]         = get4bytes(&buf[34]);
+    etp_leverage[index]         = getNBytes32<4>(&buf[34]);
     inverse[index]              = buf[38] == 'Y';
 
   } else if (type == "trading_status") {
@@ -587,9 +591,9 @@ void MessageParser::parse_message(char * buf) {
   } else if (type == "mwcb") {
 
     if (buf[0] == 'V') {
-      level1[index]         = ((double) get8bytes(&buf[11])) / 100000000.0;
-      level2[index]         = ((double) get8bytes(&buf[19])) / 100000000.0;
-      level3[index]         = ((double) get8bytes(&buf[27])) / 100000000.0;
+      level1[index]         = ((double) getNBytes64<8>(&buf[11])) / 100000000.0;
+      level2[index]         = ((double) getNBytes64<8>(&buf[19])) / 100000000.0;
+      level3[index]         = ((double) getNBytes64<8>(&buf[27])) / 100000000.0;
       breached_level[index] = NA_INTEGER;
     } else { // buf[0] == 'W'
       breached_level[index] = buf[11] - '0';
@@ -601,27 +605,27 @@ void MessageParser::parse_message(char * buf) {
   } else if (type == "ipo") {
 
     stock[index]             = getNBytes(&buf[11], 8);
-    release_time[index]      = get4bytes(&buf[19]);
+    release_time[index]      = getNBytes32<4>(&buf[19]);
     release_qualifier[index] = std::string(1, buf[23]);
-    ipo_price[index]         = ((double) get4bytes(&buf[24])) / 10000.0;
+    ipo_price[index]         = ((double) getNBytes32<4>(&buf[24])) / 10000.0;
 
   } else if (type == "luld") {
 
     stock[index]           = getNBytes(&buf[11], 8);
-    reference_price[index] = ((double) get4bytes(&buf[19])) / 10000.0;
-    upper_price[index]     = ((double) get4bytes(&buf[23])) / 10000.0;
-    lower_price[index]     = ((double) get4bytes(&buf[27])) / 10000.0;
-    extension[index]       = get4bytes(&buf[31]);
+    reference_price[index] = ((double) getNBytes32<4>(&buf[19])) / 10000.0;
+    upper_price[index]     = ((double) getNBytes32<4>(&buf[23])) / 10000.0;
+    lower_price[index]     = ((double) getNBytes32<4>(&buf[27])) / 10000.0;
+    extension[index]       = getNBytes32<4>(&buf[31]);
 
   } else if (type == "orders") {
 
-    const int64_t tmp = get8bytes(&buf[11]);
+    const int64_t tmp = getNBytes64<8>(&buf[11]);
     std::memcpy(&(order_ref[index]), &tmp, sizeof(double));
 
     buy[index]    = buf[19] == 'B';
-    shares[index] = get4bytes(&buf[20]);
+    shares[index] = getNBytes32<4>(&buf[20]);
     stock[index]  = getNBytes(&buf[24], 8);
-    price[index]  = ((double) get4bytes(&buf[32])) / 10000.0;
+    price[index]  = ((double) getNBytes32<4>(&buf[32])) / 10000.0;
 
     if (buf[0] == 'F') {
       mpid[index] = getNBytes(&buf[36], 4);
@@ -631,13 +635,13 @@ void MessageParser::parse_message(char * buf) {
 
   } else if (type == "modifications") {
 
-    const int64_t tmp = get8bytes(&buf[11]);
+    const int64_t tmp = getNBytes64<8>(&buf[11]);
     std::memcpy(&(order_ref[index]), &tmp, sizeof(double));
 
     if (buf[0] == 'E') {
-      shares[index]       = get4bytes(&buf[19]);// executed shares
+      shares[index]       = getNBytes32<4>(&buf[19]);// executed shares
 
-      const int64_t tt = get8bytes(&buf[23]);
+      const int64_t tt = getNBytes64<8>(&buf[23]);
       std::memcpy(&(match_number[index]), &tt, sizeof(double));
 
       // empty assigns
@@ -646,18 +650,18 @@ void MessageParser::parse_message(char * buf) {
       std::memcpy(&(new_order_ref[index]), &NA_INT64, sizeof(double));
 
     } else if (buf[0] == 'C') {
-      shares[index]       = get4bytes(&buf[19]);// executed shares
+      shares[index]       = getNBytes32<4>(&buf[19]);// executed shares
 
-      const int64_t tt = get8bytes(&buf[23]);
+      const int64_t tt = getNBytes64<8>(&buf[23]);
       std::memcpy(&(match_number[index]), &tt, sizeof(double));
 
       printable[index]    = buf[31] == 'P';
-      price[index]        = ((double) get4bytes(&buf[32])) / 10000.0;
+      price[index]        = ((double) getNBytes32<4>(&buf[32])) / 10000.0;
       // empty assigns
       std::memcpy(&(new_order_ref[index]), &NA_INT64, sizeof(double));
 
     } else if (buf[0] == 'X') {
-      shares[index] = get4bytes(&buf[19]); // canceled shares
+      shares[index] = getNBytes32<4>(&buf[19]); // canceled shares
       // empty assigns
       std::memcpy(&(match_number[index]), &NA_INT64, sizeof(double));
       printable[index] = NA_LOGICAL;
@@ -673,11 +677,11 @@ void MessageParser::parse_message(char * buf) {
 
     } else if (buf[0] == 'U') {
 
-      const int64_t tt = get8bytes(&buf[19]);
+      const int64_t tt = getNBytes64<8>(&buf[19]);
       std::memcpy(&(new_order_ref[index]), &tt, sizeof(double));
 
-      shares[index] = get4bytes(&buf[27]);
-      price[index]  = ((double) get4bytes(&buf[31])) / 10000.0;
+      shares[index] = getNBytes32<4>(&buf[27]);
+      price[index]  = ((double) getNBytes32<4>(&buf[31])) / 10000.0;
       // empty assigns
       std::memcpy(&(match_number[index]), &NA_INT64, sizeof(double));
       printable[index] = NA_LOGICAL;
@@ -688,23 +692,23 @@ void MessageParser::parse_message(char * buf) {
     int64_t tmp;
 
     if (buf[0] == 'P') {
-      tmp = get8bytes(&buf[11]);
+      tmp = getNBytes64<8>(&buf[11]);
       std::memcpy(&(order_ref[index]), &tmp, sizeof(double));
 
       buy[index] = buf[19] == 'B';
-      shares[index] = get4bytes(&buf[20]);
+      shares[index] = getNBytes32<4>(&buf[20]);
 
       stock[index]  = getNBytes(&buf[24], 8);
-      price[index]  = ((double) get4bytes(&buf[32])) / 10000.0;
+      price[index]  = ((double) getNBytes32<4>(&buf[32])) / 10000.0;
 
-      const int64_t tt = get8bytes(&buf[36]);
+      const int64_t tt = getNBytes64<8>(&buf[36]);
       std::memcpy(&(match_number[index]), &tt, sizeof(double));
 
       // empty assigns
       cross_type[index] = NA_STRING;
     } else if (buf[0] == 'Q') {
       // only Q has 8 byte shares... otherwise 4 bytes for shares...
-      tmp = get8bytes(&buf[11]);
+      tmp = getNBytes64<8>(&buf[11]);
       if (tmp >= INT32_MAX)
         Rcpp::Rcout <<
           "Warning, overflow for shares on message 'Q' at position " <<
@@ -712,10 +716,10 @@ void MessageParser::parse_message(char * buf) {
       shares[index] = (int32_t) tmp;
 
       stock[index] = getNBytes(&buf[19], 8);
-      price[index] = ((double) get4bytes(&buf[27])) / 10000.0;
+      price[index] = ((double) getNBytes32<4>(&buf[27])) / 10000.0;
 
 
-      const int64_t tt = get8bytes(&buf[31]);
+      const int64_t tt = getNBytes64<8>(&buf[31]);
       std::memcpy(&(match_number[index]), &tt, sizeof(double));
 
       cross_type[index] = std::string(1, buf[39]);
@@ -725,7 +729,7 @@ void MessageParser::parse_message(char * buf) {
       // WARNING: Message Q: bool has no NA... default is TRUE
     } else if (buf[0] == 'B') {
 
-      const int64_t tt = get8bytes(&buf[11]);
+      const int64_t tt = getNBytes64<8>(&buf[11]);
       std::memcpy(&(match_number[index]), &tt, sizeof(double));
       // empty assigns
       std::memcpy(&(order_ref[index]), &NA_INT64, sizeof(double));
@@ -738,17 +742,17 @@ void MessageParser::parse_message(char * buf) {
 
   } else if (type == "noii") {
 
-    const int64_t tmp = get8bytes(&buf[11]);
+    const int64_t tmp = getNBytes64<8>(&buf[11]);
     std::memcpy(&(paired_shares[index]), &tmp, sizeof(double));
 
-    const int64_t tt = get8bytes(&buf[19]);
+    const int64_t tt = getNBytes64<8>(&buf[19]);
     std::memcpy(&(imbalance_shares[index]), &tt, sizeof(double));
 
     imbalance_direction[index] = std::string(1, buf[27]);
     stock[index]               = getNBytes(&buf[28], 8);
-    far_price[index]           = ((double) get4bytes(&buf[36])) / 10000.0;
-    near_price[index]          = ((double) get4bytes(&buf[40])) / 10000.0;
-    reference_price[index]     = ((double) get4bytes(&buf[44])) / 10000.0;
+    far_price[index]           = ((double) getNBytes32<4>(&buf[36])) / 10000.0;
+    near_price[index]          = ((double) getNBytes32<4>(&buf[40])) / 10000.0;
+    reference_price[index]     = ((double) getNBytes32<4>(&buf[44])) / 10000.0;
     cross_type[index]          = std::string(1, buf[48]);
     variation_indicator[index] = std::string(1, buf[49]);
 

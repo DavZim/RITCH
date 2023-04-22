@@ -39,7 +39,7 @@ public:
 
   void activate();
   void init_vectors(int64_t n);
-  void parse_message(char * buf);
+  void parse_message(unsigned char * buf);
   Rcpp::List get_data_frame();
 
   std::vector<char> msg_types;

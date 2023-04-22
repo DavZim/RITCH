@@ -16,9 +16,9 @@ void gunzip_file_impl(std::string infile,
   gzFile gzfile = gzopen(infile.c_str(), "rb");
 
   unsigned char* buf;
-  int64_t buffer_char_size = sizeof(char) * buffer_size > UINT_MAX ?
+  int64_t buffer_char_size = sizeof(unsigned char) * buffer_size > UINT_MAX ?
   UINT_MAX :
-    sizeof(char) * buffer_size;
+    sizeof(unsigned char) * buffer_size;
   buf = (unsigned char*) malloc(buffer_char_size);
 
   int64_t this_buffer_size;
@@ -59,9 +59,9 @@ void gzip_file_impl(std::string infile,
   FILE* file = fopen(infile.c_str(), "rb");
 
   unsigned char* buf;
-  int64_t buffer_char_size = sizeof(char) * buffer_size > UINT_MAX ?
+  int64_t buffer_char_size = sizeof(unsigned char) * buffer_size > UINT_MAX ?
     UINT_MAX :
-    sizeof(char) * buffer_size;
+    sizeof(unsigned char) * buffer_size;
   buf = (unsigned char*) malloc(buffer_char_size);
 
   int64_t this_buffer_size;

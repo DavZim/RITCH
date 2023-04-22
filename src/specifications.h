@@ -18,7 +18,7 @@ const int MSG_SIZES [] = {
   35, 35, 12, 23, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21
 };
 // the names of the message types
-const char MSG_NAMES [] = {
+const unsigned char MSG_NAMES [] = {
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
   'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^',
   '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'
@@ -27,7 +27,7 @@ const char MSG_NAMES [] = {
 const int N_TYPES = sizeof(MSG_SIZES) / sizeof(MSG_SIZES[0]);
 
 // the names of the messages we actually use
-const char ACT_MSG_NAMES [] = {
+const unsigned char ACT_MSG_NAMES [] = {
   'S', 'R', 'H', 'Y', 'L', 'V', 'W', 'K', 'J', 'h', 'A', 'F', 'E', 'C', 'X',
   'D', 'U', 'P', 'Q', 'B', 'I', 'N'
 };
