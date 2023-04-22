@@ -37,6 +37,8 @@ void gunzip_file_impl(std::string infile,
       break;
     }
   }
+
+  free(buf);
   fclose(ofile);
   gzclose(gzfile);
 }
@@ -78,6 +80,8 @@ void gzip_file_impl(std::string infile,
       break;
     }
   }
+
+  free(buf);
   fclose(file);
   gzclose(ofile);
 }
