@@ -82,7 +82,7 @@ bool passes_filter(unsigned char* buf, std::vector<int> &filter) {
   for (int cc : filter) if (cc == val) return true;
   return false;
 }
-// check larger/smaller inclusive for 8 byte numbers (timestamp)
+// check larger/smaller inclusive for 6 byte numbers (timestamp)
 // equivalent to R (buf_val >= lower & buf_val <= upper)
 bool passes_filter_in(unsigned char* buf,
                       std::vector<int64_t> &lower,

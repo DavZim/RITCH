@@ -46,10 +46,14 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
 
   const size_t ts_size = min_timestamp.size();
   std::vector<int64_t> min_ts(ts_size);
-  std::memcpy(&(min_ts[0]), &(min_timestamp[0]), ts_size * sizeof(int64_t));
 
+  if (ts_size > 0)
+    std::memcpy(&(min_ts[0]), &(min_timestamp[0]), ts_size * sizeof(int64_t));
+  
   std::vector<int64_t> max_ts(ts_size);
-  std::memcpy(&(max_ts[0]), &(max_timestamp[0]), ts_size * sizeof(int64_t));
+  if (ts_size > 0)
+    std::memcpy(&(max_ts[0]), &(max_timestamp[0]), ts_size * sizeof(int64_t));
+
   if (max_ts.size() == 1 && max_ts[0] == -1)
     max_ts[0] = std::numeric_limits<int64_t>::max();
 
