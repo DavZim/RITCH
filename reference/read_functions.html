@@ -321,24 +321,24 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.81MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.21 secs at 2.22MB/s</span>
 <span class="r-in"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.98MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.30MB/s</span>
 <span class="r-in"><span><span class="va">md</span> <span class="op">&lt;-</span> <span class="fu">read_modifications</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.08MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.34MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Alternatively</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="st">"orders"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.02MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.39MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orders"</span>, <span class="st">"trades"</span>, <span class="st">"modifications"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
@@ -346,7 +346,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.85MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.38MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">od</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	5000 obs. of  13 variables:</span>
@@ -457,18 +457,18 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 3 n_max: 10 (4 - 13)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.95MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.39MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># a message count can be provided for slightly faster reads</span></span></span>
 <span class="r-in"><span><span class="va">msg_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   12,012 total messages found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 1.25GB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 1.03GB/s</span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">file</span>, n_max <span class="op">=</span> <span class="va">msg_count</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 0 n_max: 5000 (1 - 5000)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 10,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.86MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.37MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># .gz archives will be automatically unzipped</span></span></span>
 <span class="r-in"><span><span class="va">gz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ex20101224.TEST_ITCH_50.gz"</span>, package <span class="op">=</span> <span class="st">"RITCH"</span><span class="op">)</span></span></span>
@@ -477,14 +477,14 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 1.36MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 822.55KB/s</span>
 <span class="r-in"><span><span class="co"># force a decompress and delete the decompressed file afterwards</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">gz_file</span>, force_gunzip <span class="op">=</span> <span class="cn">TRUE</span>, force_cleanup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to 'ex20101224.TEST_ITCH_50'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 1.37MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 822.99KB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file 'ex20101224.TEST_ITCH_50'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_itch()</span></span></span>
@@ -492,7 +492,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.01MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:        A            2               0 31141354532167       100  TRUE</span>
@@ -535,7 +535,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.97MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.28MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $orders</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
@@ -656,7 +656,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'system_events' messages 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.02MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.30MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp event_code       date</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        S            0               0 11202475298710          O 2010-12-24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        S            0               0 25209371478776          S 2010-12-24</span>
@@ -675,7 +675,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'system_events' messages 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.06MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp event_code       date</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        S            0               0 68698845099321          C 2010-12-24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        S            0               0 68390401688921          E 2010-12-24</span>
@@ -703,7 +703,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'stock_directory' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.09MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.44MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock market_category</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        R            1               0 11435930564116   ALC               N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        R            2               0 11436025019799   BOB               S</span>
@@ -724,7 +724,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'stock_directory' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.02MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.29MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock market_category</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        R            1               0 11435930564116   ALC               N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        R            3               0 11436069862295  CHAR               P</span>
@@ -751,7 +751,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trading_status' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.03MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.37MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock trading_state</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        H            1               0 11436094498153   ALC             T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        H            2               0 11436235406277   BOB             T</span>
@@ -768,7 +768,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trading_status' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.08MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock trading_state</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:        H            1               0 11436094498153   ALC             T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2:        H            2               0 11436235406277   BOB             T</span>
@@ -790,50 +790,50 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-in"><span><span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.00MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.33MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 9 cols): msg_type,stock_locate,tracking_number,timestamp,stock,regsho_action...</span>
 <span class="r-in"><span><span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.13MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.27MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,regsho_action...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_market_participant_states()</span></span></span>
 <span class="r-in"><span><span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.07MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,mpid,stock...</span>
 <span class="r-in"><span><span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.03MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.27MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 14 cols): msg_type,stock_locate,tracking_number,timestamp,mpid,stock...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_mwcb()</span></span></span>
 <span class="r-in"><span><span class="fu">read_mwcb</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.99MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.43MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 11 cols): msg_type,stock_locate,tracking_number,timestamp,level1,level2...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_ipo()</span></span></span>
 <span class="r-in"><span><span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.99MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 11 cols): msg_type,stock_locate,tracking_number,timestamp,stock,release_time...</span>
 <span class="r-in"><span><span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.10MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.46MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,release_time...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_luld()</span></span></span>
 <span class="r-in"><span><span class="fu">read_luld</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.99MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,reference_price...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_orders()</span></span></span>
@@ -841,7 +841,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.00MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.37MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:        A            2               0 31141354532167       100  TRUE</span>
@@ -884,7 +884,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.07MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.40MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref shares</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:        E            2               2 32857937604189     87020   1220</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:        E            2               6 33415045933113    121012    200</span>
@@ -927,7 +927,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.00MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.31MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref  buy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    1:        P            2               2 34210128591201         0 TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    2:        P            2               2 34210355475120         0 TRUE</span>
@@ -969,24 +969,24 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-in"><span><span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.00MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.42MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 16 cols): msg_type,stock_locate,tracking_number,timestamp,paired_shares,imbalance_shares...</span>
 <span class="r-in"><span><span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.95MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.39MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 19 cols): msg_type,stock_locate,tracking_number,timestamp,paired_shares,imbalance_shares...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_rpii()</span></span></span>
 <span class="r-in"><span><span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.03MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 9 cols): msg_type,stock_locate,tracking_number,timestamp,stock,interest_flag...</span>
 <span class="r-in"><span><span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.99MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,interest_flag...</span>
 </code></pre></div>
     </div>
