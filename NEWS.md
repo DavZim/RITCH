@@ -1,4 +1,4 @@
-# RITCH 0.1.14
+# RITCH 0.1.16
 
 * CRAN release
 

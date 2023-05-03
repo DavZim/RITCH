@@ -6,10 +6,7 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/RITCH)](https://CRAN.R-project.org/package=RITCH)
-[![CRAN RStudio mirror
-downloads](https://cranlogs.r-pkg.org/badges/RITCH)](https://www.r-pkg.org/pkg/RITCH)
-[![R-CMD-check](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml)
+status](https://www.r-pkg.org/badges/version/RITCH)](https://CRAN.R-project.org/package=RITCH)<!--[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/RITCH)](https://www.r-pkg.org/pkg/RITCH)-->[![R-CMD-check](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol,
@@ -61,7 +58,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 msg_count <- count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 442.40MB/s
+#> [Done]       in 0.00 secs at 440.40MB/s
 dim(msg_count)
 #> [1] 22  2
 names(msg_count)
@@ -72,7 +69,7 @@ orders <- read_orders(file)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.09 secs at 5.21MB/s
+#> [Done]       in 0.08 secs at 5.63MB/s
 dim(orders)
 #> [1] 5000   13
 names(orders)
@@ -86,7 +83,7 @@ trades <- read_trades(file, n_max = 100)
 #> [Filter]     skip: 0 n_max: 100 (1 - 100)
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 8.28MB/s
+#> [Done]       in 0.05 secs at 8.86MB/s
 dim(trades)
 #> [1] 100  14
 names(trades)
@@ -170,7 +167,7 @@ outfile <- write_itch(md, "modifications", compress = TRUE)
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'modifications_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 1.97MB/s
+#> [Done]       in 0.01 secs at 2.36MB/s
 
 # compare file sizes
 files <- c(full_file = file, subset_file = outfile)
@@ -212,7 +209,7 @@ outfile <- write_itch(data,
 #> [Converting] to binary .
 #> [Writing]    to file
 #> [Outfile]    'alc_char_subset_20101224.TEST_ITCH_50.gz'
-#> [Done]       in 0.01 secs at 2.64MB/s
+#> [Done]       in 0.01 secs at 2.96MB/s
 outfile
 #> [1] "alc_char_subset_20101224.TEST_ITCH_50.gz"
 
@@ -409,7 +406,7 @@ od <- read_orders(
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.07 secs at 6.96MB/s
+#> [Done]       in 0.07 secs at 7.12MB/s
 
 # count the different message types
 od[, .(n = .N), by = msg_type]
@@ -455,7 +452,7 @@ outfile <- filter_itch(
 #> [Filter]     stock_locate: '1', '3'
 #> [Bytes]      scanned 465048, filtered 41116
 #> [Messages]   scanned 10979, filtered 1082
-#> [Done]       in 0.07 secs at 7.05MB/s
+#> [Done]       in 0.06 secs at 8.19MB/s
 
 format_bytes(file.size(outfile))
 #> [1] "41.12KB"
@@ -465,7 +462,7 @@ od2 <- read_orders(outfile)
 #> [Counting]   num messages 1,082
 #> [Counting]   num 'orders' messages 1,082
 #> [Converting] to data.table
-#> [Done]       in 0.06 secs at 668.24KB/s
+#> [Done]       in 0.06 secs at 679.67KB/s
 
 # check that the filtered dataset contains the same information as in the example above
 all.equal(od, od2)
