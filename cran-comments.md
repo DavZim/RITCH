@@ -1,1 +1,1 @@
-Fix 500 error in Readme.
+Remove CPP-11 makevars to remove NOTEs.
