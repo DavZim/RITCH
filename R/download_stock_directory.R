@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   download_stock_directory("BX", "2019-07-02")
 #'   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
 #'   download_stock_directory("BX", "2019-07-02", cache = TRUE)

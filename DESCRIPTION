@@ -1,10 +1,11 @@
 Package: RITCH
 Type: Package
 Title: R Parser for the ITCH-Protocol
-Version: 0.1.17
-Author: David Zimmermann-Kollenda
-Maintainer: David Zimmermann-Kollenda <david_j_zimmermann@hotmail.com>
-Description: Allows To Efficiently Parse ITCH Files (Version 5.0) to an R data.table.
+Version: 0.1.18
+Authors@R: c(
+    person("David", "Zimmermann-Kollenda", , "david_j_zimmermann@hotmail.com", role = c("aut", "cre"))
+  )
+Description: Allows to efficiently parse, filter, and write binary ITCH Files (Version 5.0) containing detailed financial transactions as distributed by NASDAQ to an R data.table.
 License: MIT + file LICENSE
 URL: https://davzim.github.io/RITCH/,
     https://github.com/DavZim/RITCH

@@ -13,7 +13,7 @@ a data.table of the files
 The Server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq\%20ITCH/}
 }
 \examples{
-\dontrun{
+\donttest{
   list_sample_files()
 }
 }

@@ -13,7 +13,7 @@ the URL (invisible)
 The server can be found at \url{https://emi.nasdaq.com/ITCH/Nasdaq\%20ITCH/}.
 }
 \examples{
-\dontrun{
+\donttest{
 open_itch_sample_server()
 }
 }

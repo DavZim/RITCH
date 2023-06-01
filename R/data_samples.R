@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   list_sample_files()
 #' }
 list_sample_files <- function() {
@@ -60,7 +60,7 @@ list_sample_files <- function() {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' download_sample_file()
 #' file <- download_sample_file()
 #' file

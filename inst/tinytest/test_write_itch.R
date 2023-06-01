@@ -9,7 +9,7 @@ ll <- read_itch(infile, quiet = TRUE)
 ################################################################################
 ################################################################################
 #### Testing base write functionality
-outfile_base <- "testfile"
+outfile_base <- tempfile("testfile")
 outfile <- write_itch(ll, outfile_base, quiet = TRUE)
 
 expect_equal(file.size(infile)[[1]], file.size(outfile)[[1]])
