@@ -128,7 +128,7 @@ add_meta_to_filename <- function(file, date, exchange) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' open_itch_specification()
 #' }
 open_itch_specification <- function() {
@@ -145,7 +145,7 @@ open_itch_specification <- function() {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' open_itch_sample_server()
 #' }
 open_itch_sample_server <- function() {

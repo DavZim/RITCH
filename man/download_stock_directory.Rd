@@ -27,7 +27,7 @@ The data is downloaded from NASDAQs server, which can be found here
 \url{https://emi.nasdaq.com/ITCH/Stock_Locate_Codes/}
 }
 \examples{
-\donttest{
+\dontrun{
   download_stock_directory("BX", "2019-07-02")
   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
   download_stock_directory("BX", "2019-07-02", cache = TRUE)

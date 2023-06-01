@@ -1,1 +1,1 @@
-Remove CPP-11 makevars to remove NOTEs.
+Fix failing tests on r-devel-linux-x86_64-debian-gcc and r-patched-linux-x86_64.

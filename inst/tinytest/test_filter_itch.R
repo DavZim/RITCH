@@ -4,7 +4,7 @@ library(data.table)
 suppressPackageStartupMessages(library(bit64))
 
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-outfile <- "testfile_20101224.TEST_ITCH_50"
+outfile <- file.path(tempdir(), "testfile_20101224.TEST_ITCH_50")
 
 
 ################################################################################
@@ -32,16 +32,17 @@ of <- filter_itch(infile, outfile, filter_msg_class = "system_events", quiet = T
 expect_equal(of, outfile)
 
 unlink(of)
-of <- filter_itch(infile, "testfile", filter_msg_class = "system_events", quiet = TRUE)
+tmpfile <- tempfile("testfile")
+of <- filter_itch(infile, tmpfile, filter_msg_class = "system_events", quiet = TRUE)
 
 # the outfile name is correctly constructed!
-expect_equal(of, outfile)
+expect_equal(of, paste0(tmpfile, "_20101224.TEST_ITCH_50"))
 
 # test file contents
-expect_equal(file.size(outfile), 84)
-df <- read_system_events(outfile, quiet = TRUE)
+expect_equal(file.size(of), 84)
+df <- read_system_events(of, quiet = TRUE)
 expect_equal(nrow(df), 6)
-unlink(outfile)
+unlink(of)
 
 ################################################################################
 ################################################################################

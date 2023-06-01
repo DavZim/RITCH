@@ -1,4 +1,9 @@
-# RITCH 0.1.16
+# RITCH 0.1.19
+
+* fix bug in tests on some platforms
+* CRAN release
+
+# RITCH 0.1.18
 
 * CRAN release
 

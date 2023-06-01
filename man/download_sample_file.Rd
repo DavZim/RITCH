@@ -43,7 +43,7 @@ Warning: the smallest file is around 300 MB, with the largest exceeding 5 GB.
 There are about 17 files in total. Downloading all might take a considerable amount of time.
 }
 \examples{
-\donttest{
+\dontrun{
 download_sample_file()
 file <- download_sample_file()
 file

@@ -13,7 +13,7 @@ the URL (invisible)
 The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
 }
 \examples{
-\donttest{
+\dontrun{
 open_itch_specification()
 }
 }

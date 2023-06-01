@@ -6,10 +6,7 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/RITCH)](https://CRAN.R-project.org/package=RITCH)
-[![CRAN RStudio mirror
-downloads](https://cranlogs.r-pkg.org/badges/RITCH)](https://www.r-pkg.org/pkg/RITCH)
-[![R-CMD-check](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml)
+status](https://www.r-pkg.org/badges/version/RITCH)](https://CRAN.R-project.org/package=RITCH) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/RITCH)](https://www.r-pkg.org/pkg/RITCH) [![R-CMD-check](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DavZim/RITCH/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `RITCH` library provides an `R` interface to NASDAQs ITCH protocol,
