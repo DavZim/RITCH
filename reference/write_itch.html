@@ -12,7 +12,7 @@ dropped in the process and only ITCH-compliant information is saved."><!-- mathj
     
     <a class="navbar-brand me-2" href="../index.html">RITCH</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.20</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,25 +128,21 @@ turned off <code>add_meta = FALSE</code>.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">infile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ex20101224.TEST_ITCH_50"</span>, package <span class="op">=</span> <span class="st">"RITCH"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sys</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_functions.html">read_system_events</a></span><span class="op">(</span><span class="va">infile</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> File Error number 2!</span>
 <span class="r-in"><span><span class="va">outfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_itch</span><span class="op">(</span><span class="va">sys</span>, <span class="va">outfile</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   6 messages (84 bytes) found</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to binary .</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Writing]    to file</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Outfile]    '/tmp/RtmpWfBMYC/file15e41e003de8_20101224.TEST_ITCH_50'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 87.97KB/s</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'sys' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create a list of events, stock directory, and orders and write to a file</span></span></span>
 <span class="r-in"><span><span class="va">sdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_functions.html">read_stock_directory</a></span><span class="op">(</span><span class="va">infile</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> File Error number 2!</span>
 <span class="r-in"><span><span class="va">od</span>   <span class="op">&lt;-</span> <span class="fu"><a href="read_functions.html">read_orders</a></span><span class="op">(</span><span class="va">infile</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> File Error number 2!</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sys</span>, <span class="va">sdir</span>, <span class="va">od</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'sys' not found</span>
 <span class="r-in"><span><span class="fu">write_itch</span><span class="op">(</span><span class="va">ll</span>, <span class="va">outfile</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   5,009 messages (190,219 bytes) found</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to binary .</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Writing]    to file</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Outfile]    '/tmp/RtmpWfBMYC/file15e41e003de8_20101224.TEST_ITCH_50'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.02 secs at 8.94MB/s</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'll' not found</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
