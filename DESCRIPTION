@@ -1,7 +1,7 @@
 Package: RITCH
 Type: Package
 Title: R Parser for the ITCH-Protocol
-Version: 0.1.19
+Version: 0.1.20
 Authors@R: c(
     person("David", "Zimmermann-Kollenda", , "david_j_zimmermann@hotmail.com", role = c("aut", "cre"))
   )

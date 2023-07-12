@@ -24,7 +24,7 @@ count_messages(
   buffer_size = -1,
   quiet = FALSE,
   force_gunzip = FALSE,
-  force_cleanup = FALSE
+  force_cleanup = TRUE
 )
 
 count_orders(x)

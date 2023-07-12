@@ -1,1 +1,2 @@
-Fix failing tests on r-devel-linux-x86_64-debian-gcc and r-patched-linux-x86_64.
+Fixes errors which occur only on some platforms, where left-over files result in errors.
+Now all files should be cleaned up automatically in tests and examples.

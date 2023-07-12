@@ -59,7 +59,7 @@ filter_itch <- function(infile, outfile,
                         filter_stock = NA_character_, stock_directory = NA,
                         skip = 0, n_max = -1, append = FALSE, overwrite = FALSE,
                         gz = FALSE, buffer_size = -1, quiet = FALSE,
-                        force_gunzip = FALSE, force_cleanup = FALSE) {
+                        force_gunzip = FALSE, force_cleanup = TRUE) {
   t0 <- Sys.time()
   msg_classes <- list(
     "system_events" = "S",

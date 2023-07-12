@@ -75,7 +75,7 @@
 #' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
 #' @param force_gunzip only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
-#' @param force_cleanup only applies if the input file is a gz-archive If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
+#' @param force_cleanup only applies if the input file is a gz-archive. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
 #' @param ... Additional arguments passed to `read_itch`
 #' @param add_descriptions add longer descriptions to shortened variables.
 #' The added information is taken from the official ITCH documentation
@@ -143,7 +143,7 @@ read_itch <- function(file, filter_msg_class = NA,
                       max_timestamp = bit64::as.integer64(NA),
                       filter_stock = NA_character_, stock_directory = NA,
                       buffer_size = -1, quiet = FALSE, add_meta = TRUE,
-                      force_gunzip = FALSE, force_cleanup = FALSE) {
+                      force_gunzip = FALSE, force_cleanup = TRUE) {
   t0 <- Sys.time()
   msg_classes <- list(
     "system_events" = "S",

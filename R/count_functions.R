@@ -36,7 +36,7 @@
 #' ### Specific class count functions are:
 count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
                            quiet = FALSE, force_gunzip = FALSE,
-                           force_cleanup = FALSE) {
+                           force_cleanup = TRUE) {
   t0 <- Sys.time()
   if (!file.exists(file)) stop("File not found!")
 

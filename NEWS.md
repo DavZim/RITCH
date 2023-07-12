@@ -1,3 +1,8 @@
+# RITCH 0.1.20
+
+* fix bug where tests would fail on some platforms where files are written and not cleaned up
+* CRAN release
+
 # RITCH 0.1.19
 
 * fix bug in tests on some platforms
