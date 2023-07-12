@@ -75,7 +75,9 @@
 #' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
 #' @param force_gunzip only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
-#' @param force_cleanup only applies if the input file is a gz-archive. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
+#' @param force_cleanup only applies if the input file is a gz-archive.
+#'   If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
+#'   Only applies when the gunzipped raw file did not exist before.
 #' @param ... Additional arguments passed to `read_itch`
 #' @param add_descriptions add longer descriptions to shortened variables.
 #' The added information is taken from the official ITCH documentation
@@ -145,6 +147,9 @@ read_itch <- function(file, filter_msg_class = NA,
                       buffer_size = -1, quiet = FALSE, add_meta = TRUE,
                       force_gunzip = FALSE, force_cleanup = TRUE) {
   t0 <- Sys.time()
+  if (!file.exists(file))
+    stop(sprintf("File '%s' not found!", file))
+
   msg_classes <- list(
     "system_events" = "S",
     "stock_directory" = "R",
@@ -221,6 +226,8 @@ read_itch <- function(file, filter_msg_class = NA,
   filedate <- get_date_from_filename(file)
 
   orig_file <- file
+  # only needed for gz files; gz files are not deleted when the raw file already existed
+  raw_file_existed <- file.exists(basename(gsub("\\.gz$", "", file)))
   file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
 
   res_raw <- read_itch_impl(filter_msg_class, file, start, end,
@@ -268,9 +275,9 @@ read_itch <- function(file, filter_msg_class = NA,
   report_end(t0, quiet, orig_file)
 
   # if the file was gzipped and the force_cleanup=TRUE, delete unzipped file
-  if (grepl("\\.gz$", orig_file) && force_cleanup) {
+  if (grepl("\\.gz$", orig_file) && force_cleanup && !raw_file_existed) {
     if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", file))
-    unlink(gsub("\\.gz$", "", file))
+    unlink(basename(gsub("\\.gz$", "", file)))
   }
   return(res)
 }

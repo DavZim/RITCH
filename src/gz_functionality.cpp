@@ -17,7 +17,7 @@ void gunzip_file_impl(std::string infile,
 
   unsigned char* buf;
   int64_t buffer_char_size = sizeof(unsigned char) * buffer_size > UINT_MAX ?
-  UINT_MAX :
+    UINT_MAX :
     sizeof(unsigned char) * buffer_size;
   buf = (unsigned char*) malloc(buffer_char_size);
 
@@ -30,7 +30,7 @@ void gunzip_file_impl(std::string infile,
     // fill the buffer
     this_buffer_size = gzread(gzfile, buf, buffer_char_size);
     // write the buffer
-    fwrite(buf, this_buffer_size, 1, ofile);
+    fwrite(&buf[0], 1, this_buffer_size, ofile);
 
     // check if the read buffer is smaller than the asked size
     if (this_buffer_size < buffer_char_size || this_buffer_size == 0) {
