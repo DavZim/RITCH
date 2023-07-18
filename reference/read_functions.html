@@ -58,7 +58,7 @@ before, does not remove the archive itself).'><!-- mathjax --><script src="https
     
     <a class="navbar-brand me-2" href="../index.html">RITCH</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.21</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -323,24 +323,24 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.27MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.30MB/s</span>
 <span class="r-in"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.41MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
 <span class="r-in"><span><span class="va">md</span> <span class="op">&lt;-</span> <span class="fu">read_modifications</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.49MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.42MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Alternatively</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="st">"orders"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.44MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orders"</span>, <span class="st">"trades"</span>, <span class="st">"modifications"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
@@ -348,7 +348,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.37MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">od</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	5000 obs. of  13 variables:</span>
@@ -459,18 +459,18 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 3 n_max: 10 (4 - 13)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.48MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.33MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># a message count can be provided for slightly faster reads</span></span></span>
 <span class="r-in"><span><span class="va">msg_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   12,012 total messages found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 1.03GB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 899.29MB/s</span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">file</span>, n_max <span class="op">=</span> <span class="va">msg_count</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 0 n_max: 5000 (1 - 5000)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 10,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.39MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.35MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># .gz archives will be automatically unzipped</span></span></span>
 <span class="r-in"><span><span class="va">gz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ex20101224.TEST_ITCH_50.gz"</span>, package <span class="op">=</span> <span class="st">"RITCH"</span><span class="op">)</span></span></span>
@@ -479,7 +479,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 1.19MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 833.37KB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50'</span>
 <span class="r-in"><span><span class="co"># force a decompress and delete the decompressed file afterwards</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">gz_file</span>, force_gunzip <span class="op">=</span> <span class="cn">TRUE</span>, force_cleanup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -487,510 +487,394 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 1.15MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.21 secs at 763.81KB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file 'ex20101224.TEST_ITCH_50'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_itch()</span></span></span>
-<span class="r-in"><span><span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="st">"orders"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="st">"orders"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.47MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        A            2               0 31141354532167       100  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        F            2               0 32813425752711     84836  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        A            2               0 32826656500150     87020 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        A            2               0 32827351405783     87040 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:        A            1               0 57586688692484  88478593 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:        A            2               0 57586792358162  82185144 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:        A            1               0 57590573033724  88557297  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:        A            2               0 57595196456803  82354728  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:        A            2               0 57595326231183  82357176 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       shares stock   price mpid       date                            datetime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:38:59.052372053+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:39:01.354532167+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    100   BOB  5.2917 VIRT 2010-12-24 2010-12-24T09:06:53.425752711+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   1220   BOB  5.4167      2010-12-24 2010-12-24T09:07:06.656500150+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   2000   BOB  5.4167      2010-12-24 2010-12-24T09:07:07.351405783+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:    100   ALC 23.1000      2010-12-24 2010-12-24T15:59:46.688692484+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:    900   BOB  6.0833      2010-12-24 2010-12-24T15:59:46.792358162+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:    100   ALC 23.0200      2010-12-24 2010-12-24T15:59:50.573033724+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:   1200   BOB  6.0583      2010-12-24 2010-12-24T15:59:55.196456803+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:   2000   BOB  6.0750      2010-12-24 2010-12-24T15:59:55.326231183+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:     TEST</span>
-<span class="r-in"><span><span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orders"</span>, <span class="st">"trades"</span>, <span class="st">"modifications"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.34MB/s</span>
+<span class="r-in"><span><span class="va">otm</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orders"</span>, <span class="st">"trades"</span>, <span class="st">"modifications"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.22MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $orders</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        A            2               0 31141354532167       100  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        F            2               0 32813425752711     84836  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        A            2               0 32826656500150     87020 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        A            2               0 32827351405783     87040 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:        A            1               0 57586688692484  88478593 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:        A            2               0 57586792358162  82185144 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:        A            1               0 57590573033724  88557297  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:        A            2               0 57595196456803  82354728  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:        A            2               0 57595326231183  82357176 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       shares stock   price mpid       date                            datetime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:38:59.052372053+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:39:01.354532167+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    100   BOB  5.2917 VIRT 2010-12-24 2010-12-24T09:06:53.425752711+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   1220   BOB  5.4167      2010-12-24 2010-12-24T09:07:06.656500150+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   2000   BOB  5.4167      2010-12-24 2010-12-24T09:07:07.351405783+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:    100   ALC 23.1000      2010-12-24 2010-12-24T15:59:46.688692484+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:    900   BOB  6.0833      2010-12-24 2010-12-24T15:59:46.792358162+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:    100   ALC 23.0200      2010-12-24 2010-12-24T15:59:50.573033724+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:   1200   BOB  6.0583      2010-12-24 2010-12-24T15:59:55.196456803+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:   2000   BOB  6.0750      2010-12-24 2010-12-24T15:59:55.326231183+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $trades</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref  buy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        P            2               2 34210128591201         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        P            2               2 34210355475120         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        P            2               2 34210767188977         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        P            2               2 34211127433476         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        P            2               2 34212046014088         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:        P            1               2 57594215201805         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:        P            1               6 57595050849140         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:        P            1               4 57595051019659         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:        P            1               2 57595052006081         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:        P            3               2 57597526823001         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       shares stock   price match_number cross_type       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:    200   BOB  5.3333        19447       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:    300   BOB  5.3333        19451       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    100   BOB  5.3250        19493       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     47   BOB  5.3333        19515       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:    200   BOB  5.3333        19547       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:      1   ALC 23.0800       728935       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:     28   ALC 23.0200       730245       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:     50   ALC 23.0200       730244       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:     65   ALC 23.1000       730243       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:    100  CHAR 22.0250       731883       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: 2010-12-24T09:30:10.128591201+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: 2010-12-24T09:30:10.355475120+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: 2010-12-24T09:30:10.767188977+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: 2010-12-24T09:30:11.127433476+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: 2010-12-24T09:30:12.046014088+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996: 2010-12-24T15:59:54.215201805+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997: 2010-12-24T15:59:55.050849140+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998: 2010-12-24T15:59:55.051019659+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999: 2010-12-24T15:59:55.052006081+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000: 2010-12-24T15:59:57.526823001+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $modifications</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref shares</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        E            2               2 32857937604189     87020   1220</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        E            2               6 33415045933113    121012    200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        E            2               6 33451454329367    130800   2738</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        E            2               2 33451456680919    130800    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        E            2               2 33452976359207    130800     62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996:        D            1               0 57583565860801  88418673     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997:        U            1               0 57586687948197  88478593    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998:        U            1               0 57590574066018  88557297    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999:        D            2               0 57595204788097  82354728     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000:        D            2               0 57597497623835  58412056     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       match_number printable   price new_order_ref       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        18049        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        18225        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        18234        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        18235        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        18237        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997:         &lt;NA&gt;        NA 23.0933      88575536 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998:         &lt;NA&gt;        NA 23.0267      88654608 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: 2010-12-24T09:07:37.937604189+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: 2010-12-24T09:16:55.045933113+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: 2010-12-24T09:17:31.454329367+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: 2010-12-24T09:17:31.456680919+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: 2010-12-24T09:17:32.976359207+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996: 2010-12-24T15:59:43.565860801+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997: 2010-12-24T15:59:46.687948197+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998: 2010-12-24T15:59:50.574066018+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999: 2010-12-24T15:59:55.204788097+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000: 2010-12-24T15:59:57.497623835+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">otm</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> List of 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ orders       :Classes ‘data.table’ and 'data.frame':	5000 obs. of  13 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ msg_type       : chr [1:5000] "A" "A" "F" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ stock_locate   : int [1:5000] 2 2 2 2 2 2 2 2 2 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ tracking_number: int [1:5000] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ timestamp      :integer64 [1:5000] 31139052372053 31141354532167 32813425752711 32826656500150 32827351405783 32893988026867 33067242028997 33300886636321 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ order_ref      :integer64 [1:5000] 0 100 84836 87020 87040 93032 105532 121012 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ buy            : logi [1:5000] TRUE TRUE TRUE FALSE FALSE FALSE ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ shares         : int [1:5000] 1000 1000 100 1220 2000 600 2000 200 100 3000 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ stock          : chr [1:5000] "BOB" "BOB" "BOB" "BOB" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ price          : num [1:5000] 5.32 5.32 5.29 5.42 5.42 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mpid           : chr [1:5000] "" "" "VIRT" "" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ date           : POSIXct[1:5000], format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ datetime       :integer64 [1:5000] 2010-12-24T08:38:59.052372053+00:00 2010-12-24T08:39:01.354532167+00:00 2010-12-24T09:06:53.425752711+00:00 2010-12-24T09:07:06.656500150+00:00 2010-12-24T09:07:07.351405783+00:00 2010-12-24T09:08:13.988026867+00:00 2010-12-24T09:11:07.242028997+00:00 2010-12-24T09:15:00.886636321+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ exchange       : chr [1:5000] "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ trades       :Classes ‘data.table’ and 'data.frame':	5000 obs. of  14 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ msg_type       : chr [1:5000] "P" "P" "P" "P" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ stock_locate   : int [1:5000] 2 2 2 2 2 3 3 3 3 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ tracking_number: int [1:5000] 2 2 2 2 2 2 4 2 2 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ timestamp      :integer64 [1:5000] 34210128591201 34210355475120 34210767188977 34211127433476 34212046014088 34235711475708 34239928637481 34239928703094 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ order_ref      :integer64 [1:5000] 0 0 0 0 0 0 0 0 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ buy            : logi [1:5000] TRUE TRUE TRUE TRUE TRUE TRUE ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ shares         : int [1:5000] 200 300 100 47 200 100 100 100 1 40 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ stock          : chr [1:5000] "BOB" "BOB" "BOB" "BOB" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ price          : num [1:5000] 5.33 5.33 5.33 5.33 5.33 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ match_number   :integer64 [1:5000] 19447 19451 19493 19515 19547 20148 20242 20241 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ cross_type     : chr [1:5000] NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ date           : POSIXct[1:5000], format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ datetime       :integer64 [1:5000] 2010-12-24T09:30:10.128591201+00:00 2010-12-24T09:30:10.355475120+00:00 2010-12-24T09:30:10.767188977+00:00 2010-12-24T09:30:11.127433476+00:00 2010-12-24T09:30:12.046014088+00:00 2010-12-24T09:30:35.711475708+00:00 2010-12-24T09:30:39.928637481+00:00 2010-12-24T09:30:39.928703094+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ exchange       : chr [1:5000] "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ modifications:Classes ‘data.table’ and 'data.frame':	2000 obs. of  13 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ msg_type       : chr [1:2000] "E" "E" "E" "E" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ stock_locate   : int [1:2000] 2 2 2 2 2 2 2 3 2 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ tracking_number: int [1:2000] 2 6 6 2 2 2 0 0 2 4 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ timestamp      :integer64 [1:2000] 32857937604189 33415045933113 33451454329367 33451456680919 33452976359207 33543994528073 34209047203227 34241409914577 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ order_ref      :integer64 [1:2000] 87020 121012 130800 130800 130800 134972 84836 1040034 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ shares         : int [1:2000] 1220 200 2738 100 62 25 NA NA 100 200 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ match_number   :integer64 [1:2000] 18049 18225 18234 18235 18237 18257 NA NA ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ printable      : logi [1:2000] NA NA NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ price          : num [1:2000] NA NA NA NA NA NA NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ new_order_ref  :integer64 [1:2000] NA NA NA NA NA NA NA NA ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ date           : POSIXct[1:2000], format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ datetime       :integer64 [1:2000] 2010-12-24T09:07:37.937604189+00:00 2010-12-24T09:16:55.045933113+00:00 2010-12-24T09:17:31.454329367+00:00 2010-12-24T09:17:31.456680919+00:00 2010-12-24T09:17:32.976359207+00:00 2010-12-24T09:19:03.994528073+00:00 2010-12-24T09:30:09.047203227+00:00 2010-12-24T09:30:41.409914577+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ exchange       : chr [1:2000] "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_system_events()</span></span></span>
-<span class="r-in"><span><span class="fu">read_system_events</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu">read_system_events</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'system_events' messages 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.41MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp event_code       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        S            0               0 11202475298710          O 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        S            0               0 25209371478776          S 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        S            0               0 34199261999747          Q 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:        S            0               0 57607158187591          M 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:        S            0               0 68390401688921          E 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6:        S            0               0 68698845099321          C 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2010-12-24T03:06:42.475298710+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 2010-12-24T07:00:09.371478776+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 2010-12-24T09:29:59.261999747+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 2010-12-24T16:00:07.158187591+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 2010-12-24T18:59:50.401688921+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 2010-12-24T19:04:58.845099321+00:00     TEST</span>
-<span class="r-in"><span><span class="fu">read_system_events</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
+<span class="r-in"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu">read_system_events</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'system_events' messages 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.47MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp event_code       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        S            0               0 68698845099321          C 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        S            0               0 68390401688921          E 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        S            0               0 57607158187591          M 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:        S            0               0 11202475298710          O 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:        S            0               0 34199261999747          Q 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6:        S            0               0 25209371478776          S 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               datetime exchange            event_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2010-12-24T19:04:58.845099321+00:00     TEST       End of Messages</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 2010-12-24T18:59:50.401688921+00:00     TEST   End of System Hours</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 2010-12-24T16:00:07.158187591+00:00     TEST   End of Market Hours</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 2010-12-24T03:06:42.475298710+00:00     TEST     Start of Messages</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 2010-12-24T09:29:59.261999747+00:00     TEST Start of Market Hours</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: 2010-12-24T07:00:09.371478776+00:00     TEST Start of System Hours</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                               event_note</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                                                                                                                              This is always the last message sent in any trading day.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: It indicates that Nasdaq is now closed and will not accept any new orders today. It is still possible to receive Broken Trade messages and Order Delete messages after the End of Day</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                                                                                   This message is intended to indicate that Market Hours orders are no longer available for execution</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:                                                                                 Outside of time stamp messages, the start of day message is the first message sent in any trading day</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:                                                                                             This message is intended to indicate that Market Hours orders are available for execution</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6:                                                                                                        This message indicates that NASDAQ is open and ready to start accepting orders</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.31MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	6 obs. of  10 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr  "S" "S" "S" "S" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int  0 0 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int  0 0 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64 68698845099321 68390401688921 57607158187591 11202475298710 34199261999747 25209371478776 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ event_code     : chr  "C" "E" "M" "O" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 2010-12-24T19:04:58.845099321+00:00 2010-12-24T18:59:50.401688921+00:00 2010-12-24T16:00:07.158187591+00:00 2010-12-24T03:06:42.475298710+00:00 2010-12-24T09:29:59.261999747+00:00 2010-12-24T07:00:09.371478776+00:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr  "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ event_name     : chr  "End of Messages" "End of System Hours" "End of Market Hours" "Start of Messages" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ event_note     : chr  "This is always the last message sent in any trading day." "It indicates that Nasdaq is now closed and will not accept any new orders today. It is still possible to receiv"| __truncated__ "This message is intended to indicate that Market Hours orders are no longer available for execution" "Outside of time stamp messages, the start of day message is the first message sent in any trading day" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "sorted")= chr "event_code"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_stock_directory()</span></span></span>
-<span class="r-in"><span><span class="fu">read_stock_directory</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu">read_stock_directory</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'stock_directory' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.48MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock market_category</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        R            1               0 11435930564116   ALC               N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        R            2               0 11436025019799   BOB               S</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        R            3               0 11436069862295  CHAR               P</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    financial_status lot_size round_lots_only issue_classification issue_subtype</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    authentic short_sell_closeout ipo_flag luld_price_tier etp_flag etp_leverage</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    inverse       date                            datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:   FALSE 2010-12-24 2010-12-24T03:10:35.930564116+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   FALSE 2010-12-24 2010-12-24T03:10:36.025019799+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   FALSE 2010-12-24 2010-12-24T03:10:36.069862295+00:00     TEST</span>
-<span class="r-in"><span><span class="fu">read_stock_directory</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.46MB/s</span>
+<span class="r-in"><span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu">read_stock_directory</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'stock_directory' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.48MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock market_category</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        R            1               0 11435930564116   ALC               N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        R            3               0 11436069862295  CHAR               P</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        R            2               0 11436025019799   BOB               S</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    financial_status lot_size round_lots_only issue_classification issue_subtype</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                N      100           FALSE                    A             Z</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    authentic short_sell_closeout ipo_flag luld_price_tier etp_flag etp_leverage</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:      TRUE               FALSE    FALSE               2    FALSE            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    inverse       date                            datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:   FALSE 2010-12-24 2010-12-24T03:10:35.930564116+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   FALSE 2010-12-24 2010-12-24T03:10:36.069862295+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   FALSE 2010-12-24 2010-12-24T03:10:36.025019799+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       market_category_note financial_status_note luld_price_tier_note</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: New York Stock Exchange                Normal    Tier 2 NMS Stocks</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:               NYSE Arca                Normal    Tier 2 NMS Stocks</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   Nasdaq Capital Market                Normal    Tier 2 NMS Stocks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">sd</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	3 obs. of  24 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type             : chr  "R" "R" "R"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate         : int  1 3 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number      : int  0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp            :integer64 11435930564116 11436069862295 11436025019799 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock                : chr  "ALC" "CHAR" "BOB"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ market_category      : chr  "N" "P" "S"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ financial_status     : chr  "N" "N" "N"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ lot_size             : int  100 100 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ round_lots_only      : logi  FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ issue_classification : chr  "A" "A" "A"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ issue_subtype        : chr  "Z" "Z" "Z"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ authentic            : logi  TRUE TRUE TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ short_sell_closeout  : logi  FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ ipo_flag             : logi  FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ luld_price_tier      : chr  "2" "2" "2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ etp_flag             : logi  FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ etp_leverage         : int  0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ inverse              : logi  FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date                 : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime             :integer64 2010-12-24T03:10:35.930564116+00:00 2010-12-24T03:10:36.069862295+00:00 2010-12-24T03:10:36.025019799+00:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange             : chr  "TEST" "TEST" "TEST"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ market_category_note : chr  "New York Stock Exchange" "NYSE Arca" "Nasdaq Capital Market"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ financial_status_note: chr  "Normal" "Normal" "Normal"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ luld_price_tier_note : chr  "Tier 2 NMS Stocks" "Tier 2 NMS Stocks" "Tier 2 NMS Stocks"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "sorted")= chr "luld_price_tier"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_trading_status()</span></span></span>
-<span class="r-in"><span><span class="fu">read_trading_status</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu">read_trading_status</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trading_status' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.44MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock trading_state</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        H            1               0 11436094498153   ALC             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        H            2               0 11436235406277   BOB             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        H            3               0 11436375417237  CHAR             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    reserved reason market_code operation_halted       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2010-12-24T03:10:36.094498153+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 2010-12-24T03:10:36.235406277+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 2010-12-24T03:10:36.375417237+00:00     TEST</span>
-<span class="r-in"><span><span class="fu">read_trading_status</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.39MB/s</span>
+<span class="r-in"><span><span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu">read_trading_status</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trading_status' messages 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.47MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    msg_type stock_locate tracking_number      timestamp stock trading_state</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        H            1               0 11436094498153   ALC             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        H            2               0 11436235406277   BOB             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        H            3               0 11436375417237  CHAR             T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    reserved reason market_code operation_halted       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:                        &lt;NA&gt;               NA 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               datetime exchange trading_state_note</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2010-12-24T03:10:36.094498153+00:00     TEST  Trading on Nasdaq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 2010-12-24T03:10:36.235406277+00:00     TEST  Trading on Nasdaq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 2010-12-24T03:10:36.375417237+00:00     TEST  Trading on Nasdaq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    market_code_note</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:             &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:             &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:             &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.43MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	3 obs. of  15 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type          : chr  "H" "H" "H"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate      : int  1 2 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number   : int  0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp         :integer64 11436094498153 11436235406277 11436375417237 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock             : chr  "ALC" "BOB" "CHAR"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ trading_state     : chr  "T" "T" "T"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ reserved          : chr  " " " " " "</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ reason            : chr  "" "" ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ market_code       : chr  NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ operation_halted  : logi  NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date              : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime          :integer64 2010-12-24T03:10:36.094498153+00:00 2010-12-24T03:10:36.235406277+00:00 2010-12-24T03:10:36.375417237+00:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange          : chr  "TEST" "TEST" "TEST"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ trading_state_note: chr  "Trading on Nasdaq" "Trading on Nasdaq" "Trading on Nasdaq"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ market_code_note  : chr  NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "sorted")= chr "market_code"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_reg_sho()</span></span></span>
-<span class="r-in"><span><span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.46MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 9 cols): msg_type,stock_locate,tracking_number,timestamp,stock,regsho_action...</span>
-<span class="r-in"><span><span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.35MB/s</span>
+<span class="r-in"><span><span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">read_reg_sho</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.54MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,regsho_action...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  10 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate      : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number   : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp         :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock             : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ regsho_action     : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date              : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime          :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ regsho_action_note: chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_market_participant_states()</span></span></span>
-<span class="r-in"><span><span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mps</span> <span class="op">&lt;-</span> <span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.54MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,mpid,stock...</span>
-<span class="r-in"><span><span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
+<span class="r-in"><span><span class="va">mps</span> <span class="op">&lt;-</span> <span class="fu">read_market_participant_states</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.48MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 14 cols): msg_type,stock_locate,tracking_number,timestamp,mpid,stock...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">mps</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  14 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type              : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate          : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number       : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp             :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ mpid                  : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock                 : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ primary_mm            : logi </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ mm_mode               : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ participant_state     : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date                  : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime              :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange              : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ mm_mode_note          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ participant_state_note: chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_mwcb()</span></span></span>
-<span class="r-in"><span><span class="fu">read_mwcb</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mwcb</span> <span class="op">&lt;-</span> <span class="fu">read_mwcb</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.45MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 11 cols): msg_type,stock_locate,tracking_number,timestamp,level1,level2...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.46MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">mwcb</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  11 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ level1         : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ level2         : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ level3         : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ breached_level : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_ipo()</span></span></span>
-<span class="r-in"><span><span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ipo</span> <span class="op">&lt;-</span> <span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.46MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 11 cols): msg_type,stock_locate,tracking_number,timestamp,stock,release_time...</span>
-<span class="r-in"><span><span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.41MB/s</span>
+<span class="r-in"><span><span class="va">ipo</span> <span class="op">&lt;-</span> <span class="fu">read_ipo</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.47MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,release_time...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.46MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">ipo</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  12 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type              : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate          : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number       : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp             :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock                 : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ release_time          : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ release_qualifier     : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ ipo_price             : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date                  : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime              :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange              : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ release_qualifier_note: chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_luld()</span></span></span>
-<span class="r-in"><span><span class="fu">read_luld</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">luld</span> <span class="op">&lt;-</span> <span class="fu">read_luld</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.39MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,reference_price...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.43MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">luld</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  12 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ reference_price: num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ upper_price    : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ lower_price    : num </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ extension      : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_orders()</span></span></span>
-<span class="r-in"><span><span class="fu">read_orders</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.37MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref   buy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        A            2               0 31139052372053         0  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        A            2               0 31141354532167       100  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        F            2               0 32813425752711     84836  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        A            2               0 32826656500150     87020 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        A            2               0 32827351405783     87040 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:        A            1               0 57586688692484  88478593 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:        A            2               0 57586792358162  82185144 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:        A            1               0 57590573033724  88557297  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:        A            2               0 57595196456803  82354728  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:        A            2               0 57595326231183  82357176 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       shares stock   price mpid       date                            datetime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:38:59.052372053+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:   1000   BOB  5.3167      2010-12-24 2010-12-24T08:39:01.354532167+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    100   BOB  5.2917 VIRT 2010-12-24 2010-12-24T09:06:53.425752711+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:   1220   BOB  5.4167      2010-12-24 2010-12-24T09:07:06.656500150+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:   2000   BOB  5.4167      2010-12-24 2010-12-24T09:07:07.351405783+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:    100   ALC 23.1000      2010-12-24 2010-12-24T15:59:46.688692484+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:    900   BOB  6.0833      2010-12-24 2010-12-24T15:59:46.792358162+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:    100   ALC 23.0200      2010-12-24 2010-12-24T15:59:50.573033724+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:   1200   BOB  6.0583      2010-12-24 2010-12-24T15:59:55.196456803+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:   2000   BOB  6.0750      2010-12-24 2010-12-24T15:59:55.326231183+00:00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:     TEST</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.36MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">od</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	5000 obs. of  13 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr  "A" "A" "F" "A" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int  2 2 2 2 2 2 2 2 2 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64 31139052372053 31141354532167 32813425752711 32826656500150 32827351405783 32893988026867 33067242028997 33300886636321 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ order_ref      :integer64 0 100 84836 87020 87040 93032 105532 121012 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ buy            : logi  TRUE TRUE TRUE FALSE FALSE FALSE ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ shares         : int  1000 1000 100 1220 2000 600 2000 200 100 3000 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock          : chr  "BOB" "BOB" "BOB" "BOB" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ price          : num  5.32 5.32 5.29 5.42 5.42 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ mpid           : chr  "" "" "VIRT" "" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 2010-12-24T08:38:59.052372053+00:00 2010-12-24T08:39:01.354532167+00:00 2010-12-24T09:06:53.425752711+00:00 2010-12-24T09:07:06.656500150+00:00 2010-12-24T09:07:07.351405783+00:00 2010-12-24T09:08:13.988026867+00:00 2010-12-24T09:11:07.242028997+00:00 2010-12-24T09:15:00.886636321+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr  "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_modifications()</span></span></span>
-<span class="r-in"><span><span class="fu">read_modifications</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">read_modifications</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'modifications' messages 2,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.31MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref shares</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        E            2               2 32857937604189     87020   1220</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        E            2               6 33415045933113    121012    200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        E            2               6 33451454329367    130800   2738</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        E            2               2 33451456680919    130800    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        E            2               2 33452976359207    130800     62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996:        D            1               0 57583565860801  88418673     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997:        U            1               0 57586687948197  88478593    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998:        U            1               0 57590574066018  88557297    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999:        D            2               0 57595204788097  82354728     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000:        D            2               0 57597497623835  58412056     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       match_number printable   price new_order_ref       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        18049        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        18225        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        18234        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        18235        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        18237        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997:         &lt;NA&gt;        NA 23.0933      88575536 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998:         &lt;NA&gt;        NA 23.0267      88654608 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000:         &lt;NA&gt;        NA      NA          &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: 2010-12-24T09:07:37.937604189+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: 2010-12-24T09:16:55.045933113+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: 2010-12-24T09:17:31.454329367+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: 2010-12-24T09:17:31.456680919+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: 2010-12-24T09:17:32.976359207+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1996: 2010-12-24T15:59:43.565860801+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1997: 2010-12-24T15:59:46.687948197+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1998: 2010-12-24T15:59:50.574066018+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1999: 2010-12-24T15:59:55.204788097+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2000: 2010-12-24T15:59:57.497623835+00:00     TEST</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.28MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	2000 obs. of  13 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr  "E" "E" "E" "E" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int  2 2 2 2 2 2 2 3 2 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int  2 6 6 2 2 2 0 0 2 4 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64 32857937604189 33415045933113 33451454329367 33451456680919 33452976359207 33543994528073 34209047203227 34241409914577 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ order_ref      :integer64 87020 121012 130800 130800 130800 134972 84836 1040034 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ shares         : int  1220 200 2738 100 62 25 NA NA 100 200 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ match_number   :integer64 18049 18225 18234 18235 18237 18257 NA NA ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ printable      : logi  NA NA NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ price          : num  NA NA NA NA NA NA NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ new_order_ref  :integer64 NA NA NA NA NA NA NA NA ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 2010-12-24T09:07:37.937604189+00:00 2010-12-24T09:16:55.045933113+00:00 2010-12-24T09:17:31.454329367+00:00 2010-12-24T09:17:31.456680919+00:00 2010-12-24T09:17:32.976359207+00:00 2010-12-24T09:19:03.994528073+00:00 2010-12-24T09:30:09.047203227+00:00 2010-12-24T09:30:41.409914577+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr  "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_trades()</span></span></span>
-<span class="r-in"><span><span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.29MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       msg_type stock_locate tracking_number      timestamp order_ref  buy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:        P            2               2 34210128591201         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:        P            2               2 34210355475120         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:        P            2               2 34210767188977         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:        P            2               2 34211127433476         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:        P            2               2 34212046014088         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:        P            1               2 57594215201805         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:        P            1               6 57595050849140         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:        P            1               4 57595051019659         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:        P            1               2 57595052006081         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:        P            3               2 57597526823001         0 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       shares stock   price match_number cross_type       date</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:    200   BOB  5.3333        19447       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:    300   BOB  5.3333        19451       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:    100   BOB  5.3250        19493       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:     47   BOB  5.3333        19515       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:    200   BOB  5.3333        19547       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996:      1   ALC 23.0800       728935       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997:     28   ALC 23.0200       730245       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998:     50   ALC 23.0200       730244       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999:     65   ALC 23.1000       730243       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000:    100  CHAR 22.0250       731883       &lt;NA&gt; 2010-12-24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  datetime exchange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: 2010-12-24T09:30:10.128591201+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: 2010-12-24T09:30:10.355475120+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: 2010-12-24T09:30:10.767188977+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: 2010-12-24T09:30:11.127433476+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: 2010-12-24T09:30:12.046014088+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ---                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4996: 2010-12-24T15:59:54.215201805+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4997: 2010-12-24T15:59:55.050849140+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4998: 2010-12-24T15:59:55.051019659+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4999: 2010-12-24T15:59:55.052006081+00:00     TEST</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5000: 2010-12-24T15:59:57.526823001+00:00     TEST</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.19 secs at 2.48MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tr</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	5000 obs. of  14 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type       : chr  "P" "P" "P" "P" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate   : int  2 2 2 2 2 3 3 3 3 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number: int  2 2 2 2 2 2 4 2 2 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp      :integer64 34210128591201 34210355475120 34210767188977 34211127433476 34212046014088 34235711475708 34239928637481 34239928703094 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ order_ref      :integer64 0 0 0 0 0 0 0 0 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ buy            : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ shares         : int  200 300 100 47 200 100 100 100 1 40 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock          : chr  "BOB" "BOB" "BOB" "BOB" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ price          : num  5.33 5.33 5.33 5.33 5.33 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ match_number   :integer64 19447 19451 19493 19515 19547 20148 20242 20241 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ cross_type     : chr  NA NA NA NA ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date           : POSIXct, format: "2010-12-24" "2010-12-24" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime       :integer64 2010-12-24T09:30:10.128591201+00:00 2010-12-24T09:30:10.355475120+00:00 2010-12-24T09:30:10.767188977+00:00 2010-12-24T09:30:11.127433476+00:00 2010-12-24T09:30:12.046014088+00:00 2010-12-24T09:30:35.711475708+00:00 2010-12-24T09:30:39.928637481+00:00 2010-12-24T09:30:39.928703094+00:00 ... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange       : chr  "TEST" "TEST" "TEST" "TEST" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_noii()</span></span></span>
-<span class="r-in"><span><span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">noii</span> <span class="op">&lt;-</span> <span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.35MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 16 cols): msg_type,stock_locate,tracking_number,timestamp,paired_shares,imbalance_shares...</span>
-<span class="r-in"><span><span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.32MB/s</span>
+<span class="r-in"><span><span class="va">noii</span> <span class="op">&lt;-</span> <span class="fu">read_noii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.36MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.38MB/s</span>
+<span class="r-in"><span><span class="va">noii</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 19 cols): msg_type,stock_locate,tracking_number,timestamp,paired_shares,imbalance_shares...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_rpii()</span></span></span>
-<span class="r-in"><span><span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rpii</span> <span class="op">&lt;-</span> <span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.36MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 9 cols): msg_type,stock_locate,tracking_number,timestamp,stock,interest_flag...</span>
-<span class="r-in"><span><span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.22 secs at 2.14MB/s</span>
+<span class="r-in"><span><span class="va">rpii</span> <span class="op">&lt;-</span> <span class="fu">read_rpii</span><span class="op">(</span><span class="va">file</span>, add_descriptions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.14 secs at 3.44MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,interest_flag...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.20 secs at 2.27MB/s</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">rpii</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Classes ‘data.table’ and 'data.frame':	0 obs. of  10 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ msg_type          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock_locate      : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ tracking_number   : int </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ timestamp         :integer64  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ stock             : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ interest_flag     : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ date              : 'POSIXct' num(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "tzone")= chr "GMT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ datetime          :integer64 nanotime(0) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ exchange          : chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ interest_flag_note: chr </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
