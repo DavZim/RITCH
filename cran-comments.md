@@ -1,2 +1,1 @@
-Fixes errors which occur only on some platforms, where left-over files result in errors.
-Now all files should be cleaned up automatically in tests and examples.
+fix long code execution times of `read_functions`, used to be >5secs for the one function. Now the whole check runs in 3.5 secs on my Windows machine.

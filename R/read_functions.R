@@ -135,8 +135,9 @@ NULL
 #' @examples
 #'
 #' ## read_itch()
-#' read_itch(file, "orders")
-#' read_itch(file, c("orders", "trades", "modifications"))
+#' od <- read_itch(file, "orders")
+#' otm <- read_itch(file, c("orders", "trades", "modifications"))
+#' str(otm)
 read_itch <- function(file, filter_msg_class = NA,
                       skip = 0, n_max = -1,
                       filter_msg_type = NA_character_,
@@ -292,8 +293,9 @@ read_itch <- function(file, filter_msg_class = NA,
 #' @examples
 #'
 #' ## read_system_events()
-#' read_system_events(file)
-#' read_system_events(file, add_descriptions = TRUE)
+#' se <- read_system_events(file)
+#' se <- read_system_events(file, add_descriptions = TRUE)
+#' str(se)
 read_system_events <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -330,8 +332,9 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_stock_directory()
-#' read_stock_directory(file)
-#' read_stock_directory(file, add_descriptions = TRUE)
+#' sd <- read_stock_directory(file)
+#' sd <- read_stock_directory(file, add_descriptions = TRUE)
+#' str(sd)
 read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -393,8 +396,9 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_trading_status()
-#' read_trading_status(file)
-#' read_trading_status(file, add_descriptions = TRUE)
+#' ts <- read_trading_status(file)
+#' ts <- read_trading_status(file, add_descriptions = TRUE)
+#' str(ts)
 read_trading_status <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -435,8 +439,9 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_reg_sho()
-#' read_reg_sho(file)
-#' read_reg_sho(file, add_descriptions = TRUE)
+#' rs <- read_reg_sho(file)
+#' rs <- read_reg_sho(file, add_descriptions = TRUE)
+#' str(rs)
 read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -471,8 +476,9 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_market_participant_states()
-#' read_market_participant_states(file)
-#' read_market_participant_states(file, add_descriptions = TRUE)
+#' mps <- read_market_participant_states(file)
+#' mps <- read_market_participant_states(file, add_descriptions = TRUE)
+#' str(mps)
 read_market_participant_states <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -510,7 +516,8 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
 #' @examples
 #'
 #' ## read_mwcb()
-#' read_mwcb(file)
+#' mwcb <- read_mwcb(file)
+#' str(mwcb)
 read_mwcb <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -532,8 +539,9 @@ read_mwcb <- function(file, ...) {
 #' @examples
 #'
 #' ## read_ipo()
-#' read_ipo(file)
-#' read_ipo(file, add_descriptions = TRUE)
+#' ipo <- read_ipo(file)
+#' ipo <- read_ipo(file, add_descriptions = TRUE)
+#' str(ipo)
 read_ipo <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -566,7 +574,8 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_luld()
-#' read_luld(file)
+#' luld <- read_luld(file)
+#' str(luld)
 read_luld <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -582,7 +591,8 @@ read_luld <- function(file, ...) {
 #' @examples
 #'
 #' ## read_orders()
-#' read_orders(file)
+#' od <- read_orders(file)
+#' str(od)
 read_orders <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -599,7 +609,8 @@ read_orders <- function(file, ...) {
 #' @examples
 #'
 #' ## read_modifications()
-#' read_modifications(file)
+#' mod <- read_modifications(file)
+#' str(mod)
 read_modifications <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -615,7 +626,8 @@ read_modifications <- function(file, ...) {
 #' @examples
 #'
 #' ## read_trades()
-#' read_trades(file)
+#' tr <- read_trades(file)
+#' str(tr)
 read_trades <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -632,8 +644,9 @@ read_trades <- function(file, ...) {
 #' @examples
 #'
 #' ## read_noii()
-#' read_noii(file)
-#' read_noii(file, add_descriptions = TRUE)
+#' noii <- read_noii(file)
+#' noii <- read_noii(file, add_descriptions = TRUE)
+#' noii
 read_noii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -694,8 +707,9 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_rpii()
-#' read_rpii(file)
-#' read_rpii(file, add_descriptions = TRUE)
+#' rpii <- read_rpii(file)
+#' rpii <- read_rpii(file, add_descriptions = TRUE)
+#' str(rpii)
 read_rpii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file

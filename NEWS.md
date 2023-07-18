@@ -1,3 +1,7 @@
+# RITCH 0.1.21
+
+* fix long running tasks in read functions
+
 # RITCH 0.1.20
 
 * fix bug where tests would fail on some platforms where files are written and not cleaned up
