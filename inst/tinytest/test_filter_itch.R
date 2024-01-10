@@ -2,6 +2,7 @@ library(RITCH)
 library(tinytest)
 library(data.table)
 suppressPackageStartupMessages(library(bit64))
+setDTthreads(2)
 
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 outfile <- file.path(tempdir(), "testfile_20101224.TEST_ITCH_50")

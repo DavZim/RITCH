@@ -1,3 +1,7 @@
+# RITCH 0.1.23
+
+* fix compilation warning and limit test cases to two cores (CRAN...)
+
 # RITCH 0.1.22
 
 * fix CRAN release by shorten example runtimes

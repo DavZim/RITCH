@@ -1,1 +1,1 @@
-Fix failing tests on CRAN by reducing code run times of examples.
+fix failing test where printf was used with a wrong format specifier, also limit data.table to 2 cores

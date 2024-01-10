@@ -1,6 +1,7 @@
 library(RITCH)
 library(tinytest)
 library(data.table)
+setDTthreads(2)
 
 infile <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 

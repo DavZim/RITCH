@@ -1,5 +1,6 @@
 library(RITCH)
 library(tinytest)
+setDTthreads(2)
 
 # check that using gunzip_file and gzip_file return the same files as the originals!
 raw_file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")

@@ -1,6 +1,7 @@
 library(RITCH)
 library(tinytest)
 library(data.table)
+setDTthreads(2)
 
 as.int64 <- bit64::as.integer64
 # overload table for better comparison
