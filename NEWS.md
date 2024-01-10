@@ -1,3 +1,7 @@
+# RITCH 0.1.22
+
+* fix CRAN release by shorten example runtimes
+
 # RITCH 0.1.21
 
 * fix long running tasks in read functions

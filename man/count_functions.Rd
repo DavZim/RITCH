@@ -142,18 +142,19 @@ messages. Message type \code{N}
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 count_messages(file)
-count_messages(file, add_meta_data = TRUE)
+count_messages(file, add_meta_data = TRUE, quiet = TRUE)
 
+# file can also be a .gz file
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
-count_messages(gz_file)
+count_messages(gz_file, quiet = TRUE)
 
 # count only a specific class
-msg_count <- count_messages(file)
+msg_count <- count_messages(file, quiet = TRUE)
 
 # either count based on a given data.table outputted by count_messages
 count_orders(msg_count)
 
-# or count messages in a file
+# or count orders from a file and not from a msg_count
 count_orders(file)
 
 ### Specific class count functions are:

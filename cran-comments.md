@@ -1,1 +1,1 @@
-fix long code execution times of `read_functions`, used to be >5secs for the one function. Now the whole check runs in 3.5 secs on my Windows machine.
+Fix failing tests on CRAN by reducing code run times of examples.

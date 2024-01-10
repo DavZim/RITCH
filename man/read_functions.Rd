@@ -254,32 +254,28 @@ well:
 }
 \examples{
 file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
-od <- read_orders(file)
-tr <- read_trades(file)
-md <- read_modifications(file)
+od <- read_orders(file, quiet = FALSE) # note quiet = FALSE is the default
+tr <- read_trades(file, quiet = TRUE)
 
 ## Alternatively
-od <- read_itch(file, "orders")
+od <- read_itch(file, "orders", quiet = TRUE)
 
-ll <- read_itch(file, c("orders", "trades", "modifications"))
+ll <- read_itch(file, c("orders", "trades"), quiet = TRUE)
 
-str(od)
-str(tr)
-str(md)
-str(ll)
+od
+tr
+str(ll, max.level = 1)
 
-# additional options:
-
-# turn off feedback
-od <- read_orders(file, quiet = TRUE)
+## additional options:
 
 # take only subset of messages
 od <- read_orders(file, skip = 3, n_max = 10)
 
 # a message count can be provided for slightly faster reads
-msg_count <- count_messages(file)
+msg_count <- count_messages(file, quiet = TRUE)
 od <- read_orders(file, n_max = msg_count)
 
+## .gz archive functionality
 # .gz archives will be automatically unzipped
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 od <- read_orders(gz_file)
@@ -287,69 +283,82 @@ od <- read_orders(gz_file)
 od <- read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
 
 ## read_itch()
-od <- read_itch(file, "orders")
-otm <- read_itch(file, c("orders", "trades", "modifications"))
-str(otm)
+otm <- read_itch(file, c("orders", "trades"), quiet = TRUE)
+str(otm, max.level = 1)
 
 ## read_system_events()
-se <- read_system_events(file)
-se <- read_system_events(file, add_descriptions = TRUE)
-str(se)
+se <- read_system_events(file, add_descriptions = TRUE, quiet = TRUE)
+se
 
 ## read_stock_directory()
-sd <- read_stock_directory(file)
-sd <- read_stock_directory(file, add_descriptions = TRUE)
-str(sd)
+sd <- read_stock_directory(file, add_descriptions = TRUE, quiet = TRUE)
+sd
 
 ## read_trading_status()
-ts <- read_trading_status(file)
-ts <- read_trading_status(file, add_descriptions = TRUE)
-str(ts)
+ts <- read_trading_status(file, add_descriptions = TRUE, quiet = TRUE)
+ts
 
 ## read_reg_sho()
-rs <- read_reg_sho(file)
-rs <- read_reg_sho(file, add_descriptions = TRUE)
-str(rs)
+\dontrun{
+# note the example file has no reg SHO messages
+rs <- read_reg_sho(file, add_descriptions = TRUE, quiet = TRUE)
+rs
+}
 
 ## read_market_participant_states()
-mps <- read_market_participant_states(file)
-mps <- read_market_participant_states(file, add_descriptions = TRUE)
-str(mps)
+\dontrun{
+# note the example file has no market participant state information
+mps <- read_market_participant_states(file, add_descriptions = TRUE,
+                                      quiet = TRUE)
+mps
+}
 
 ## read_mwcb()
-mwcb <- read_mwcb(file)
-str(mwcb)
+\dontrun{
+# note the example file has no circuit breakers messages
+mwcb <- read_mwcb(file, quiet = TRUE)
+mwcb
+}
 
 ## read_ipo()
-ipo <- read_ipo(file)
-ipo <- read_ipo(file, add_descriptions = TRUE)
-str(ipo)
+\dontrun{
+# note the example file has no IPOs
+ipo <- read_ipo(file, add_descriptions = TRUE, quiet = TRUE)
+ipo
+}
 
 ## read_luld()
-luld <- read_luld(file)
-str(luld)
+\dontrun{
+# note the example file has no LULD messages
+luld <- read_luld(file, quiet = TRUE)
+luld
+}
 
 ## read_orders()
-od <- read_orders(file)
-str(od)
+od <- read_orders(file, quiet = TRUE)
+od
 
 ## read_modifications()
-mod <- read_modifications(file)
-str(mod)
+mod <- read_modifications(file, quiet = TRUE)
+mod
 
 ## read_trades()
-tr <- read_trades(file)
-str(tr)
+tr <- read_trades(file, quiet = TRUE)
+tr
 
 ## read_noii()
-noii <- read_noii(file)
-noii <- read_noii(file, add_descriptions = TRUE)
+\dontrun{
+# note the example file has no NOII messages
+noii <- read_noii(file, add_descriptions = TRUE, quiet = TRUE)
 noii
+}
 
 ## read_rpii()
-rpii <- read_rpii(file)
-rpii <- read_rpii(file, add_descriptions = TRUE)
-str(rpii)
+\dontrun{
+# note the example file has no RPII messages
+rpii <- read_rpii(file, add_descriptions = TRUE, quiet = TRUE)
+rpii
+}
 }
 \references{
 \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}
