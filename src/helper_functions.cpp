@@ -150,7 +150,7 @@ uint64_t set8bytes(unsigned char* b, int64_t val) {
 // i.e., "UFO" with 8 to 0x55534f2020202020 (filled with whitespaces)
 uint64_t setCharBytes(unsigned char* b, std::string x, uint64_t n) {
   unsigned char *st = new unsigned char[n + 1];
-  if (x.size() > n) Rprintf("ERROR: setChar Bytes for string '%s' larger than capacity %i\n", x.c_str(), n);
+  if (x.size() > n) Rprintf("ERROR: setChar Bytes for string '%s' larger than capacity %lu\n", x.c_str(), n);
   for (uint64_t j = 0; j < n; j++) st[j] = ' '; // fill with n spaces
   for (uint64_t j = 0; j < x.size(); j++) st[j] = x[j]; // copy the string x
   memcpy(b, st, n);

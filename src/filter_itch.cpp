@@ -164,9 +164,9 @@ void filter_itch_impl(std::string infile, std::string outfile,
   }
 
   if (!quiet) {
-    Rprintf("[Bytes]      scanned %lld, filtered %lld\n",
+    Rprintf("[Bytes]      scanned %ld, filtered %ld\n",
             filesize, bytes_written + o);
-    Rprintf("[Messages]   scanned %lld, filtered %lld\n",
+    Rprintf("[Messages]   scanned %ld, filtered %ld\n",
             msg_count, msg_read);
   }
 
