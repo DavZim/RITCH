@@ -1,3 +1,7 @@
+# RITCH 0.1.24
+
+* fix printf warnings about wrong argument type
+
 # RITCH 0.1.23
 
 * fix compilation warning and limit test cases to two cores (CRAN...)

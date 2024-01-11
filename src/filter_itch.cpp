@@ -164,9 +164,9 @@ void filter_itch_impl(std::string infile, std::string outfile,
   }
 
   if (!quiet) {
-    Rprintf("[Bytes]      scanned %ld, filtered %ld\n",
+    Rprintf("[Bytes]      scanned " PRId64 ", filtered " PRId64 "\n",
             filesize, bytes_written + o);
-    Rprintf("[Messages]   scanned %ld, filtered %ld\n",
+    Rprintf("[Messages]   scanned " PRId64 ", filtered " PRId64 "\n",
             msg_count, msg_read);
   }
 
