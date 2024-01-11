@@ -326,7 +326,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.02MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.82MB/s</span>
 <span class="r-in"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Alternatively</span></span></span>
@@ -423,7 +423,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 3 n_max: 10 (4 - 13)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.23MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.95MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># a message count can be provided for slightly faster reads</span></span></span>
 <span class="r-in"><span><span class="va">msg_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">file</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -431,7 +431,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 0 n_max: 5000 (1 - 5000)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 10,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.27MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.86MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## .gz archive functionality</span></span></span>
 <span class="r-in"><span><span class="co"># .gz archives will be automatically unzipped</span></span></span>
@@ -441,7 +441,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 1.49MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 1.38MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50'</span>
 <span class="r-in"><span><span class="co"># force a decompress and delete the decompressed file afterwards</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">gz_file</span>, force_gunzip <span class="op">=</span> <span class="cn">TRUE</span>, force_cleanup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -449,7 +449,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 1.44MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 1.32MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file 'ex20101224.TEST_ITCH_50'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_itch()</span></span></span>
