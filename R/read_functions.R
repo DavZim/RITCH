@@ -92,6 +92,9 @@
 #' @return a data.table containing the messages
 #'
 #' @examples
+#' \dontshow{
+#' data.table::setDTthreads(2)
+#' }
 #' file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 #' od <- read_orders(file, quiet = FALSE) # note quiet = FALSE is the default
 #' tr <- read_trades(file, quiet = TRUE)
@@ -471,7 +474,7 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
 #'
 #' ## read_market_participant_states()
 #' \dontrun{
-#' # note the example file has no market participant state information
+#' # note the example file has no market participant states
 #' mps <- read_market_participant_states(file, add_descriptions = TRUE,
 #'                                       quiet = TRUE)
 #' mps
