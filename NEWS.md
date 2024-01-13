@@ -1,3 +1,7 @@
+# RITCH 0.1.25
+
+* fix Debian segfault when writing to user library
+
 # RITCH 0.1.24
 
 * fix printf warnings about wrong argument type

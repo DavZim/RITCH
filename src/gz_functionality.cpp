@@ -14,6 +14,9 @@ void gunzip_file_impl(std::string infile,
                       int64_t buffer_size = 1e9) {
 
   gzFile gzfile = gzopen(infile.c_str(), "rb");
+  if (gzfile == NULL) {
+    Rcpp::stop("Could not open file '%s' for gunzip", infile.c_str());
+  }
 
   unsigned char* buf;
   int64_t buffer_char_size = sizeof(unsigned char) * buffer_size > UINT_MAX ?
@@ -24,6 +27,9 @@ void gunzip_file_impl(std::string infile,
   int64_t this_buffer_size;
 
   FILE* ofile = fopen(outfile.c_str(), "wb");
+  if (ofile == NULL) {
+    Rcpp::stop("Could not open file '%s' for gunzip", outfile.c_str());
+  }
   // iterate over the file until the all information is gathered
 
   while (1) {
@@ -57,6 +63,9 @@ void gzip_file_impl(std::string infile,
                     int64_t buffer_size = 1e9) {
 
   FILE* file = fopen(infile.c_str(), "rb");
+  if (file == NULL) {
+    Rcpp::stop("Could not open file %s for gzip", infile.c_str());
+  }
 
   unsigned char* buf;
   int64_t buffer_char_size = sizeof(unsigned char) * buffer_size > UINT_MAX ?
@@ -67,6 +76,9 @@ void gzip_file_impl(std::string infile,
   int64_t this_buffer_size;
 
   gzFile ofile = gzopen(outfile.c_str(), "wb");
+  if (ofile == NULL) {
+    Rcpp::stop("Could not open file %s for gzip", outfile.c_str());
+  }
   // iterate over the file until the all information is gathered
 
   while (1) {
