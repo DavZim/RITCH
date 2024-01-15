@@ -159,7 +159,7 @@ filter_itch <- function(infile, outfile,
   orig_infile <- infile
   # only needed for gz files; gz files are not deleted when the raw file already existed
   raw_file_existed <- file.exists(basename(gsub("\\.gz$", "", infile)))
-  infile <- check_and_gunzip(infile, buffer_size, force_gunzip, quiet)
+  infile <- check_and_gunzip(infile, dirname(outfile), buffer_size, force_gunzip, quiet)
 
   filter_itch_impl(infile, outfile, start, end,
                    filter_msg_type, filter_stock_locate,
@@ -169,7 +169,8 @@ filter_itch <- function(infile, outfile,
   if (gz) {
     if (!quiet) cat(sprintf("[gzip]       outfile\n"))
     of <- outfile
-    outfile <- gzip_file(outfile)
+    outfile <- gzip_file(infile = outfile,
+                         outfile = paste0(outfile, ".gz"))
     unlink(of) # delete the temporary file
   }
 

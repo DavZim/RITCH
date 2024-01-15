@@ -10,8 +10,9 @@
 #' @param quiet if TRUE, the status messages are supressed, defaults to FALSE
 #' @param force_gunzip only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
 #'        if set to TRUE, the existing file is overwritten. Default value is FALSE
+#' @param gz_dir a directory where the gz archive is extracted to.
+#'        Only applies if file is a gz archive. Default is [tempdir()].    
 #' @param force_cleanup only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
-#'
 #' @return a data.table containing the message-type and their counts for `count_messages`
 #'  or an integer value for the other functions.
 #' @export
@@ -37,7 +38,7 @@
 #' ### Specific class count functions are:
 count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
                            quiet = FALSE, force_gunzip = FALSE,
-                           force_cleanup = TRUE) {
+                           gz_dir = tempdir(), force_cleanup = TRUE) {
   t0 <- Sys.time()
   if (!file.exists(file))
     stop(sprintf("File '%s' not found!", file))
@@ -48,7 +49,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
   orig_file <- file
   # only needed for gz files; gz files are not deleted when the raw file already existed
   raw_file_existed <- file.exists(basename(gsub("\\.gz$", "", file)))
-  file <- check_and_gunzip(file, buffer_size, force_gunzip, quiet)
+  file <- check_and_gunzip(file, gz_dir, buffer_size, force_gunzip, quiet)
   df <- count_messages_impl(file, buffer_size, quiet)
 
   df <- data.table::setalloccol(df)

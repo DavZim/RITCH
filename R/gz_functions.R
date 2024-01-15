@@ -63,7 +63,7 @@ gzip_file <- function(infile,
                       infile,
                       paste0(infile, ".gz"))
     # remove path
-    xx <- strsplit(outfile, "/")[[1]]
+    xx <- strsplit(outfile, "\\\\|/")[[1]]
     outfile <- xx[length(xx)]
   }
   if (file.exists(outfile)) unlink(outfile)
@@ -77,34 +77,35 @@ gzip_file <- function(infile,
   return(invisible(outfile))
 }
 
-# Helper function
 
-check_and_gunzip <- function(file, buffer_size, force_gunzip, quiet) {
+# Helper function
+# returns the (if needed gunzipped) file
+# note that it only operates in the dir directory
+check_and_gunzip <- function(file, dir = dirname(file), buffer_size, force_gunzip, quiet) {
   file <- path.expand(file)
   if (!grepl("\\.gz$", file)) return(file)
 
-  raw_file <- gsub("\\.gz$", "", file)
+  outfile <- file.path(dir, basename(gsub("\\.gz$", "", file)))
   # check if the raw-file at target directory already exists, if so use this (unless force_gunzip = TRUE)
-  if (file.exists(raw_file) && !quiet && !force_gunzip) {
-    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip=TRUE)\n", raw_file))
-    return(raw_file)
+  if (file.exists(outfile) && !quiet && !force_gunzip) {
+    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip = TRUE)\n",
+                outfile))
+    return(outfile)
   }
-
-  # look in current directory and extract to current directory if decompress needed
-  raw_file <- strsplit(raw_file, "/")[[1]]
-  raw_file <- raw_file[length(raw_file)]
 
   # check if the raw-file at current directory already exists, if so use this (unless force_gunzip = TRUE)
-  if (file.exists(raw_file) && !quiet && !force_gunzip) {
-    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip=TRUE)\n", raw_file))
-    return(raw_file)
-  }
-  # if the unzipped file doesnt exist or the force_gunzip flag is set, unzip file
-  if (!file.exists(raw_file) || force_gunzip) {
-    unlink(raw_file)
-    if (!quiet) cat(sprintf("[Decompressing] '%s' to '%s'\n", file, raw_file))
+  if (file.exists(outfile) && !force_gunzip) {
+    if (!quiet)
+      cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip = TRUE)\n",
+                  outfile))
+    return(outfile)
+  } else {
+    # if the unzipped file doesnt exist or the force_gunzip flag is set, unzip file
+    unlink(outfile)
+    if (!quiet)
+      cat(sprintf("[Decompressing] '%s' to '%s'\n", file, outfile))
 
-    gunzip_file(file, raw_file, buffer_size)
+    gunzip_file(file, outfile, buffer_size)
   }
-  return(raw_file)
+  return(outfile)
 }

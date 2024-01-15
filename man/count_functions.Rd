@@ -24,6 +24,7 @@ count_messages(
   buffer_size = -1,
   quiet = FALSE,
   force_gunzip = FALSE,
+  gz_dir = tempdir(),
   force_cleanup = TRUE
 )
 
@@ -64,6 +65,9 @@ count_rpii(x)
 
 \item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
 if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{gz_dir}{a directory where the gz archive is extracted to.
+Only applies if file is a gz archive. Default is \code{\link[=tempdir]{tempdir()}}.}
 
 \item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
 

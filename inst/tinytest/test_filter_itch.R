@@ -9,7 +9,7 @@ outfile <- file.path(tempdir(), "testfile_20101224.TEST_ITCH_50")
 
 
 ################################################################################
- # Test that filtering for all trades returns all data entries
+# Test that filtering for all trades returns all data entries
 orig <- read_itch(infile, quiet = TRUE)
 trades <- read_trades(infile, quiet = TRUE)
 expect_equal(orig$trades, trades)
@@ -371,31 +371,32 @@ unlink(outfile)
 
 ################################################################################
 # filter_itch works on gz input files
-infile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+gzinfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
+tmpoutfile <- file.path(tempdir(), "gz_testfile_20101224.TEST_ITCH_50")
 
-outfile_plain <- filter_itch(infile, outfile, filter_msg_class = "orders",
-                             quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
-expect_equal(file.size(outfile_plain), 190012)
+rawoutfile <- filter_itch(gzinfile, tmpoutfile, filter_msg_class = "orders",
+                          quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+expect_equal(rawoutfile, tmpoutfile)
+expect_equal(file.size(rawoutfile), 190012)
 
-odf <- read_orders(outfile_plain, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
-idf <- read_orders(infile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+odf <- read_orders(rawoutfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+idf <- read_orders(gzinfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 expect_equal(odf, idf)
-unlink(outfile_plain)
+unlink(rawoutfile)
 
 
 ################################################################################
 # works also on gz-output files
-tmpoutfile <- file.path(tempdir(), "gz_testfile_20101224.TEST_ITCH_50")
+rawoutfile <- filter_itch(gzinfile, tmpoutfile, filter_msg_class = "orders", gz = TRUE,
+                          quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 
-gzoutfile <- filter_itch(infile, tmpoutfile, filter_msg_class = "orders", gz = TRUE,
-                         quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+expect_equal(rawoutfile, paste0(tmpoutfile, ".gz"))
+expect_true(file.exists(rawoutfile))
+expect_equal(file.size(rawoutfile), 72619)
 
-expect_true(file.exists(gzoutfile))
-expect_equal(file.size(gzoutfile), 72619)
-
-odf <- read_orders(gzoutfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
-idf <- read_orders(infile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+odf <- read_orders(rawoutfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
+idf <- read_orders(gzinfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 
 expect_equal(odf, idf)
-unlink(gzoutfile)
+unlink(rawoutfile)
 unlink(tmpoutfile)

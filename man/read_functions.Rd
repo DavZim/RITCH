@@ -36,6 +36,7 @@ read_itch(
   quiet = FALSE,
   add_meta = TRUE,
   force_gunzip = FALSE,
+  gz_dir = tempdir(),
   force_cleanup = TRUE
 )
 
@@ -125,6 +126,9 @@ if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{force_gunzip}{only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
 if set to TRUE, the existing file is overwritten. Default value is FALSE}
+
+\item{gz_dir}{a directory where the gz archive is extracted to.
+Only applies if file is a gz archive. Default is \code{\link[=tempdir]{tempdir()}}.}
 
 \item{force_cleanup}{only applies if the input file is a gz-archive.
 If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.

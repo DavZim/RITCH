@@ -1,3 +1,7 @@
+# RITCH 0.1.26
+
+* fix bug where gz functionality would write to user library or current directory
+
 # RITCH 0.1.25
 
 * fix Debian segfault when writing to user library

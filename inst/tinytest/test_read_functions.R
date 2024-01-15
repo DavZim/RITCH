@@ -38,9 +38,10 @@ expect_equal(ct, ct_exp)
 
 # force_cleanup = FALSE leaves the raw file behind
 ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE,
-                      force_cleanup = FALSE)
+                      gz_dir = tempdir(), force_cleanup = FALSE)
 expect_equal(ct, ct2)
-expect_true(file.exists(file_raw))
+expect_true(file.exists(file.path(tempdir(),
+                                  gsub("\\.gz$", "", basename(gzfile)))))
 unlink(file_raw)
 
 # check that force_cleanup works

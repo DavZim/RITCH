@@ -1,1 +1,1 @@
-fix bug around writing to user library in tests.
+Fix bug where the gz functionality would write to the current directory or to the user library.
