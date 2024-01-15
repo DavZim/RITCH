@@ -57,6 +57,7 @@
 <span>  buffer_size <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  force_gunzip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  gz_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  force_cleanup <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -110,6 +111,11 @@
 if set to TRUE, the existing file is overwritten. Default value is FALSE</p></dd>
 
 
+<dt>gz_dir</dt>
+<dd><p>a directory where the gz archive is extracted to.
+Only applies if file is a gz archive. Default is <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>.</p></dd>
+
+
 <dt>force_cleanup</dt>
 <dd><p>only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.</p></dd>
 
@@ -161,7 +167,7 @@ messages. Message type <code>N</code></p></li>
 <span class="r-in"><span><span class="fu">count_messages</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   12,012 total messages found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 715.27MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 781.78MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     msg_type count</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1:        S     6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  2:        R     3</span>

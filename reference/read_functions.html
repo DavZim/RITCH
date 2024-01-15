@@ -138,6 +138,7 @@ before, does not remove the archive itself).</p>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  add_meta <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  force_gunzip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  gz_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  force_cleanup <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -258,6 +259,11 @@ if you have a large amount of RAM, 1e9 (1GB) might be faster</p></dd>
 if set to TRUE, the existing file is overwritten. Default value is FALSE</p></dd>
 
 
+<dt>gz_dir</dt>
+<dd><p>a directory where the gz archive is extracted to.
+Only applies if file is a gz archive. Default is <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>.</p></dd>
+
+
 <dt>force_cleanup</dt>
 <dd><p>only applies if the input file is a gz-archive.
 If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
@@ -326,7 +332,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.66MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 4.01MB/s</span>
 <span class="r-in"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu">read_trades</span><span class="op">(</span><span class="va">file</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Alternatively</span></span></span>
@@ -423,7 +429,7 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 3 n_max: 10 (4 - 13)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 3.83MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.23MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># a message count can be provided for slightly faster reads</span></span></span>
 <span class="r-in"><span><span class="va">msg_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">file</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -431,26 +437,24 @@ well:</p><ul><li><p><code>get_orders</code>: Redirects to <code>read_orders</cod
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     skip: 0 n_max: 5000 (1 - 5000)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 10,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.71MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 4.10MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## .gz archive functionality</span></span></span>
 <span class="r-in"><span><span class="co"># .gz archives will be automatically unzipped</span></span></span>
 <span class="r-in"><span><span class="va">gz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ex20101224.TEST_ITCH_50.gz"</span>, package <span class="op">=</span> <span class="st">"RITCH"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">gz_file</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] Unzipped file '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50' already found, using that (overwrite with force_gunzip=TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] Unzipped file '/tmp/Rtmp6hhDia/ex20101224.TEST_ITCH_50' already found, using that (overwrite with force_gunzip = TRUE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.12 secs at 1.30MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 1.45MB/s</span>
 <span class="r-in"><span><span class="co"># force a decompress and delete the decompressed file afterwards</span></span></span>
 <span class="r-in"><span><span class="va">od</span> <span class="op">&lt;-</span> <span class="fu">read_orders</span><span class="op">(</span><span class="va">gz_file</span>, force_gunzip <span class="op">=</span> <span class="cn">TRUE</span>, force_cleanup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to 'ex20101224.TEST_ITCH_50'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/Rtmp6hhDia/ex20101224.TEST_ITCH_50'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num messages 12,012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 5,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 1.26MB/s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Cleanup]    Removing file 'ex20101224.TEST_ITCH_50'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.11 secs at 1.42MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## read_itch()</span></span></span>
 <span class="r-in"><span><span class="va">otm</span> <span class="op">&lt;-</span> <span class="fu">read_itch</span><span class="op">(</span><span class="va">file</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orders"</span>, <span class="st">"trades"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
