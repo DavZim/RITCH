@@ -64,9 +64,16 @@ void filter_itch_impl(std::string infile, std::string outfile,
   }
 
   // get size of the file
-  fseek(ifile, 0L, SEEK_END);
-  int64_t filesize = ftell(ifile);
-  fseek(ifile, 0L, SEEK_SET);
+  if (fseeko64(ifile, 0L, SEEK_END) != 0) {
+    Rcpp::stop("Error seeking to end of file");
+  }
+  int64_t filesize = ftello64(ifile);
+  if (filesize == -1) {
+    Rcpp::stop("Error getting file size");
+  }
+  if (fseeko64(ifile, 0L, SEEK_SET) != 0) {
+    Rcpp::stop("Error seeking back to start of file");
+  }
 
   // create buffer
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
@@ -153,7 +160,7 @@ void filter_itch_impl(std::string infile, std::string outfile,
     const int64_t offset = i - this_buffer_size;
     // Rprintf("Filter ibuf at %6lld offsetting by %3lld - Total bytes read %lld\n",
     //         i, offset, bytes_read + i);
-    fseek(ifile, offset, SEEK_CUR);
+    fseeko64(ifile, offset, SEEK_CUR);
     bytes_read += i;
   }
 

@@ -1,3 +1,7 @@
+# RITCH 0.1.76
+
+* fix bug where no messages would be reported for larger files
+
 # RITCH 0.1.26
 
 * fix bug where gz functionality would write to user library or current directory

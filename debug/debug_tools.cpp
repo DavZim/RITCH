@@ -118,7 +118,7 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
 
   Rprintf("Number of Messages:\n");
   for (int j = 0; j < N_ACT_MSGS; j++) {
-    Rprintf("- '%c': %i\n", ACT_MSG_NAMES[j], counts[j]);
+    Rprintf("- '%c': %ld\n", ACT_MSG_NAMES[j], counts[j]);
   }
   Rprintf("=============================\n");
   // Use the Buffer
@@ -154,7 +154,7 @@ void dbg_itch_file(std::string filename = "inst/extdata/ex20101224.TEST_ITCH_50"
       }
     }
 
-    Rprintf("'%c' (len 2 + %i) idx %4i at offset %5i (0x%04x) | ", num, l - 2, i, idx, idx);
+    Rprintf("'%c' (len 2 + %i) idx %4i at offset %5ld (0x%04lx) | ", num, l - 2, i, idx, idx);
     Rprintf("(%02x %02x) ", bufferPtr[idx], bufferPtr[idx + 1]);
     for (int x = 2; x < l; x++) Rprintf("%02x ", bufferPtr[idx + x]);
     Rprintf("\n");
@@ -237,14 +237,14 @@ dbg_hex_to_dbl <- function(h, prec = 4) {
 */
 
 // converts a std::string of hex values to a buffer
-char * to_buffer(std::string x) {
+unsigned char * to_buffer(std::string x) {
   x.erase(remove_if(x.begin(), x.end(), isspace), x.end());
   const uint64_t n_bytes = x.size() / 2;
   unsigned char * buf;
   // Rprintf("Found %u bytes\n", x.size() / 2);
   buf = (unsigned char*) calloc(x.size() / 2, sizeof(unsigned char));
 
-  for (int j = 0; j < n_bytes; j++)
+  for (uint64_t j = 0; j < n_bytes; j++)
     buf[j] = std::stoul(x.substr(j * 2, 2), nullptr, 16);
   return buf;
 }
@@ -263,7 +263,7 @@ Rcpp::DataFrame hex_count_messages_impl(std::string x) {
   std::vector<int64_t> count = count_messages_buffer(buf, n_bytes);
 
   Rcpp::StringVector types;
-  for (unsigned char c : ACT_MSG_NAMES) types.push_back(c);
+  for (unsigned char c : ACT_MSG_NAMES) types.push_back(std::string(1, c));
 
   Rcpp::List df(2);
   df.names() = Rcpp::CharacterVector::create("msg_type", "count");
@@ -322,7 +322,7 @@ Rcpp::DataFrame dbg_hex_to_df(std::string x, std::string msg_class) {
   MessageParser mp(msg_class, 0, 100); // take max 100 messages...
   mp.activate();
   mp.init_vectors(n_messages + 100);
-  int64_t i = 2;
+  uint64_t i = 2;
 
   while (i < n_bytes) {
     mp.parse_message(&buf[i]);

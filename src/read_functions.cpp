@@ -99,9 +99,16 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
   }
 
   // get size of the file
-  fseek(infile, 0L, SEEK_END);
-  int64_t filesize = ftell(infile);
-  fseek(infile, 0L, SEEK_SET);
+  if (fseeko64(infile, 0L, SEEK_END) != 0) {
+    Rcpp::stop("Error seeking to end of file");
+  }
+  int64_t filesize = ftello64(infile);
+  if (filesize == -1) {
+    Rcpp::stop("Error getting file size");
+  }
+  if (fseeko64(infile, 0L, SEEK_SET) != 0) {
+    Rcpp::stop("Error seeking back to start of file");
+  }
 
   // create buffer
   int64_t buf_size = max_buffer_size > filesize ? filesize : max_buffer_size;
@@ -161,7 +168,7 @@ Rcpp::List read_itch_impl(std::vector<std::string> classes,
 
     // offset file pointer to fit the next message into the buffer
     const int64_t offset = i - this_buffer_size;
-    fseek(infile, offset, SEEK_CUR);
+    fseeko64(infile, offset, SEEK_CUR);
     bytes_read += i;
   }
   
