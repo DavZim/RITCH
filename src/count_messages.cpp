@@ -2,6 +2,7 @@
 
 #ifdef __APPLE__
 #  define fseeko64 fseeko
+#  define ftello64 ftello
 #endif
 
 // counts messages in a file
