@@ -1,5 +1,9 @@
 #include "filter_itch.h"
 
+#ifdef __APPLE__
+#  define fseeko64 fseeko
+#endif
+
 // [[Rcpp::export]]
 void filter_itch_impl(std::string infile, std::string outfile,
                       int64_t start, int64_t end,

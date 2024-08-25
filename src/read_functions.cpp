@@ -1,5 +1,9 @@
 #include "read_functions.h"
 
+#ifdef __APPLE__
+#  define fseeko64 fseeko
+#endif
+
 // [[Rcpp::export]]
 Rcpp::List read_itch_impl(std::vector<std::string> classes,
                           std::string filename,

@@ -1,5 +1,9 @@
 #include "count_messages.h"
 
+#ifdef __APPLE__
+#  define fseeko64 fseeko
+#endif
+
 // counts messages in a file
 std::vector<int64_t> count_messages_internal(std::string filename,
                                              int64_t max_buffer_size) {
