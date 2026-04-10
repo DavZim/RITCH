@@ -73,7 +73,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
 #'
 #' All information is handled according to the official ITCH 5.0
 #' documentation as found here:
-#' <http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf>
+#' <https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf>
 #'
 #' - `msg_type` the type of the message
 #' - `msg_class` the group the message belongs to

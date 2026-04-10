@@ -12,7 +12,7 @@ a data.table with the information of the message-types
 \description{
 All information is handled according to the official ITCH 5.0
 documentation as found here:
-\url{http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf}
+\url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf}
 }
 \details{
 \itemize{

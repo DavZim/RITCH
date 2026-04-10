@@ -1,3 +1,7 @@
+# RITCH 0.1.29
+
+* fix failing CRAN NOTEs (URL + unneeded files)
+
 # RITCH 0.1.28
 
 * fix test for some platforms to avoid CRAN archiving
