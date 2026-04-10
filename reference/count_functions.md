@@ -155,7 +155,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 833.21MB/s
+#> [Done]       in 0.00 secs at 708.00MB/s
 #>     msg_type count
 #>       <char> <i64>
 #>  1:        S     6

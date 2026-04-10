@@ -296,7 +296,7 @@ od <- read_orders(file, quiet = FALSE) # note quiet = FALSE is the default
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.12 secs at 3.80MB/s
+#> [Done]       in 0.18 secs at 2.60MB/s
 tr <- read_trades(file, quiet = TRUE)
 
 ## Alternatively
@@ -399,7 +399,7 @@ od <- read_orders(file, skip = 3, n_max = 10)
 #> [Filter]     skip: 3 n_max: 10 (4 - 13)
 #> [Counting]   num 'orders' messages 20
 #> [Converting] to data.table
-#> [Done]       in 0.12 secs at 3.82MB/s
+#> [Done]       in 0.18 secs at 2.63MB/s
 
 # a message count can be provided for slightly faster reads
 msg_count <- count_messages(file, quiet = TRUE)
@@ -407,24 +407,24 @@ od <- read_orders(file, n_max = msg_count)
 #> [Filter]     skip: 0 n_max: 5000 (1 - 5000)
 #> [Counting]   num 'orders' messages 10,000
 #> [Converting] to data.table
-#> [Done]       in 0.12 secs at 3.77MB/s
+#> [Done]       in 0.18 secs at 2.56MB/s
 
 ## .gz archive functionality
 # .gz archives will be automatically unzipped
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 od <- read_orders(gz_file)
-#> [INFO] Unzipped file '/tmp/RtmpJ94tVk/ex20101224.TEST_ITCH_50' already found, using that (overwrite with force_gunzip = TRUE)
+#> [INFO] Unzipped file '/tmp/RtmpH56qgV/ex20101224.TEST_ITCH_50' already found, using that (overwrite with force_gunzip = TRUE)
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.12 secs at 1.29MB/s
+#> [Done]       in 0.18 secs at 880.32KB/s
 # force a decompress and delete the decompressed file afterwards
 od <- read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
-#> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/RtmpJ94tVk/ex20101224.TEST_ITCH_50'
+#> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/RtmpH56qgV/ex20101224.TEST_ITCH_50'
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.12 secs at 1.30MB/s
+#> [Done]       in 0.18 secs at 890.25KB/s
 
 ## read_itch()
 otm <- read_itch(file, c("orders", "trades"), quiet = TRUE)

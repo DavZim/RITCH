@@ -2,7 +2,7 @@
 
 All information is handled according to the official ITCH 5.0
 documentation as found here:
-<http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf>
+<https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf>
 
 ## Usage
 

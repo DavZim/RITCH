@@ -56,9 +56,9 @@ file   <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 #> [1] "tmp"
 file.info(outfile)
 #>       size isdir mode               mtime               ctime
-#> tmp 465048 FALSE  644 2026-04-10 14:37:24 2026-04-10 14:37:24
+#> tmp 465048 FALSE  644 2026-04-10 19:32:46 2026-04-10 19:32:46
 #>                   atime  uid  gid  uname grname
-#> tmp 2026-04-10 14:37:24 1001 1001 runner runner
+#> tmp 2026-04-10 19:32:46 1001 1001 runner runner
 unlink(outfile)
 
 # compress file
@@ -66,9 +66,9 @@ unlink(outfile)
 #> [1] "ex20101224.TEST_ITCH_50.gz"
 file.info(outfile)
 #>                              size isdir mode               mtime
-#> ex20101224.TEST_ITCH_50.gz 159965 FALSE  644 2026-04-10 14:37:24
+#> ex20101224.TEST_ITCH_50.gz 159965 FALSE  644 2026-04-10 19:32:46
 #>                                          ctime               atime  uid  gid
-#> ex20101224.TEST_ITCH_50.gz 2026-04-10 14:37:24 2026-04-10 14:37:24 1001 1001
+#> ex20101224.TEST_ITCH_50.gz 2026-04-10 19:32:46 2026-04-10 19:32:46 1001 1001
 #>                             uname grname
 #> ex20101224.TEST_ITCH_50.gz runner runner
 unlink(outfile)
