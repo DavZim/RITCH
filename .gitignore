@@ -89,3 +89,4 @@ vignettes/*.pdf
 NQTVITCHspecification*.pdf
 
 docs
+.Renviron

@@ -75,7 +75,9 @@ unlink(outfile)
 #### Test gz compression file
 outfile <- write_itch(ll, outfile_base, compress = TRUE, quiet = TRUE)
 
-expect_equal(file.size(outfile), 159965)
+gz_default_size <- file.size(outfile)
+expect_true(gz_default_size > 0)
+expect_true(gz_default_size < file.size(infile))
 
 # read in the file again and compare to outfile
 ll2 <- read_itch(outfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
@@ -87,7 +89,9 @@ outfile <- write_itch(ll, outfile_base, compress = TRUE, buffer_size = 100,
                       quiet = TRUE)
 
 # with smaller buffer sizes when using compress = TRUE, the filesize will increase!
-expect_equal(file.size(outfile), 419608)
+gz_small_buffer_size <- file.size(outfile)
+expect_true(gz_small_buffer_size > 0)
+expect_true(gz_small_buffer_size >= gz_default_size)
 # read in the file again and compare to outfile
 ll2 <- read_itch(outfile, quiet = TRUE, force_gunzip = TRUE, force_cleanup = TRUE)
 expect_equal(ll, ll2)
@@ -100,7 +104,7 @@ unlink(outfile)
 #### check append and compress
 write_itch(ll, outfile, compress = TRUE, buffer_size = 100, add_meta = FALSE,
            quiet = TRUE)
-expect_equal(file.size(outfile), 419608)
+expect_equal(file.size(outfile), gz_small_buffer_size)
 
 expect_warning(
   outfile <- write_itch(ll, outfile, compress = TRUE, append = TRUE,
@@ -109,7 +113,7 @@ expect_warning(
 
 # note that appending to a gzipped file will linearly increase file size...
 # only the buffers are compressed!
-expect_equal(file.size(outfile), 419608 * 2)
+expect_equal(file.size(outfile), gz_small_buffer_size * 2)
 
 expect_equal(lapply(ll, function(x) rbindlist(list(x, x))),
              read_itch(outfile, quiet = TRUE, force_gunzip = TRUE,

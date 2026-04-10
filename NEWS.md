@@ -1,4 +1,8 @@
-# RITCH 0.1.76
+# RITCH 0.1.28
+
+* fix test for some platforms to avoid CRAN archiving
+
+# RITCH 0.1.27
 
 * fix bug where no messages would be reported for larger files
 
