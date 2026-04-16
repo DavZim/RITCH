@@ -1,5 +1,9 @@
-Most recent updates:
-fix URL redirect and unneeded files to pass CRAN checks.
+Thank you for the review. We addressed all reported items:
 
-Other updates compared to last CRAN version:
-Fix failing test on Fedora platforms + make tests more robust for other platforms.
+- Updated `Title`/`Description` wording in `DESCRIPTION` and removed redundant phrasing.
+- Added explicit auto-linked webservice URLs in `Description`:
+  `<https://emi.nasdaq.com/ITCH/>` and
+  `<https://emi.nasdaq.com/ITCH/Stock_Locate_Codes/>`.
+- Replaced `\dontrun{}` usage with executable examples or `\donttest{}` where appropriate.
+- Removed commented lines from examples in `read_functions`.
+- Ensured examples/tests write to temporary locations (`tempdir()`/`tempfile()`) instead of user home/workspace paths.
