@@ -1,0 +1,8 @@
+linters: linters_with_defaults(
+    line_length_linter(100),
+    object_usage_linter = NULL
+  )
+exclusions: list(
+    "debug/test_debug.R",
+    "R/RcppExports.R"
+  )

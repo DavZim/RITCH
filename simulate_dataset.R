@@ -44,13 +44,14 @@ loc_codes <- loc_code[
   .(stock_old = stock,
     old_loc_code = stock_locate,
     stock = stock_select[stock])
-][order(stock)][, stock_locate := 1:.N][]
+][order(stock)][, stock_locate := seq_len(N)][]
 
 # removes price outliers outside of a given sigma range...
 remove_price_outliers <- function(dt, sigma = 3) {
   dd <- dt[]
   setorder(dd, stock, timestamp)
-  dd[, rmean := frollmean(price, 100, align = "left"), by = stock][, rmean := nafill(rmean, type = "locf"), by = stock]
+  dd[, rmean := frollmean(price, 100, align = "left"),
+     by = stock][, rmean := nafill(rmean, type = "locf"), by = stock]
   dd[, diff := (price - rmean), by = stock]
   dd[, diff := (diff - mean(diff, na.rm = TRUE)) / sd(diff, na.rm = TRUE), by = .(buy, stock)]
   dd <- dd[diff > -sigma & diff < sigma]
@@ -67,15 +68,11 @@ obfuscate_prices <- function(dt) {
                            est_range     = c(30,  6,   6))
 
   dd <- merge(dt, price_info, by = "stock", all.x = TRUE)
-  # dd[, ':=' (
-  #   min_price = min(price),
-  #   price_range = max(price) - min(price)
-  # ), by = stock]
 
   # scale the price by the base prices...
   dd[, price := (price - est_min_price) / est_range * (tar_range) + tar_range]
   dd[, price := round(price, 4)]
-  return(dd[, -c("tar_min_price", "tar_range", "est_min_price", "est_range")])
+  dd[, -c("tar_min_price", "tar_range", "est_min_price", "est_range")]
 }
 
 
@@ -96,7 +93,7 @@ names_dir <- names(stock_dir)
 sdir <- stock_dir[stock %chin% names(stock_select)][, stock := stock_select[stock]][]
 
 valid_market_cat <- c("Q", "G", "S", "N", "A", "P", "Z", "V", " ")
-sdir[, ':='(
+sdir[, ":=" (
   market_category = sample(valid_market_cat, .N, replace = TRUE),
   financial_status = "N",
   issue_classification = "A",
@@ -120,7 +117,7 @@ names_stat <- names(trad_stat)
 
 # shuffle the timestamps and rename the stocks
 trstat <- trad_stat[stock_locate %in% loc_codes$old_loc_code][
-  , ':='(
+  , ":="(
     timestamp = timestamp + rnorm(.N, 0, 1e8),
     stock = stock_select[stock]
   )
@@ -139,7 +136,7 @@ setcolorder(trstat, names_stat)
 ######################
 # Prepare Orders Messages
 set.seed(654918413)
-N_ORDERS <- 5000
+N_ORDERS <- 5000 # nolint
 
 # rename the stock and stock_locates
 or <- orders[stock %chin% names(stock_select)][, stock := stock_select[stock]]
@@ -153,7 +150,7 @@ or <- or[sample.int(.N, N_ORDERS)]
 or <- or[, timestamp := timestamp + rnorm(.N, 0, 1e6)][order(timestamp)]
 
 # treat order_ref
-MIN_ORDER_REF <- min(or$order_ref)
+MIN_ORDER_REF <- min(or$order_ref)  # nolint
 or[, order_ref := order_ref - MIN_ORDER_REF]
 
 # obfuscate prices
@@ -164,7 +161,7 @@ setcolorder(or, names_orders)
 ######################
 # Prepare Trades Messages
 set.seed(7451984)
-N_TRADES <- 1000
+N_TRADES <- 1000 # nolint
 
 tr <- trades[stock %chin% names(stock_select)][, stock := stock_select[stock]]
 tr <- merge(tr[, -c("stock_locate")], loc_codes[, .(stock, stock_locate)])
@@ -183,7 +180,7 @@ setcolorder(tr, names_trades)
 ######################
 # Prepare Modifications Messages
 set.seed(78632176)
-N_MODS <- 2000
+N_MODS <- 2000 # nolint
 
 md <- mods[stock_locate %in% loc_codes$old_loc_code][, old_loc_code := stock_locate]
 md <- merge(md[, -c("stock_locate")],

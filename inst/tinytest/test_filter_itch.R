@@ -358,12 +358,12 @@ expect_equal(sapply(filtered_res, nrow),
 df_orig <- read_itch(infile,  c("orders", "trades", "modifications"),
                      quiet = TRUE)
 # apply the filters
-msg_types <- c('D', 'A', 'F', 'P', 'Q', 'B')
-df_orig_res <- lapply(df_orig, function(d)
+msg_types <- c("D", "A", "F", "P", "Q", "B")
+df_orig_res <- lapply(df_orig, function(d) {
   d[msg_type %in% msg_types &
       stock_locate %in% c(1, 3) &
-      timestamp > min_ts & timestamp < max_ts][1:100,]
-)
+      timestamp > min_ts & timestamp < max_ts][1:100, ]
+})
 
 expect_equal(filtered_res, df_orig_res)
 unlink(outfile)

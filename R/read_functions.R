@@ -72,11 +72,13 @@
 #' @param buffer_size the size of the buffer in bytes, defaults to 1e8 (100 MB),
 #' if you have a large amount of RAM, 1e9 (1GB) might be faster
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
-#' @param add_meta if TRUE, the date and exchange information of the file are added, defaults to TRUE
-#' @param force_gunzip only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
-#'        if set to TRUE, the existing file is overwritten. Default value is FALSE
+#' @param add_meta if TRUE, the date and exchange information of the file are added,
+#' defaults to TRUE
+#' @param force_gunzip only applies if the input file is a gz-archive and a file with
+#' the same (gunzipped) name already exists.
+#' If set to TRUE, the existing file is overwritten. Default value is FALSE
 #' @param gz_dir a directory where the gz archive is extracted to.
-#'        Only applies if file is a gz archive. Default is [tempdir()].        
+#' Only applies if file is a gz archive. Default is [tempdir()].
 #' @param force_cleanup only applies if the input file is a gz-archive.
 #'   If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.
 #'   Only applies when the gunzipped raw file did not exist before.
@@ -189,7 +191,7 @@ read_itch <- function(file, filter_msg_class = NA,
   if (is.numeric(n_max) && n_max != -1 && !quiet && !n_max_is_dataframe)
     cat("[Note]       n_max overrides counting the messages. Number of messages may be off\n")
 
-  if (!quiet && (start != 0 | end >= 0))
+  if (!quiet && (start != 0 || end >= 0))
     cat(sprintf("[Filter]     skip: %i n_max: %i (%i - %i)\n",
                 skip, n_max, start + 1, end + 1))
 
@@ -247,7 +249,7 @@ read_itch <- function(file, filter_msg_class = NA,
       if (nrow(df) > 0)
         dtime <- nanotime::nanotime(as.Date(filedate)) + df$timestamp
 
-      df[, ':=' (
+      df[, ":=" (
         date = filedate,
         datetime = dtime,
         exchange = get_exchange_from_filename(file)
@@ -280,7 +282,7 @@ read_itch <- function(file, filter_msg_class = NA,
     if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", file))
     unlink(gsub("\\.gz$", "", file))
   }
-  return(res)
+  res
 }
 
 ## convenient wrapper for read functions for the different classes
@@ -306,13 +308,15 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
 
     ei <- data.table::data.table(
       event_code = c("O", "S", "Q", "M", "E", "C"),
-      event_name = c("Start of Messages", "Start of System Hours", "Start of Market Hours", "End of Market Hours", "End of System Hours", "End of Messages"),
+      event_name = c("Start of Messages", "Start of System Hours",
+                     "Start of Market Hours", "End of Market Hours",
+                     "End of System Hours", "End of Messages"),
       event_note = c(
-        "Outside of time stamp messages, the start of day message is the first message sent in any trading day",
+        "Outside of time stamp messages, the start of day message is the first message sent in any trading day", # nolint
         "This message indicates that NASDAQ is open and ready to start accepting orders",
-        "This message is intended to indicate that Market Hours orders are available for execution",
-        "This message is intended to indicate that Market Hours orders are no longer available for execution",
-        "It indicates that Nasdaq is now closed and will not accept any new orders today. It is still possible to receive Broken Trade messages and Order Delete messages after the End of Day",
+        "This message is intended to indicate that Market Hours orders are available for execution", # nolint
+        "This message is intended to indicate that Market Hours orders are no longer available for execution", # nolint
+        "It indicates that Nasdaq is now closed and will not accept any new orders today. It is still possible to receive Broken Trade messages and Order Delete messages after the End of Day", # nolint
         "This is always the last message sent in any trading day."
       )
     )
@@ -320,7 +324,7 @@ read_system_events <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -382,7 +386,7 @@ read_stock_directory <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -425,7 +429,7 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -436,11 +440,9 @@ read_trading_status <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_reg_sho()
-#' \dontrun{
 #' # note the example file has no reg SHO messages
 #' rs <- read_reg_sho(file, add_descriptions = TRUE, quiet = TRUE)
 #' rs
-#' }
 read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -463,7 +465,7 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -475,12 +477,10 @@ read_reg_sho <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_market_participant_states()
-#' \dontrun{
 #' # note the example file has no market participant states
 #' mps <- read_market_participant_states(file, add_descriptions = TRUE,
 #'                                       quiet = TRUE)
 #' mps
-#' }
 read_market_participant_states <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -506,7 +506,7 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -518,11 +518,9 @@ read_market_participant_states <- function(file, ..., add_descriptions = FALSE) 
 #' @examples
 #'
 #' ## read_mwcb()
-#' \dontrun{
 #' # note the example file has no circuit breakers messages
 #' mwcb <- read_mwcb(file, quiet = TRUE)
 #' mwcb
-#' }
 read_mwcb <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -544,11 +542,9 @@ read_mwcb <- function(file, ...) {
 #' @examples
 #'
 #' ## read_ipo()
-#' \dontrun{
 #' # note the example file has no IPOs
 #' ipo <- read_ipo(file, add_descriptions = TRUE, quiet = TRUE)
 #' ipo
-#' }
 read_ipo <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -560,8 +556,14 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
     desc <- data.table::data.table(
       release_qualifier = c("A", "C"),
       release_qualifier_note = c(
-        "Anticipated Quotation Release Time: This value would be used when Nasdaq Market Operations initially enters the IPO instrument for release",
-        "IPO Release Canceled/Postponed: This value would be sued when Nasdaq Market Operations cancels or postpones the release of the new IPO instrument"
+        paste(
+          "Anticipated Quotation Release Time: This value would be used when Nasdaq Market",
+          "Operations initially enters the IPO instrument for release"
+        ),
+        paste(
+          "IPO Release Canceled/Postponed: This value would be sued when Nasdaq Market",
+          "Operations cancels or postpones the release of the new IPO instrument"
+        )
       )
     )
     res <- merge(res, desc, by = "release_qualifier", all.x = TRUE)
@@ -569,7 +571,7 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -581,11 +583,9 @@ read_ipo <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_luld()
-#' \dontrun{
 #' # note the example file has no LULD messages
 #' luld <- read_luld(file, quiet = TRUE)
 #' luld
-#' }
 read_luld <- function(file, ...) {
   dots <- list(...)
   dots$file <- file
@@ -654,11 +654,9 @@ read_trades <- function(file, ...) {
 #' @examples
 #'
 #' ## read_noii()
-#' \dontrun{
 #' # note the example file has no NOII messages
 #' noii <- read_noii(file, add_descriptions = TRUE, quiet = TRUE)
 #' noii
-#' }
 read_noii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -669,7 +667,8 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
     names_ <- names(res)
     desc <- data.table::data.table(
       imbalance_direction = c("B", "S", "N", "O"),
-      imbalance_direction_note = c("Buy Imbalance", "Sell Imbalance", "No Imbalance", "Insufficient Orders to Calculate")
+      imbalance_direction_note = c("Buy Imbalance", "Sell Imbalance", "No Imbalance",
+                                   "Insufficient Orders to Calculate")
     )
     res <- merge(res, desc, by = "imbalance_direction", all.x = TRUE)
 
@@ -707,7 +706,7 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 #' @rdname read_functions
@@ -719,11 +718,9 @@ read_noii <- function(file, ..., add_descriptions = FALSE) {
 #' @examples
 #'
 #' ## read_rpii()
-#' \dontrun{
 #' # note the example file has no RPII messages
 #' rpii <- read_rpii(file, add_descriptions = TRUE, quiet = TRUE)
 #' rpii
-#' }
 read_rpii <- function(file, ..., add_descriptions = FALSE) {
   dots <- list(...)
   dots$file <- file
@@ -746,7 +743,7 @@ read_rpii <- function(file, ..., add_descriptions = FALSE) {
     data.table::setcolorder(res, names_)
   }
 
-  return(res)
+  res
 }
 
 

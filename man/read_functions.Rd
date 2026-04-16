@@ -122,10 +122,12 @@ if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{quiet}{if TRUE, the status messages are suppressed, defaults to FALSE}
 
-\item{add_meta}{if TRUE, the date and exchange information of the file are added, defaults to TRUE}
+\item{add_meta}{if TRUE, the date and exchange information of the file are added,
+defaults to TRUE}
 
-\item{force_gunzip}{only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
-if set to TRUE, the existing file is overwritten. Default value is FALSE}
+\item{force_gunzip}{only applies if the input file is a gz-archive and a file with
+the same (gunzipped) name already exists.
+If set to TRUE, the existing file is overwritten. Default value is FALSE}
 
 \item{gz_dir}{a directory where the gz archive is extracted to.
 Only applies if file is a gz archive. Default is \code{\link[=tempdir]{tempdir()}}.}
@@ -306,40 +308,30 @@ ts <- read_trading_status(file, add_descriptions = TRUE, quiet = TRUE)
 ts
 
 ## read_reg_sho()
-\dontrun{
 # note the example file has no reg SHO messages
 rs <- read_reg_sho(file, add_descriptions = TRUE, quiet = TRUE)
 rs
-}
 
 ## read_market_participant_states()
-\dontrun{
 # note the example file has no market participant states
 mps <- read_market_participant_states(file, add_descriptions = TRUE,
                                       quiet = TRUE)
 mps
-}
 
 ## read_mwcb()
-\dontrun{
 # note the example file has no circuit breakers messages
 mwcb <- read_mwcb(file, quiet = TRUE)
 mwcb
-}
 
 ## read_ipo()
-\dontrun{
 # note the example file has no IPOs
 ipo <- read_ipo(file, add_descriptions = TRUE, quiet = TRUE)
 ipo
-}
 
 ## read_luld()
-\dontrun{
 # note the example file has no LULD messages
 luld <- read_luld(file, quiet = TRUE)
 luld
-}
 
 ## read_orders()
 od <- read_orders(file, quiet = TRUE)
@@ -354,18 +346,14 @@ tr <- read_trades(file, quiet = TRUE)
 tr
 
 ## read_noii()
-\dontrun{
 # note the example file has no NOII messages
 noii <- read_noii(file, add_descriptions = TRUE, quiet = TRUE)
 noii
-}
 
 ## read_rpii()
-\dontrun{
 # note the example file has no RPII messages
 rpii <- read_rpii(file, add_descriptions = TRUE, quiet = TRUE)
 rpii
-}
 }
 \references{
 \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}

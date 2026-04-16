@@ -125,7 +125,7 @@ filter_itch <- function(infile, outfile,
   end <- max(skip + n_max - 1, -1)
   if (end < start) end <- -1
 
-  if (!quiet && (start != 0 | end != -1))
+  if (!quiet && (start != 0 || end != -1))
     cat(sprintf("[Filter]     skip: %i n_max: %i (%i - %i)\n",
                 skip, n_max, start + 1, end + 1))
 
@@ -154,8 +154,6 @@ filter_itch <- function(infile, outfile,
   # Set the default value of the buffer size
   buffer_size <- check_buffer_size(buffer_size, infile)
 
-  filedate <- get_date_from_filename(infile)
-
   orig_infile <- infile
   # only needed for gz files; gz files are not deleted when the raw file already existed
   raw_file_existed <- file.exists(basename(gsub("\\.gz$", "", infile)))
@@ -174,7 +172,7 @@ filter_itch <- function(infile, outfile,
     unlink(of) # delete the temporary file
   }
 
-  a <- gc()
+  a <- gc() # nolint
 
   report_end(t0, quiet, infile)
 
@@ -184,5 +182,5 @@ filter_itch <- function(infile, outfile,
     unlink(basename(gsub("\\.gz$", "", infile)))
   }
 
-  return(invisible(outfile))
+  invisible(outfile)
 }

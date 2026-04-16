@@ -490,7 +490,7 @@ ggplot() +
   geom_point(data = orders,
              aes(x = as.POSIXct(datetime), y = price, color = buy), alpha = 0.2) +
   geom_step(data = trades, aes(x = as.POSIXct(datetime), y = price), size = 0.2) +
-  facet_grid(stock~., scales = "free_y") +
+  facet_grid(stock ~ ., scales = "free_y") +
   theme_light() +
   labs(title = "Orders and Trades of Three Simulated Stocks",
        subtitle = "Date: 2010-12-24 | Exchange: TEST",

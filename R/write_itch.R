@@ -75,9 +75,10 @@ write_itch <- function(ll, file, add_meta = TRUE,
                   "existing file, this is likely not guaranteed!"))
 
   # check that all lls are about correct
-  chk <- sapply(ll, function(x)
-    is.data.frame(x) &&
-      all(c("msg_type", "stock_locate", "tracking_number", "timestamp") %in% names(x)))
+  chk <- sapply(ll, function(x) {
+    req_types <- c("msg_type", "stock_locate", "tracking_number", "timestamp")
+    is.data.frame(x) && all(req_types %in% names(x))
+  })
   if (!all(chk))
     stop("All elements in ll need to be a data.frame of ITCH messages")
 
@@ -99,5 +100,5 @@ write_itch <- function(ll, file, add_meta = TRUE,
 
   report_end(t0, quiet, file)
 
-  return(invisible(file))
+  invisible(file)
 }

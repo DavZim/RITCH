@@ -7,8 +7,10 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' if (interactive()) {
 #'   list_sample_files()
+#' }
 #' }
 list_sample_files <- function() {
 
@@ -27,14 +29,14 @@ list_sample_files <- function() {
     tt = sapply(cont, function(x) x[3])
   )
 
-  df[, ':=' (
+  df[, ":=" (
     file_size = as.numeric(size),
     last_modified = as.POSIXct(paste(date, time, tt), format = "%m/%d/%Y %H:%M %p", tz = "GMT"),
     exchange = get_exchange_from_filename(file),
     date = get_date_from_filename(file)
   )]
 
-  return(df[, .(file, exchange, date, file_size, last_modified)])
+  df[, .(file, exchange, date, file_size, last_modified)]
 }
 
 
@@ -50,32 +52,38 @@ list_sample_files <- function() {
 #' @param file the name of a specific file, overrules the choice and exchanges arguments
 #' @param exchanges A vector of exchanges, can be NASDAQ, BX, or PSX.
 #' The default value is to consider all exchanges.
-#' @param dir The directory where the files will be saved to, default is current working directory.
+#' @param dir The directory where the files will be saved to, default is current
+#' working directory.
 #' @param force_download If the file should be downloaded even if it already exists locally.
 #' Default value is FALSE.
-#' @param check_md5sum If the md5-sum (hash-value) of the downloaded file should be checked, default value is TRUE.
+#' @param check_md5sum If the md5-sum (hash-value) of the downloaded file should
+#' be checked, default value is TRUE.
 #' @param quiet if TRUE, the status messages are suppressed, defaults to FALSE
 #'
 #' @return an invisible vector of the files
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' download_sample_file()
-#' file <- download_sample_file()
-#' file
+#' \donttest{
+#' if (interactive()) {
+#'   download_sample_file()
+#'   file <- download_sample_file()
+#'   file
 #'
-#' # download a specific sample file
-#' file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
-#' file
+#'   # download a specific sample file
+#'   file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
+#'   file
 #' }
-download_sample_file <- function(choice = c("smallest", "largest", "earliest", "latest",  "random", "all"),
-                                 file = NA,
-                                 exchanges = NA,
-                                 dir = ".",
-                                 force_download = FALSE,
-                                 check_md5sum = TRUE,
-                                 quiet = FALSE) {
+#' }
+download_sample_file <- function(
+  choice = c("smallest", "largest", "earliest", "latest",  "random", "all"),
+  file = NA,
+  exchanges = NA,
+  dir = ".",
+  force_download = FALSE,
+  check_md5sum = TRUE,
+  quiet = FALSE
+) {
   choice <- match.arg(choice)
 
   url <- "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/"
@@ -97,7 +105,7 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
                 largest = 1,
                 earliest = nrow(df),
                 latest = 1,
-                all = 1:nrow(df))
+                all = seq_len(nrow(df)))
 
   if (!is.na(file)) idx <- df$file == file
   df_take <- df[idx, ]
@@ -145,8 +153,8 @@ download_sample_file <- function(choice = c("smallest", "largest", "earliest", "
       }
     }
 
-    return(file)
+    file
   })
 
-  return(invisible(files))
+  invisible(files)
 }

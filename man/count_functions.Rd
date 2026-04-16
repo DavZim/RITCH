@@ -59,17 +59,20 @@ count_rpii(x)
 
 \item{add_meta_data}{if the meta-data of the messages should be added, defaults to FALSE}
 
-\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB), if you have a large amount of RAM, 1e9 (1GB) might be faster}
+\item{buffer_size}{the size of the buffer in bytes, defaults to 1e8 (100 MB),
+if you have a large amount of RAM, 1e9 (1GB) might be faster}
 
 \item{quiet}{if TRUE, the status messages are supressed, defaults to FALSE}
 
-\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped) name already exists.
-if set to TRUE, the existing file is overwritten. Default value is FALSE}
+\item{force_gunzip}{only applies if file is a gz-file and a file with the same (gunzipped)
+name already exists. If set to TRUE, the existing file is overwritten.
+Default value is FALSE}
 
 \item{gz_dir}{a directory where the gz archive is extracted to.
 Only applies if file is a gz archive. Default is \code{\link[=tempdir]{tempdir()}}.}
 
-\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE, the gunzipped raw file will be deleted afterwards.}
+\item{force_cleanup}{only applies if file is a gz-file. If force_cleanup=TRUE,
+the gunzipped raw file will be deleted afterwards.}
 
 \item{x}{a file or a data.table containing the message types and the counts,
 as outputted by \code{count_messages}}

@@ -10,10 +10,13 @@ open_itch_specification()
 the URL (invisible)
 }
 \description{
-The specifications can be found as a PDF \url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
+The specifications can be found as a PDF
+\url{https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf}.
 }
 \examples{
-\dontrun{
-open_itch_specification()
+\donttest{
+if (interactive()) {
+  open_itch_specification()
+}
 }
 }

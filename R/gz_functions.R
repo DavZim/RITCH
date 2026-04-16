@@ -9,7 +9,8 @@
 #'
 #' @param infile the file to be zipped or unzipped
 #' @param outfile the resulting zipped or unzipped file
-#' @param buffer_size the size of the buffer to read in at once, default is 4 times the file.size (max 2Gb).
+#' @param buffer_size the size of the buffer to read in at once,
+#' default is 4 times the file.size (max 2Gb).
 #'
 #' @details Functions are
 #'
@@ -39,7 +40,7 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
   if (file.exists(outfile)) unlink(outfile)
 
   gunzip_file_impl(infile, outfile, buffer_size)
-  return(invisible(outfile))
+  invisible(outfile)
 }
 
 #' @rdname gz_functions
@@ -74,7 +75,7 @@ gzip_file <- function(infile,
   }
 
   gzip_file_impl(infile, outfile, buffer_size)
-  return(invisible(outfile))
+  invisible(outfile)
 }
 
 
@@ -86,18 +87,30 @@ check_and_gunzip <- function(file, dir = dirname(file), buffer_size, force_gunzi
   if (!grepl("\\.gz$", file)) return(file)
 
   outfile <- file.path(dir, basename(gsub("\\.gz$", "", file)))
-  # check if the raw-file at target directory already exists, if so use this (unless force_gunzip = TRUE)
+  # check if the raw-file at target directory already exists, if so use this
+  # (unless force_gunzip = TRUE)
   if (file.exists(outfile) && !quiet && !force_gunzip) {
-    cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip = TRUE)\n",
-                outfile))
+    cat(sprintf(
+      paste(
+        "[INFO] Unzipped file '%s' already found, using that (overwrite with",
+        "force_gunzip = TRUE)\n"
+      ),
+      outfile
+    ))
     return(outfile)
   }
 
-  # check if the raw-file at current directory already exists, if so use this (unless force_gunzip = TRUE)
+  # check if the raw-file at current directory already exists, if so use this
+  # (unless force_gunzip = TRUE)
   if (file.exists(outfile) && !force_gunzip) {
     if (!quiet)
-      cat(sprintf("[INFO] Unzipped file '%s' already found, using that (overwrite with force_gunzip = TRUE)\n",
-                  outfile))
+      cat(sprintf(
+        paste(
+          "[INFO] Unzipped file '%s' already found, using that (overwrite with",
+          "force_gunzip = TRUE)\n"
+        ),
+        outfile
+      ))
     return(outfile)
   } else {
     # if the unzipped file doesnt exist or the force_gunzip flag is set, unzip file
@@ -107,5 +120,5 @@ check_and_gunzip <- function(file, dir = dirname(file), buffer_size, force_gunzi
 
     gunzip_file(file, outfile, buffer_size)
   }
-  return(outfile)
+  outfile
 }

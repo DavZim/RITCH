@@ -22,17 +22,18 @@ get_date_from_filename <- function(file) {
     grepl("NASDAQ_ITCH50(\\.gz)?$", file),
     # format MMDDYYYY
     gsub("(\\d{2})(\\d{2})(\\d{4})", "\\3-\\1-\\2", date_),
-    data.table::fifelse(grepl("S\\d{6}-", file),
-                        # format MMDDYY
-                        gsub("(\\d{2})(\\d{2})(\\d{2})", "20\\3-\\1-\\2", date_),
-                        # format YYYYMMDD
-                        gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", date_)
-                        )
+    data.table::fifelse(
+      grepl("S\\d{6}-", file),
+      # format MMDDYY
+      gsub("(\\d{2})(\\d{2})(\\d{2})", "20\\3-\\1-\\2", date_),
+      # format YYYYMMDD
+      gsub("(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3", date_)
+    )
   )
 
   date_ <- try(as.POSIXct(date_, tz = "GMT"), silent = TRUE)
   if (inherits(date_, "try-error")) date_ <- NA
-  return(date_)
+  date_
 }
 
 #' Returns the exchange from an ITCH-filename
@@ -53,7 +54,7 @@ get_exchange_from_filename <- function(file) {
     res <- regmatches(file, regexpr("(?<=-v50-)[a-z]+", file, perl = TRUE))
   res <- toupper(res)
   if (length(res) == 0) res <- NA
-  return(res)
+  res
 }
 
 #' Adds meta information (date and exchange) to an itch filename
@@ -116,25 +117,28 @@ add_meta_to_filename <- function(file, date, exchange) {
     if (has_gz) file <- paste0(file, ".gz")
   }
 
-  return(file)
+  file
 }
 
 
 #' Opens the ITCH Specification PDF
 #'
-#' The specifications can be found as a PDF <https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf>.
+#' The specifications can be found as a PDF
+#' <https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf>.
 #'
 #' @return the URL (invisible)
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' open_itch_specification()
+#' \donttest{
+#' if (interactive()) {
+#'   open_itch_specification()
+#' }
 #' }
 open_itch_specification <- function() {
-  url <- "https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf"
+  url <- "https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHspecification.pdf" # nolint
   browseURL(url)
-  return(invisible(url))
+  invisible(url)
 }
 
 #' Opens the ITCH sample page
@@ -145,13 +149,15 @@ open_itch_specification <- function() {
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' open_itch_sample_server()
+#' \donttest{
+#' if (interactive()) {
+#'   open_itch_sample_server()
+#' }
 #' }
 open_itch_sample_server <- function() {
   url <- "https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/"
   browseURL(url)
-  return(invisible(url))
+  invisible(url)
 }
 
 check_msg_types <- function(filter_msg_type, quiet) {
@@ -171,7 +177,7 @@ check_msg_types <- function(filter_msg_type, quiet) {
                paste(filter_msg_type, collapse = "', '"),
                "'\n"))
 
-  return(filter_msg_type)
+  filter_msg_type
 }
 
 check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
@@ -184,12 +190,11 @@ check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
   txt <- "[Filter]     timestamp: "
   if (lmin != lmax) {
     # either vector has to have size 1 the other 0
-    if ((lmin == 0 && lmax == 1) ||
-        (lmin == 1 && lmax == 0)) {
+    if ((lmin == 0 && lmax == 1) || (lmin == 1 && lmax == 0)) {
       if (lmin == 0) {
         min_timestamp <- 0
         txt <- paste0(txt, "<= ", bit64::as.integer64(max_timestamp))
-      } else { # lmax == 0
+      } else { # eg lmax == 0
         max_timestamp <- -1
         txt <- paste0(txt, ">= ", bit64::as.integer64(min_timestamp))
       }
@@ -197,7 +202,7 @@ check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
       stop(paste("min_ and and max_timestamp have to have the same length",
                  "or only one has to have size 1!"))
     }
-  } else { # lmin == lmax
+  } else { # eg lmin == lmax
     txt <- paste0(txt,
                   paste(bit64::as.integer64(min_timestamp),
                         bit64::as.integer64(max_timestamp),
@@ -208,7 +213,7 @@ check_timestamps <- function(min_timestamp, max_timestamp, quiet) {
   min_timestamp <- bit64::as.integer64(min_timestamp)
   max_timestamp <- bit64::as.integer64(max_timestamp)
 
-  return(list(min = min_timestamp, max = max_timestamp))
+  list(min = min_timestamp, max = max_timestamp)
 }
 
 check_stock_filters <- function(filter_stock, stock_directory,
@@ -216,7 +221,10 @@ check_stock_filters <- function(filter_stock, stock_directory,
 
   if (!(length(filter_stock) == 1 && is.na(filter_stock))) {
     if (length(stock_directory) == 1 && is.na(stock_directory)) {
-      warning("filter_stock is given, but no stock_directory is specified. Trying to extract stock directory from file\n")
+      warning(paste(
+        "filter_stock is given, but no stock_directory is specified.",
+        "Trying to extract stock directory from file\n"
+      ))
       stock_directory <- read_stock_directory(infile, quiet = TRUE)
     }
 
@@ -228,9 +236,9 @@ check_stock_filters <- function(filter_stock, stock_directory,
     }
     # extend locate code by the stocks:
     filter_stock_locate <- c(filter_stock_locate,
-                             stock_directory[stock %chin%filter_stock, stock_locate])
+                             stock_directory[stock %chin% filter_stock, stock_locate])
   }
-  return(filter_stock_locate)
+  filter_stock_locate
 }
 
 check_buffer_size <- function(buffer_size, file) {
@@ -248,7 +256,7 @@ check_buffer_size <- function(buffer_size, file) {
   if (buffer_size > 5e9)
     warning(paste("You are trying to allocate a large array on the heap, if",
                   "the function crashes, try to use a smaller buffer_size"))
-  return(buffer_size)
+  buffer_size
 }
 
 #' Formats a number of bytes

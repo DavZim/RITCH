@@ -1,3 +1,8 @@
+# RITCH 0.1.30
+
+* fix CRAN comments
+* replace `\dontrun{}` examples with executable examples or `\donttest{}`
+
 # RITCH 0.1.29
 
 * fix failing CRAN NOTEs (URL + unneeded files)

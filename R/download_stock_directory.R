@@ -16,7 +16,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' if (interactive()) {
 #'   download_stock_directory("BX", "2019-07-02")
 #'   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
 #'   download_stock_directory("BX", "2019-07-02", cache = TRUE)
@@ -24,6 +25,7 @@
 #'   download_stock_directory("BX", "2019-07-02", cache = "stock_directory")
 #'   dir.exists("stock_directory")
 #'   list.files("stock_directory")
+#' }
 #' }
 download_stock_directory <- function(exchange, date, cache = FALSE,
                                      quiet = FALSE) {
@@ -41,7 +43,7 @@ download_stock_directory <- function(exchange, date, cache = FALSE,
   if (length(exchange) > 1 || length(date) > 1) {
     vals <- expand.grid(ex = exchange, d = date, stringsAsFactors = FALSE)
 
-    res <- lapply(1:nrow(vals),
+    res <- lapply(seq_len(nrow(vals)),
                   function(i) download_stock_directory(vals$ex[i], vals$d[i]))
 
     d <- data.table::rbindlist(res)
@@ -76,9 +78,8 @@ download_stock_directory <- function(exchange, date, cache = FALSE,
     d <- data.table::fread(file, showProgress = !quiet)
 
     data.table::setnames(d, c("ticker", "stock_locate"))
-    d[, ':=' (exchange = toupper(exchange), date = date)]
+    d[, ":=" (exchange = toupper(exchange), date = date)]
   }
 
-  return(d[])
+  d[]
 }
-

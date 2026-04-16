@@ -3,7 +3,7 @@ library(tinytest)
 library(data.table)
 setDTthreads(2)
 
-as.int64 <- bit64::as.integer64
+as.int64 <- bit64::as.integer64 # nolint
 # overload table for better comparison
 table <- function(x) {
   tb <- base::table(x)
@@ -448,7 +448,7 @@ expect_equal(
 # combine multiple filters act as an AND combination!
 # skip and n_max act as a filter within the filtered results
 
-# skip = 10
+# eg skip = 10
 expect_equal(
   orders[stock == "ALC" &
            timestamp >= start_ts &

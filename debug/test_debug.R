@@ -34,7 +34,7 @@ test_hex_to_dt <- function(hex = NA, dt = NA, hex_to_dt_func) {
 
     # Check Message Lengths
     xx <- strsplit(gsub(" ", "", hex), split = "")[[1]]
-    nibbles <- paste0(xx[c(T, F)], xx[c(F, T)])
+    nibbles <- paste0(xx[c(TRUE, FALSE)], xx[c(FALSE, TRUE)])
     expect_equal(length(nibbles),
                  sum(as.numeric(dbg_get_message_length(dt$msg_type))))
   }
@@ -88,7 +88,7 @@ hex_f <- paste(
   "00 00", # tracking number 0
   "16 eb 55 2c 88 24", # timestamp 25200002107428
   "00 00 00 00 00 00 00 04", # order ref 4
-  "42", # buy == TRUE -> 'B'
+  "42", # buy == TRUE => 'B'
   "00 00 2e 7c", # shares 11900
   "55 53 4f 20 20 20 20 20", # stock 'USO     ' (length 8)
   "00 01 fa 40", # price 129600 (12.96)

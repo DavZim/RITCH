@@ -1,5 +1,4 @@
-if (requireNamespace("tinytest", quietly=TRUE) &&
-    utils::packageVersion("tinytest") >= "1.0.0") {
+if (requireNamespace("tinytest", quietly = TRUE) && utils::packageVersion("tinytest") >= "1.0.0") {
 
   ## Set a seed to make the test deterministic
   set.seed(42)
