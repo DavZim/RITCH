@@ -52,8 +52,8 @@ list_sample_files <- function() {
 #' @param file the name of a specific file, overrules the choice and exchanges arguments
 #' @param exchanges A vector of exchanges, can be NASDAQ, BX, or PSX.
 #' The default value is to consider all exchanges.
-#' @param dir The directory where the files will be saved to, default is current
-#' working directory.
+#' @param dir The directory where the files will be saved to. Default is
+#' [tempdir()].
 #' @param force_download If the file should be downloaded even if it already exists locally.
 #' Default value is FALSE.
 #' @param check_md5sum If the md5-sum (hash-value) of the downloaded file should
@@ -66,12 +66,12 @@ list_sample_files <- function() {
 #' @examples
 #' \donttest{
 #' if (interactive()) {
-#'   download_sample_file()
-#'   file <- download_sample_file()
+#'   download_sample_file(dir = tempdir())
+#'   file <- download_sample_file(dir = tempdir())
 #'   file
 #'
 #'   # download a specific sample file
-#'   file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
+#'   file <- download_sample_file(file = "2019130.BX_ITCH_50.gz", dir = tempdir())
 #'   file
 #' }
 #' }
@@ -79,7 +79,7 @@ download_sample_file <- function(
   choice = c("smallest", "largest", "earliest", "latest",  "random", "all"),
   file = NA,
   exchanges = NA,
-  dir = ".",
+  dir = tempdir(),
   force_download = FALSE,
   check_md5sum = TRUE,
   quiet = FALSE

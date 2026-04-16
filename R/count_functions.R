@@ -51,7 +51,8 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
 
   orig_file <- file
   # only needed for gz files; gz files are not deleted when the raw file already existed
-  raw_file_existed <- file.exists(basename(gsub("\\.gz$", "", file)))
+  raw_file <- file.path(gz_dir, basename(gsub("\\.gz$", "", file)))
+  raw_file_existed <- file.exists(raw_file)
   file <- check_and_gunzip(file, gz_dir, buffer_size, force_gunzip, quiet)
   df <- count_messages_impl(file, buffer_size, quiet)
 
@@ -65,7 +66,7 @@ count_messages <- function(file, add_meta_data = FALSE, buffer_size = -1,
   report_end(t0, quiet, orig_file)
 
   if (grepl("\\.gz$", orig_file) && force_cleanup && !raw_file_existed) {
-    unlink(basename(gsub("\\.gz$", "", file)))
+    unlink(file)
     if (!quiet) cat(sprintf("[Cleanup]    Removing file '%s'\n", file))
   }
 

@@ -7,8 +7,8 @@
 #' @param date The date, should be of class Date. If not the value is converted
 #' using `as.Date`.
 #' @param cache If the stock directory should be cached, can be set to TRUE
-#' to save the stock directories in the working directory or a character for a
-#' target directory.
+#' to save stock directories in [tempdir()], or a character for a target
+#' directory.
 #' @param quiet If the download function should be quiet, default is FALSE.
 #'
 #' @return a data.table of the tickers, the respective stock locate codes, and
@@ -22,9 +22,10 @@
 #'   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
 #'   download_stock_directory("BX", "2019-07-02", cache = TRUE)
 #'
-#'   download_stock_directory("BX", "2019-07-02", cache = "stock_directory")
-#'   dir.exists("stock_directory")
-#'   list.files("stock_directory")
+#'   cache_dir <- file.path(tempdir(), "stock_directory")
+#'   download_stock_directory("BX", "2019-07-02", cache = cache_dir)
+#'   dir.exists(cache_dir)
+#'   list.files(cache_dir)
 #' }
 #' }
 download_stock_directory <- function(exchange, date, cache = FALSE,
@@ -43,8 +44,9 @@ download_stock_directory <- function(exchange, date, cache = FALSE,
   if (length(exchange) > 1 || length(date) > 1) {
     vals <- expand.grid(ex = exchange, d = date, stringsAsFactors = FALSE)
 
-    res <- lapply(seq_len(nrow(vals)),
-                  function(i) download_stock_directory(vals$ex[i], vals$d[i]))
+    res <- lapply(seq_len(nrow(vals)), function(i) {
+      download_stock_directory(vals$ex[i], vals$d[i], cache = cache, quiet = quiet)
+    })
 
     d <- data.table::rbindlist(res)
 
@@ -54,12 +56,9 @@ download_stock_directory <- function(exchange, date, cache = FALSE,
     file <- url
 
     if (is.character(cache) || is.logical(cache) && cache) {
-
-      destfile <- filename
-      if (is.character(cache)) {
-        if (!dir.exists(cache)) dir.create(cache)
-        destfile <- file.path(cache, filename)
-      }
+      cache_dir <- if (is.character(cache)) cache else tempdir()
+      if (!dir.exists(cache_dir)) dir.create(cache_dir, recursive = TRUE)
+      destfile <- file.path(cache_dir, filename)
 
       txt <- sprintf("for exchange '%s' and date '%s'",
                      exchange, format(date, "%Y-%m-%d"))

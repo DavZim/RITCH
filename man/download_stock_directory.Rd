@@ -13,8 +13,8 @@ download_stock_directory(exchange, date, cache = FALSE, quiet = FALSE)
 using \code{as.Date}.}
 
 \item{cache}{If the stock directory should be cached, can be set to TRUE
-to save the stock directories in the working directory or a character for a
-target directory.}
+to save stock directories in \code{\link[=tempdir]{tempdir()}}, or a character for a target
+directory.}
 
 \item{quiet}{If the download function should be quiet, default is FALSE.}
 }
@@ -33,9 +33,10 @@ if (interactive()) {
   download_stock_directory(c("BX", "NDQ"), c("2019-07-02", "2019-07-03"))
   download_stock_directory("BX", "2019-07-02", cache = TRUE)
 
-  download_stock_directory("BX", "2019-07-02", cache = "stock_directory")
-  dir.exists("stock_directory")
-  list.files("stock_directory")
+  cache_dir <- file.path(tempdir(), "stock_directory")
+  download_stock_directory("BX", "2019-07-02", cache = cache_dir)
+  dir.exists(cache_dir)
+  list.files(cache_dir)
 }
 }
 }

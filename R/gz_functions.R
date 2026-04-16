@@ -29,7 +29,8 @@ NULL
 #'
 #' @examples
 #' # uncompress file
-#' (outfile <- gunzip_file(gzfile, "tmp"))
+#' tmp_raw <- tempfile(pattern = "ritch_raw_", tmpdir = tempdir())
+#' (outfile <- gunzip_file(gzfile, tmp_raw))
 #' file.info(outfile)
 #' unlink(outfile)
 #'
@@ -50,9 +51,11 @@ gunzip_file <- function(infile, outfile = gsub("\\.gz$", "", infile),
 #'
 #' @examples
 #' # compress file
-#' (outfile <- gzip_file(file))
+#' tmp_raw <- tempfile(pattern = "ritch_raw_", tmpdir = tempdir())
+#' file.copy(file, tmp_raw)
+#' (outfile <- gzip_file(tmp_raw))
 #' file.info(outfile)
-#' unlink(outfile)
+#' unlink(c(tmp_raw, outfile))
 gzip_file <- function(infile,
                       outfile = NA,
                       buffer_size = min(4 * file.size(infile), 2e9)) {
@@ -60,12 +63,7 @@ gzip_file <- function(infile,
   if (!file.exists(infile)) stop(sprintf("File '%s' not found!", infile))
 
   if (is.na(outfile)) {
-    outfile <- ifelse(grepl("\\.gz$", infile),
-                      infile,
-                      paste0(infile, ".gz"))
-    # remove path
-    xx <- strsplit(outfile, "\\\\|/")[[1]]
-    outfile <- xx[length(xx)]
+    outfile <- if (grepl("\\.gz$", infile)) infile else paste0(infile, ".gz")
   }
   if (file.exists(outfile)) unlink(outfile)
 

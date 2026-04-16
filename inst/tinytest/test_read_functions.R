@@ -17,6 +17,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 gzfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 file_raw <- strsplit(file, "/")[[1]]
 file_raw <- file_raw[length(file_raw)]
+file_raw_temp <- file.path(tempdir(), file_raw)
 
 expect_true(file.exists(file))
 expect_true(file.info(file)[["size"]] == 465048)
@@ -42,13 +43,13 @@ ct2 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE,
 expect_equal(ct, ct2)
 expect_true(file.exists(file.path(tempdir(),
                                   gsub("\\.gz$", "", basename(gzfile)))))
-unlink(file_raw)
+unlink(file_raw_temp)
 
 # check that force_cleanup works
 ct3 <- count_messages(gzfile, quiet = TRUE, force_gunzip = TRUE,
                       force_cleanup = TRUE)
 expect_equal(ct, ct3)
-expect_false(file.exists(file_raw))
+expect_false(file.exists(file_raw_temp))
 
 
 #### Orders

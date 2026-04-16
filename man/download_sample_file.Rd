@@ -8,7 +8,7 @@ download_sample_file(
   choice = c("smallest", "largest", "earliest", "latest", "random", "all"),
   file = NA,
   exchanges = NA,
-  dir = ".",
+  dir = tempdir(),
   force_download = FALSE,
   check_md5sum = TRUE,
   quiet = FALSE
@@ -23,8 +23,8 @@ earliest (date-wise), latest, random, or all.}
 \item{exchanges}{A vector of exchanges, can be NASDAQ, BX, or PSX.
 The default value is to consider all exchanges.}
 
-\item{dir}{The directory where the files will be saved to, default is current
-working directory.}
+\item{dir}{The directory where the files will be saved to. Default is
+\code{\link[=tempdir]{tempdir()}}.}
 
 \item{force_download}{If the file should be downloaded even if it already exists locally.
 Default value is FALSE.}
@@ -47,12 +47,12 @@ There are about 17 files in total. Downloading all might take a considerable amo
 \examples{
 \donttest{
 if (interactive()) {
-  download_sample_file()
-  file <- download_sample_file()
+  download_sample_file(dir = tempdir())
+  file <- download_sample_file(dir = tempdir())
   file
 
   # download a specific sample file
-  file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
+  file <- download_sample_file(file = "2019130.BX_ITCH_50.gz", dir = tempdir())
   file
 }
 }

@@ -5,7 +5,7 @@ Version: 0.1.30
 Authors@R: c(
     person("David", "Zimmermann-Kollenda", , "david_j_zimmermann@hotmail.com", role = c("aut", "cre"))
   )
-Description: Allows to efficiently parse, filter, and write binary ITCH Files (Version 5.0) containing detailed financial transactions as distributed by NASDAQ to a data.table. Additionally, there are functions to interact with the data server of NASDAQ at <https://emi.nasdaq.com/ITCH>
+Description: Allows to efficiently parse, filter, and write binary ITCH Files (Version 5.0) containing detailed financial transactions as distributed by NASDAQ to a data.table. Additionally, there are functions to interact with the data server of NASDAQ at <https://emi.nasdaq.com/ITCH>.
 License: MIT + file LICENSE
 URL: https://davzim.github.io/RITCH/,
     https://github.com/DavZim/RITCH
