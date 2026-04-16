@@ -174,7 +174,7 @@ get_modifications(file, ...)
 - force_gunzip:
 
   only applies if the input file is a gz-archive and a file with the
-  same (gunzipped) name already exists. if set to TRUE, the existing
+  same (gunzipped) name already exists. If set to TRUE, the existing
   file is overwritten. Default value is FALSE
 
 - gz_dir:
@@ -296,7 +296,7 @@ od <- read_orders(file, quiet = FALSE) # note quiet = FALSE is the default
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 2.60MB/s
+#> [Done]       in 0.15 secs at 3.12MB/s
 tr <- read_trades(file, quiet = TRUE)
 
 ## Alternatively
@@ -399,7 +399,7 @@ od <- read_orders(file, skip = 3, n_max = 10)
 #> [Filter]     skip: 3 n_max: 10 (4 - 13)
 #> [Counting]   num 'orders' messages 20
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 2.63MB/s
+#> [Done]       in 0.13 secs at 3.53MB/s
 
 # a message count can be provided for slightly faster reads
 msg_count <- count_messages(file, quiet = TRUE)
@@ -407,24 +407,24 @@ od <- read_orders(file, n_max = msg_count)
 #> [Filter]     skip: 0 n_max: 5000 (1 - 5000)
 #> [Counting]   num 'orders' messages 10,000
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 2.56MB/s
+#> [Done]       in 0.14 secs at 3.42MB/s
 
 ## .gz archive functionality
 # .gz archives will be automatically unzipped
 gz_file <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH")
 od <- read_orders(gz_file)
-#> [INFO] Unzipped file '/tmp/RtmpH56qgV/ex20101224.TEST_ITCH_50' already found, using that (overwrite with force_gunzip = TRUE)
+#> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/Rtmp0LDw4D/ex20101224.TEST_ITCH_50'
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 880.32KB/s
+#> [Done]       in 0.14 secs at 1.15MB/s
 # force a decompress and delete the decompressed file afterwards
 od <- read_orders(gz_file, force_gunzip = TRUE, force_cleanup = TRUE)
-#> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/RtmpH56qgV/ex20101224.TEST_ITCH_50'
+#> [Decompressing] '/home/runner/work/_temp/Library/RITCH/extdata/ex20101224.TEST_ITCH_50.gz' to '/tmp/Rtmp0LDw4D/ex20101224.TEST_ITCH_50'
 #> [Counting]   num messages 12,012
 #> [Counting]   num 'orders' messages 5,000
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 890.25KB/s
+#> [Done]       in 0.13 secs at 1.20MB/s
 
 ## read_itch()
 otm <- read_itch(file, c("orders", "trades"), quiet = TRUE)
@@ -520,40 +520,35 @@ ts
 #> 3:             <NA>
 
 ## read_reg_sho()
-if (FALSE) { # \dontrun{
 # note the example file has no reg SHO messages
 rs <- read_reg_sho(file, add_descriptions = TRUE, quiet = TRUE)
 rs
-} # }
+#> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,regsho_action...
 
 ## read_market_participant_states()
-if (FALSE) { # \dontrun{
 # note the example file has no market participant states
 mps <- read_market_participant_states(file, add_descriptions = TRUE,
                                       quiet = TRUE)
 mps
-} # }
+#> Empty data.table (0 rows and 14 cols): msg_type,stock_locate,tracking_number,timestamp,mpid,stock...
 
 ## read_mwcb()
-if (FALSE) { # \dontrun{
 # note the example file has no circuit breakers messages
 mwcb <- read_mwcb(file, quiet = TRUE)
 mwcb
-} # }
+#> Empty data.table (0 rows and 11 cols): msg_type,stock_locate,tracking_number,timestamp,level1,level2...
 
 ## read_ipo()
-if (FALSE) { # \dontrun{
 # note the example file has no IPOs
 ipo <- read_ipo(file, add_descriptions = TRUE, quiet = TRUE)
 ipo
-} # }
+#> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,release_time...
 
 ## read_luld()
-if (FALSE) { # \dontrun{
 # note the example file has no LULD messages
 luld <- read_luld(file, quiet = TRUE)
 luld
-} # }
+#> Empty data.table (0 rows and 12 cols): msg_type,stock_locate,tracking_number,timestamp,stock,reference_price...
 
 ## read_orders()
 od <- read_orders(file, quiet = TRUE)
@@ -685,16 +680,14 @@ tr
 #> 5000: 2010-12-24T15:59:57.526823001+00:00     TEST
 
 ## read_noii()
-if (FALSE) { # \dontrun{
 # note the example file has no NOII messages
 noii <- read_noii(file, add_descriptions = TRUE, quiet = TRUE)
 noii
-} # }
+#> Empty data.table (0 rows and 19 cols): msg_type,stock_locate,tracking_number,timestamp,paired_shares,imbalance_shares...
 
 ## read_rpii()
-if (FALSE) { # \dontrun{
 # note the example file has no RPII messages
 rpii <- read_rpii(file, add_descriptions = TRUE, quiet = TRUE)
 rpii
-} # }
+#> Empty data.table (0 rows and 10 cols): msg_type,stock_locate,tracking_number,timestamp,stock,interest_flag...
 ```

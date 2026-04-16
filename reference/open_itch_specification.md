@@ -16,7 +16,9 @@ the URL (invisible)
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-open_itch_specification()
-} # }
+# \donttest{
+if (interactive()) {
+  open_itch_specification()
+}
+# }
 ```

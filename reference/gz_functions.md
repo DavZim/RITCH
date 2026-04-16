@@ -52,24 +52,32 @@ gzfile <- system.file("extdata", "ex20101224.TEST_ITCH_50.gz", package = "RITCH"
 file   <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 
 # uncompress file
-(outfile <- gunzip_file(gzfile, "tmp"))
-#> [1] "tmp"
+tmp_raw <- tempfile(pattern = "ritch_raw_", tmpdir = tempdir())
+(outfile <- gunzip_file(gzfile, tmp_raw))
+#> [1] "/tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66"
 file.info(outfile)
-#>       size isdir mode               mtime               ctime
-#> tmp 465048 FALSE  644 2026-04-10 19:32:46 2026-04-10 19:32:46
-#>                   atime  uid  gid  uname grname
-#> tmp 2026-04-10 19:32:46 1001 1001 runner runner
+#>                                          size isdir mode               mtime
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 465048 FALSE  644 2026-04-16 14:42:52
+#>                                                      ctime               atime
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 2026-04-16 14:42:52 2026-04-16 14:42:52
+#>                                         uid  gid  uname grname
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 1001 1001 runner runner
 unlink(outfile)
 
 # compress file
-(outfile <- gzip_file(file))
-#> [1] "ex20101224.TEST_ITCH_50.gz"
+tmp_raw <- tempfile(pattern = "ritch_raw_", tmpdir = tempdir())
+file.copy(file, tmp_raw)
+#> [1] TRUE
+(outfile <- gzip_file(tmp_raw))
+#> [1] "/tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz"
 file.info(outfile)
-#>                              size isdir mode               mtime
-#> ex20101224.TEST_ITCH_50.gz 159965 FALSE  644 2026-04-10 19:32:46
-#>                                          ctime               atime  uid  gid
-#> ex20101224.TEST_ITCH_50.gz 2026-04-10 19:32:46 2026-04-10 19:32:46 1001 1001
-#>                             uname grname
-#> ex20101224.TEST_ITCH_50.gz runner runner
-unlink(outfile)
+#>                                             size isdir mode               mtime
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 159965 FALSE  644 2026-04-16 14:42:52
+#>                                                         ctime
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 2026-04-16 14:42:52
+#>                                                         atime  uid  gid  uname
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 2026-04-16 14:42:52 1001 1001 runner
+#>                                           grname
+#> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz runner
+unlink(c(tmp_raw, outfile))
 ```

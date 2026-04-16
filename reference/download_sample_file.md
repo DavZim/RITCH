@@ -9,7 +9,7 @@ download_sample_file(
   choice = c("smallest", "largest", "earliest", "latest", "random", "all"),
   file = NA,
   exchanges = NA,
-  dir = ".",
+  dir = tempdir(),
   force_download = FALSE,
   check_md5sum = TRUE,
   quiet = FALSE
@@ -35,8 +35,8 @@ download_sample_file(
 
 - dir:
 
-  The directory where the files will be saved to, default is current
-  working directory.
+  The directory where the files will be saved to. Default is
+  [`tempdir()`](https://rdrr.io/r/base/tempfile.html).
 
 - force_download:
 
@@ -65,13 +65,15 @@ considerable amount of time.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-download_sample_file()
-file <- download_sample_file()
-file
+# \donttest{
+if (interactive()) {
+  download_sample_file(dir = tempdir())
+  file <- download_sample_file(dir = tempdir())
+  file
 
-# download a specific sample file
-file <- download_sample_file(file = "2019130.BX_ITCH_50.gz")
-file
-} # }
+  # download a specific sample file
+  file <- download_sample_file(file = "2019130.BX_ITCH_50.gz", dir = tempdir())
+  file
+}
+# }
 ```

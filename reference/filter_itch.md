@@ -139,7 +139,7 @@ filter_itch(
 - force_gunzip:
 
   only applies if the input file is a gz-archive and a file with the
-  same (gunzipped) name already exists. if set to TRUE, the existing
+  same (gunzipped) name already exists. If set to TRUE, the existing
   file is overwritten. Default value is FALSE
 
 - force_cleanup:
@@ -178,13 +178,13 @@ filter_itch(
 #> [Filter]     msg_type: 'R', 'A', 'F', 'P', 'Q', 'B'
 #> [Bytes]      scanned 465048, filtered 8527
 #> [Messages]   scanned 12012, filtered 203
-#> [Done]       in 0.17 secs at 2.66MB/s
+#> [Done]       in 0.13 secs at 3.58MB/s
 
 # expecting 100 orders, 100 trades, and 3 stock_directory entries
 count_messages(outfile)
 #> [Counting]   203 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 38.87MB/s
+#> [Done]       in 0.00 secs at 47.81MB/s
 #>     msg_type count
 #>       <char> <i64>
 #>  1:        S     0
@@ -219,7 +219,7 @@ res  <- read_itch(outfile, c("orders", "trades", "stock_directory"))
 #> [Counting]   num 'orders' messages 100
 #> [Counting]   num 'trades' messages 100
 #> [Converting] to data.table
-#> [Done]       in 0.17 secs at 49.18KB/s
+#> [Done]       in 0.13 secs at 66.83KB/s
 sapply(res, nrow)
 #>          orders          trades stock_directory 
 #>             100             100               3 
@@ -232,7 +232,7 @@ res2 <- read_itch(infile,  c("orders", "trades", "stock_directory"),
 #> [Counting]   num 'orders' messages 200
 #> [Counting]   num 'trades' messages 300
 #> [Converting] to data.table
-#> [Done]       in 0.18 secs at 2.63MB/s
+#> [Done]       in 0.13 secs at 3.66MB/s
 
 all.equal(res, res2)
 #> [1] TRUE

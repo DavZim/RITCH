@@ -64,7 +64,7 @@ count_rpii(x)
 - force_gunzip:
 
   only applies if file is a gz-file and a file with the same (gunzipped)
-  name already exists. if set to TRUE, the existing file is overwritten.
+  name already exists. If set to TRUE, the existing file is overwritten.
   Default value is FALSE
 
 - gz_dir:
@@ -155,7 +155,7 @@ file <- system.file("extdata", "ex20101224.TEST_ITCH_50", package = "RITCH")
 count_messages(file)
 #> [Counting]   12,012 total messages found
 #> [Converting] to data.table
-#> [Done]       in 0.00 secs at 708.00MB/s
+#> [Done]       in 0.00 secs at 785.25MB/s
 #>     msg_type count
 #>       <char> <i64>
 #>  1:        S     6

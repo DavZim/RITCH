@@ -1,5 +1,16 @@
 # Changelog
 
+## RITCH 0.1.30
+
+- fix CRAN comments
+- replace `\dontrun{}` examples with executable examples or
+  `\donttest{}`
+- avoid writing to user working directory by default in write-related
+  helpers and examples/tests
+  ([`download_sample_file()`](https://davzim.github.io/RITCH/reference/download_sample_file.md),
+  `download_stock_directory(cache = TRUE)`,
+  [`gzip_file()`](https://davzim.github.io/RITCH/reference/gz_functions.md))
+
 ## RITCH 0.1.29
 
 - fix failing CRAN NOTEs (URL + unneeded files)

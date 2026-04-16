@@ -84,8 +84,8 @@ write_itch(sys, outfile)
 #> [Counting]   6 messages (84 bytes) found
 #> [Converting] to binary .
 #> [Writing]    to file
-#> [Outfile]    '/tmp/RtmpH56qgV/file19d576781db3_20101224.TEST_ITCH_50'
-#> [Done]       in 0.00 secs at 89.92KB/s
+#> [Outfile]    '/tmp/Rtmp0LDw4D/file19f14bc35de8_20101224.TEST_ITCH_50'
+#> [Done]       in 0.00 secs at 102.96KB/s
 
 # create a list of events, stock directory, and orders and write to a file
 sdir <- read_stock_directory(infile, quiet = TRUE)
@@ -96,6 +96,6 @@ write_itch(ll, outfile)
 #> [Counting]   5,009 messages (190,219 bytes) found
 #> [Converting] to binary .
 #> [Writing]    to file
-#> [Outfile]    '/tmp/RtmpH56qgV/file19d576781db3_20101224.TEST_ITCH_50'
-#> [Done]       in 0.02 secs at 11.98MB/s
+#> [Outfile]    '/tmp/Rtmp0LDw4D/file19f14bc35de8_20101224.TEST_ITCH_50'
+#> [Done]       in 0.02 secs at 12.01MB/s
 ```

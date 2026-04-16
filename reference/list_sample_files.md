@@ -15,7 +15,9 @@ a data.table of the files
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
+if (interactive()) {
   list_sample_files()
-} # }
+}
+# }
 ```

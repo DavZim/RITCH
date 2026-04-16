@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RITCH</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.30</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,8 @@
 
 
 <dt id="arg-buffer-size">buffer_size<a class="anchor" aria-label="anchor" href="#arg-buffer-size"></a></dt>
-<dd><p>the size of the buffer to read in at once, default is 4 times the file.size (max 2Gb).</p></dd>
+<dd><p>the size of the buffer to read in at once,
+default is 4 times the file.size (max 2Gb).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -85,26 +86,34 @@
 <span class="r-in"><span><span class="va">file</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ex20101224.TEST_ITCH_50"</span>, package <span class="op">=</span> <span class="st">"RITCH"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># uncompress file</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">outfile</span> <span class="op">&lt;-</span> <span class="fu">gunzip_file</span><span class="op">(</span><span class="va">gzfile</span>, <span class="st">"tmp"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tmp"</span>
+<span class="r-in"><span><span class="va">tmp_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"ritch_raw_"</span>, tmpdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">outfile</span> <span class="op">&lt;-</span> <span class="fu">gunzip_file</span><span class="op">(</span><span class="va">gzfile</span>, <span class="va">tmp_raw</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       size isdir mode               mtime               ctime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tmp 465048 FALSE  644 2026-04-10 19:32:46 2026-04-10 19:32:46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   atime  uid  gid  uname grname</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tmp 2026-04-10 19:32:46 1001 1001 runner runner</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                          size isdir mode               mtime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 465048 FALSE  644 2026-04-16 14:42:52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                      ctime               atime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 2026-04-16 14:42:52 2026-04-16 14:42:52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                         uid  gid  uname grname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f15abafe66 1001 1001 runner runner</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># compress file</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">outfile</span> <span class="op">&lt;-</span> <span class="fu">gzip_file</span><span class="op">(</span><span class="va">file</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ex20101224.TEST_ITCH_50.gz"</span>
+<span class="r-in"><span><span class="va">tmp_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"ritch_raw_"</span>, tmpdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="va">file</span>, <span class="va">tmp_raw</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="op">(</span><span class="va">outfile</span> <span class="op">&lt;-</span> <span class="fu">gzip_file</span><span class="op">(</span><span class="va">tmp_raw</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              size isdir mode               mtime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ex20101224.TEST_ITCH_50.gz 159965 FALSE  644 2026-04-10 19:32:46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                          ctime               atime  uid  gid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ex20101224.TEST_ITCH_50.gz 2026-04-10 19:32:46 2026-04-10 19:32:46 1001 1001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             uname grname</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ex20101224.TEST_ITCH_50.gz runner runner</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                             size isdir mode               mtime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 159965 FALSE  644 2026-04-16 14:42:52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         ctime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 2026-04-16 14:42:52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         atime  uid  gid  uname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz 2026-04-16 14:42:52 1001 1001 runner</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           grname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/Rtmp0LDw4D/ritch_raw_19f123e19245.gz runner</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">tmp_raw</span>, <span class="va">outfile</span><span class="op">)</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

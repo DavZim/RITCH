@@ -9,7 +9,7 @@ files. The messages are written to another ITCH file."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">RITCH</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.29</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.30</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -166,8 +166,9 @@ if you have a large amount of RAM, 1e9 (1GB) might be faster</p></dd>
 
 
 <dt id="arg-force-gunzip">force_gunzip<a class="anchor" aria-label="anchor" href="#arg-force-gunzip"></a></dt>
-<dd><p>only applies if the input file is a gz-archive and a file with the same (gunzipped) name already exists.
-if set to TRUE, the existing file is overwritten. Default value is FALSE</p></dd>
+<dd><p>only applies if the input file is a gz-archive and a file with
+the same (gunzipped) name already exists.
+If set to TRUE, the existing file is overwritten. Default value is FALSE</p></dd>
 
 
 <dt id="arg-force-cleanup">force_cleanup<a class="anchor" aria-label="anchor" href="#arg-force-cleanup"></a></dt>
@@ -204,13 +205,13 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Filter]     msg_type: 'R', 'A', 'F', 'P', 'Q', 'B'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Bytes]      scanned 465048, filtered 8527</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Messages]   scanned 12012, filtered 203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.17 secs at 2.66MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.58MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># expecting 100 orders, 100 trades, and 3 stock_directory entries</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="count_functions.html">count_messages</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   203 total messages found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 38.87MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.00 secs at 47.81MB/s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     msg_type count</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;char&gt; &lt;i64&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1:        S     0</span>
@@ -245,7 +246,7 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.17 secs at 49.18KB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 66.83KB/s</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">nrow</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          orders          trades stock_directory </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             100             100               3 </span>
@@ -258,7 +259,7 @@ is not large enough to filter the datalimits the analysis.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'orders' messages 200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Counting]   num 'trades' messages 300</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [Converting] to data.table</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.18 secs at 2.63MB/s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [Done]       in 0.13 secs at 3.66MB/s</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">res2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
